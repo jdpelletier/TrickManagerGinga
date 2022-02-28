@@ -156,7 +156,7 @@ class FitsViewer(QtGui.QMainWindow):
         hbox4.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
         self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
         self.wfullframemode.clicked.connect(self.full_frame_mode)
-        self.wfullframemode = QtGui.QPushButton("Video Mode")
+        self.wvideomode = QtGui.QPushButton("Video Mode")
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setEnabled(False)
         self.wstopvideo = QtGui.QPushButton("Stop Video")
