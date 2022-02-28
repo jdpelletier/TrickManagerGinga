@@ -164,8 +164,7 @@ class FitsViewer(QtGui.QMainWindow):
         fi.add_callback('cursor-down', self.btndown)
         hbox3.addStretch(1)
         for w in (self.winittrick, self.wrestartvideo, self.wreboottrick,
-                  self.wstartscan, self.wstopscan, self.wopen, self.wsky, self.wtakeff,
-                  self.wsetroi):
+                  self.wopen, self.wsky, self.wtakeff, self.wsetroi):
             hbox3.addWidget(w, stretch=0)
 
         hw3 = QtGui.QWidget()
@@ -358,8 +357,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     ##Full frame stuff
     def start_scan(self):
-        self.wstartscan.setEnabled(False)
-        self.wstopscan.setEnabled(True)
         self.scanning = True
         hdu = fits.PrimaryHDU()
         try:
@@ -374,8 +371,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.threadpool.start(scanner)
 
     def stop_scan(self):
-        self.wstartscan.setEnabled(True)
-        self.wstopscan.setEnabled(False)
         self.scanning = False
         print('Scanning stopped.')
 
