@@ -791,7 +791,7 @@ def main():
 
 
     w = FitsViewer(logger)
-    w.resize(300, 400)
+    w.resize(400, 400)
     w.show()
     app.setActiveWindow(w)
     w.raise_()
