@@ -448,6 +448,8 @@ class FitsViewer(QtGui.QMainWindow):
         return(image)
 
     def full_frame_mode(self):
+        self.wfullframemode.setVisible(False)
+        self.wvideomode.setVisible(True)
         self.stop_video()
         self.fitsimage.clear()
         self.resize(700, 700)
@@ -468,6 +470,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.start_scan()
 
     def video_mode(self):
+        self.wvideomode.setVisible(False)
+        self.wfullframemode.setVisible(True)
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
