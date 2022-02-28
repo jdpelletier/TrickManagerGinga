@@ -394,6 +394,7 @@ class FitsViewer(QtGui.QMainWindow):
     def display_video(self, file_callback):
         while self.video:
             file_callback.emit(self.roipixels)
+            self.resize(400, 400)
             time.sleep(1)
 
     def show_images(self, pix):
