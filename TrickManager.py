@@ -361,7 +361,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wquit.setEnabled(False)
         self.video = True
         print("video started")
-        video = Video(self.run_video)
+        video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         self.threadpool.start(video)
 
