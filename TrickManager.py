@@ -352,7 +352,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.logger.info("Attempting to shut down the application...")
         self.stop_video()
         self.stop_scan()
-        time.sleep(0.5)
+        time.sleep(2)
         self.threadpool = False
         self.deleteLater()
 
