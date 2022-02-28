@@ -311,20 +311,19 @@ class FitsViewer(QtGui.QMainWindow):
         return(image)
 
     def full_frame_mode(self):
-        fi = CanvasView(self.logger, render='widget')
-        w = fi.get_widget()
-        w.resize(700, 700)
+        self.resize(700, 700)
         self.wstopvideo.setEnabled(False)
         self.winittrick.setEnabled(False)
         self.wrestartvideo.setEnabled(False)
         self.wreboottrick.setEnabled(False)
         self.wreboottrick.setEnabled(False)
+        self.wfullframemode.setEnabled(True)
         self.wvideomode.setEnabled(True)
 
     def video_mode(self):
         fi = CanvasView(self.logger, render='widget')
         w = fi.get_widget()
-        w.resize(512, 512)
+        self..resize(512, 512)
         self.wstopvideo.setEnabled(True)
         self.winittrick.setEnabled(True)
         self.wrestartvideo.setEnabled(True)
@@ -347,7 +346,7 @@ def main():
 
 
     w = FitsViewer(logger)
-    w.resize(700, 700)
+    w.resize(500, 500)
     w.show()
     app.setActiveWindow(w)
     w.raise_()
