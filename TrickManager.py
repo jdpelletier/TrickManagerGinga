@@ -240,6 +240,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode = QtGui.QPushButton("Video Mode")
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setEnabled(False)
+        #TODO remove this after other stuff gets tested
+        self.wstartvideo = QtGui.QPushButton("Start Video")
+        self.wstartvideo.clicked.connect(self.start_video)
         self.wstopvideo = QtGui.QPushButton("Stop Video")
         self.wstopvideo.clicked.connect(self.stop_video)
         self.wstopvideo.setEnabled(False)
