@@ -178,6 +178,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode = QtGui.QPushButton("Video Mode")
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setEnabled(False)
+        self.wstopvideo = QtGui.QPushButton("Stop Video")
+        self.wstopvideo.clicked.connect(self.stop_video)
+        self.wstopvideo.setEnabled(False)
         self.wquit = QtGui.QPushButton("Quit")
         self.wquit.clicked.connect(self.quit)
         hbox4.addStretch(1)
@@ -252,7 +255,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     def init_trick(self):
         print("Initing TRICK")
-        self.wstopvideo.setEnabled(True)
         self.wquit.setEnabled(False)
         self.stopex.write(1)
         time.sleep(3)
