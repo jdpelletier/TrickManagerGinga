@@ -323,7 +323,7 @@ class FitsViewer(QtGui.QMainWindow):
     def video_mode(self):
         fi = CanvasView(self.logger, render='widget')
         w = fi.get_widget()
-        self..resize(512, 512)
+        self.resize(512, 512)
         self.wstopvideo.setEnabled(True)
         self.winittrick.setEnabled(True)
         self.wrestartvideo.setEnabled(True)
