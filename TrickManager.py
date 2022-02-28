@@ -249,7 +249,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkfpspx.write('1 second')
         self.trkenapx.write(1)
         self.trkstsx.write(1)
-        self.wstartvideo.setEnabled(False)
         self.video = True
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
@@ -269,11 +268,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkfpspx.write('1 second')
         self.trkenapx.write(1)
         self.trkstsx.write(1)
-        self.wstartvideo.setEnabled(False)
 
     def stop_video(self):
         print("video stopped")
-        self.wstartvideo.setEnabled(True)
         self.wstopvideo.setEnabled(False)
         self.wquit.setEnabled(True)
         self.video = False
