@@ -154,6 +154,11 @@ class FitsViewer(QtGui.QMainWindow):
 
         hbox4 = QtGui.QHBoxLayout()
         hbox4.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
+        self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
+        self.wfullframemode.clicked.connect(self.full_frame_mode)
+        self.wfullframemode = QtGui.QPushButton("Video Mode")
+        self.wfullframemode.clicked.connect(self.video_mode)
+        self.wfullframemode.setEnabled(False)
         self.wstopvideo = QtGui.QPushButton("Stop Video")
         self.wstopvideo.clicked.connect(self.stop_video)
         self.wstopvideo.setEnabled(False)
@@ -305,93 +310,28 @@ class FitsViewer(QtGui.QMainWindow):
 
         return(image)
 
-
-class TestViewer(QtGui.QMainWindow):
-
-    def __init__(self, logger):
-        super(TestViewer, self).__init__()
-        self.logger = logger
-
-        self.cachedFiles = None
-        self.video = False
-        #KTL stuff
-        #Cache KTL keywords
-        self.trickxpos = ktl.cache('tds', 'TRKRO1X')
-        self.trickypos = ktl.cache('tds', 'TRKRO1Y')
-        self.trickxsize = ktl.cache('tds', 'TRKRO1SX')
-        self.trickysize = ktl.cache('tds', 'TRKRO1SY')
-        self.stopex = ktl.cache('tds', 'STOPEX')
-        self.timfile = ktl.cache('tds', 'TIMFILE')
-        self.init = ktl.cache('tds', 'INIT')
-        self.sampmode = ktl.cache('tds', 'SAMPMODE')
-        self.cdsmode = ktl.cache('tds', 'CDSMODE')
-        self.readmode = ktl.cache('tds', 'READMODE')
-        self.itime = ktl.cache('tds', 'ITIME')
-        self.getkw = ktl.cache('tds', 'GETKW')
-        self.getdcskw = ktl.cache('tds', 'GETDCSKW')
-        self.getaokw = ktl.cache('tds', 'GETAOKW')
-        self.go = ktl.cache('tds', 'GO')
-        self.progress = ktl.cache('tds', 'progress')
-
-        self.roipixels = ktl.cache('ao', 'TRKRO1PX')
-        self.roipixels.monitor()
-
-        self.img = AstroImage()
-
-        self.threadpool = QtCore.QThreadPool()
-
-        # create the ginga viewer and configure it
+    def full_frame_mode(self):
         fi = CanvasView(self.logger, render='widget')
-        fi.enable_autocuts('on')
-        fi.set_autocut_params('zscale')
-        fi.enable_autozoom('on')
-        # fi.set_callback('drag-drop', self.drop_file)
-        fi.set_bg(0.2, 0.2, 0.2)
-        fi.ui_set_active(True)
-        self.fitsimage = fi
-
-        # enable some user interaction
-        self.bd = fi.get_bindings()
-        self.bd.enable_all(True)
-
         w = fi.get_widget()
-        w.resize(512, 512)
+        w.resize(700, 700)
+        self.wstopvideo.setEnabled(False)
+        self.winittrick.setEnabled(False)
+        self.wrestartvideo.setEnabled(False)
+        self.wreboottrick.setEnabled(False)
+        self.wreboottrick.setEnabled(False)
+        self.wvideomode.setEnabled(True)
 
-        vbox = QtGui.QVBoxLayout()
-        vbox.setContentsMargins(QtCore.QMargins(2, 2, 2, 2))
-        vbox.setSpacing(1)
-        vbox.addWidget(w, stretch=1)
+    def video_mode(self):
+        fi = CanvasView(self.logger, render='widget')
+        w = fi.get_widget()
+        w.resize(500, 500)
+        self.wstopvideo.setEnabled(True)
+        self.winittrick.setEnabled(True)
+        self.wrestartvideo.setEnabled(True)
+        self.wreboottrick.setEnabled(True)
+        self.wreboottrick.setEnabled(True)
+        self.wvideomode.setEnabled(False)
 
-        hbox = QtGui.QHBoxLayout()
-        hbox.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-
-        self.test_info = QtGui.QLabel("test")
-
-        hbox.addStretch(1)
-        hbox.addWidget(self.roi_info, stretch = 0)
-        hw = QtGui.QWidget()
-        hw.setLayout(hbox)
-        vbox.addWidget(hw, stretch=0)
-
-        vw = QtGui.QWidget()
-        self.setCentralWidget(vw)
-        vw.setLayout(vbox)
-        self.recdc, self.compdc = self.add_canvas()
-        self.boxtag = "roi-box"
-        self.picktag = "pick-box"
-
-
-    def add_canvas(self, tag=None):
-        # add a canvas to the view
-        my_canvas = self.fitsimage.get_canvas()
-        RecCanvas = my_canvas.get_draw_class('rectangle')
-        CompCanvas = my_canvas.get_draw_class('compass')
-        return RecCanvas, CompCanvas
-
-
-    def quit(self, *args):
-        self.logger.info("Attempting to shut down the application...")
-        self.deleteLater()
 
 
 def main():
@@ -404,16 +344,10 @@ def main():
     # using null=True in this call instead of log_stderr=True
     logger = log.get_logger("example1", log_stderr=True, level=40)
 
+
+
     w = FitsViewer(logger)
     w.resize(500, 500)
-    w.show()
-    app.setActiveWindow(w)
-    w.raise_()
-    w.activateWindow()
-    app.exec_()
-    time.sleep(5)
-    w = TestViewer(logger)
-    w.resize(700, 700)
     w.show()
     app.setActiveWindow(w)
     w.raise_()
