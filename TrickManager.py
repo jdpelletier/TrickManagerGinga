@@ -354,6 +354,19 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkenapx.write(1)
         self.trkstsx.write(1)
 
+
+    ##TODO remove this when switching back to video mode is replaced with restart_video
+    def start_video(self):
+        self.wstartvideo.setEnabled(False)
+        self.wstopvideo.setEnabled(True)
+        self.wquit.setEnabled(False)
+        self.video = True
+        print("video started")
+        video = Video(self.run_video)
+        video.signals.load.connect(self.show_images)
+        self.threadpool.start(video)
+
+    #TODO make this actually stop video mode
     def stop_video(self):
         print("video stopped")
         self.wstopvideo.setEnabled(False)
@@ -391,6 +404,7 @@ class FitsViewer(QtGui.QMainWindow):
         return(image)
 
     def full_frame_mode(self):
+        self.stop_video()
         self.resize(700, 700)
         self.wstopvideo.setVisible(False)
         self.winittrick.setVisible(False)
@@ -424,6 +438,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.sky_info.setVisible(False)
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
+        #TODO replace this with restart_video
+        self.start_video()
 
     ##Full frame stuff
     def start_scan(self):
