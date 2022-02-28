@@ -394,13 +394,13 @@ class FitsViewer(QtGui.QMainWindow):
     def display_video(self, file_callback):
         while self.video:
             file_callback.emit(self.roipixels)
-            self.resize(400, 400)
             time.sleep(1)
 
     def show_images(self, pix):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
+        self.resize(400, 400)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
