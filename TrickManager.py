@@ -440,8 +440,6 @@ class FitsViewer(QtGui.QMainWindow):
     def video_mode(self):
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.resize(300, 300)
-        # self.fitsimage.set_window_size(100, 100)
         self.wstopvideo.setVisible(True)
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
@@ -458,6 +456,7 @@ class FitsViewer(QtGui.QMainWindow):
         time.sleep(1)
         #TODO replace this with restart_video
         self.start_video()
+        self.resize(300, 300)
 
     ##Full frame stuff
     def start_scan(self):
