@@ -22,6 +22,32 @@ from ginga.AstroImage import AstroImage
 
 import ktl
 
+class ScannerSignals(QtCore.QObject):
+    load = QtCore.Signal(object)
+
+class Scanner(QtCore.QRunnable):
+    '''
+    Scanner thread
+    '''
+    def __init__(self, fn, *args, **kwargs):
+        super(Scanner, self).__init__()
+
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = ScannerSignals()
+        self.kwargs['file_callback'] = self.signals.load
+
+        # Add the callback to our kwargs
+    @QtCore.Slot()
+    def run(self):
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+
+        self.fn(*self.args, **self.kwargs)
+
 class VideoSignals(QtCore.QObject):
     load = QtCore.Signal(object)
 
@@ -325,6 +351,7 @@ class FitsViewer(QtGui.QMainWindow):
     def quit(self, *args):
         self.logger.info("Attempting to shut down the application...")
         self.stop_video()
+        self.stop_scan()
         time.sleep(0.5)
         self.threadpool = False
         self.deleteLater()
@@ -437,8 +464,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(True)
         self.wfullframemode.setEnabled(False)
         self.wvideomode.setEnabled(True)
+        self.start_scan()
 
     def video_mode(self):
+        self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
         self.wstopvideo.setVisible(True)
