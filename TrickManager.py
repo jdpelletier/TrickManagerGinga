@@ -75,13 +75,21 @@ class FitsViewer(QtGui.QMainWindow):
         self.getaokw = ktl.cache('tds', 'GETAOKW')
         self.go = ktl.cache('tds', 'GO')
         self.progress = ktl.cache('tds', 'progress')
-
         self.roipixels = ktl.cache('ao', 'TRKRO1PX')
         self.roipixels.monitor()
+        self.cyclespr = ktl.cache('tds', 'cyclespr')
+        self.trkfpspx = ktl.cache('ao', 'trkfpspx')
+        self.trkenapx = ktl.cache('ao', 'trkenapx')
+        self.trkstop = ktl.cache('trick', 'trkstop')
+        self.trkstsx = ktl.cache('trick', 'trkstsx')
+
+        self.rawfile = ''
 
         self.img = AstroImage()
 
         self.threadpool = QtCore.QThreadPool()
+
+        self.iqcalc = iqcalc.IQCalc(self.logger)
 
         # create the ginga viewer and configure it
         fi = CanvasView(self.logger, render='widget')
@@ -110,11 +118,55 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.roi_info = QtGui.QLabel("")
 
+        self.image_info = QtGui.QLabel("")
+
+        self.sky_info = QtGui.QLabel("")
+
+        self.filt_info = QtGui.QLabel("")
+
         hbox.addStretch(1)
         hbox.addWidget(self.roi_info, stretch = 0)
 
         text = f"ROI {self.trickxpos.read()} {self.trickypos.read()}"
         self.roi_info.setText(text)
+
+        hbox.addStretch(1)
+        hbox.addWidget(self.image_info, stretch = 0)
+
+        text = f"Image:"
+        self.image_info.setText(text)
+        self.image_info.setVisible(False)
+
+        hbox.addStretch(1)
+        hbox.addWidget(self.filt_info, stretch = 0)
+
+        text = f"Filter:"
+        self.filt_info.setText(text)
+        self.filt_info.setVisible(False)
+
+        hbox.addStretch(1)
+        hbox.addWidget(self.sky_info, stretch = 0)
+
+        text = f"Sky:"
+        self.sky_info.setText(text)
+        self.sky_info.setVisible(False)
+
+        hw = QtGui.QWidget()
+        hw.setLayout(hbox)
+        vbox.addWidget(hw, stretch=0)
+
+        hbox2 = QtGui.QHBoxLayout()
+        hbox2.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
+
+        self.readout = QtGui.QLabel("")
+
+        hbox2.addStretch(1)
+        hbox2.addWidget(self.readout, stretch = 0)
+
+        self.box_readout = QtGui.QLabel("")
+
+        hbox2.addStretch(1)
+        hbox2.addWidget(self.box_readout, stretch = 0)
 
         hw = QtGui.QWidget()
         hw.setLayout(hbox)
@@ -349,6 +401,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.wsky.setVisible(True)
         self.wtakeff.setVisible(True)
         self.wsetroi.setVisible(True)
+        self.image_info.setVisible(True)
+        self.sky_info.setVisible(True)
+        self.filt_info.setVisible(True)
         self.wfullframemode.setEnabled(False)
         self.wvideomode.setEnabled(True)
 
@@ -365,6 +420,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.wsky.setVisible(False)
         self.wtakeff.setVisible(False)
         self.wsetroi.setVisible(False)
+        self.image_info.setVisible(False)
+        self.sky_info.setVisible(False)
+        self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
 
     ##Full frame stuff
