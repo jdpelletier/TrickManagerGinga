@@ -381,6 +381,7 @@ class FitsViewer(QtGui.QMainWindow):
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         self.threadpool.start(video)
+        self.wquit.setEnabled(True)
 
     def restart_video(self):
         self.stopex.write(1)
@@ -401,7 +402,6 @@ class FitsViewer(QtGui.QMainWindow):
     ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
         self.wstopvideo.setEnabled(True)
-        self.wquit.setEnabled(False)
         self.video = True
         print("video started")
         video = Video(self.display_video)
@@ -412,7 +412,6 @@ class FitsViewer(QtGui.QMainWindow):
     def stop_video(self):
         print("video stopped")
         self.wstopvideo.setEnabled(False)
-        self.wquit.setEnabled(True)
         self.video = False
 
     def reboot_trick(self):
