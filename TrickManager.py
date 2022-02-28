@@ -404,6 +404,7 @@ class FitsViewer(QtGui.QMainWindow):
 
     def full_frame_mode(self):
         self.stop_video()
+        self.fitsimage.clear()
         self.resize(700, 700)
         self.wstopvideo.setVisible(False)
         self.winittrick.setVisible(False)
@@ -421,8 +422,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.setEnabled(True)
 
     def video_mode(self):
-        fi = CanvasView(self.logger, render='widget')
-        w = fi.get_widget()
+        self.fitsimage.clear()
         self.resize(512, 512)
         self.wstopvideo.setVisible(True)
         self.winittrick.setVisible(True)
