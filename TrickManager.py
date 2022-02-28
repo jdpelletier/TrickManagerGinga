@@ -249,7 +249,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wquit = QtGui.QPushButton("Quit")
         self.wquit.clicked.connect(self.quit)
         hbox4.addStretch(1)
-        for w in (self.wfullframemode, self.wvideomode, self.wstopvideo, self.wquit):
+        for w in (self.wfullframemode, self.wvideomode, self.wstartvideo, self.wstopvideo, self.wquit):
             hbox4.addWidget(w, stretch=0)
 
         hw4 = QtGui.QWidget()
