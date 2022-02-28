@@ -357,7 +357,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
-        self.wstartvideo.setEnabled(False)
         self.wstopvideo.setEnabled(True)
         self.wquit.setEnabled(False)
         self.video = True
@@ -438,6 +437,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.sky_info.setVisible(False)
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
+        time.sleep(1)
         #TODO replace this with restart_video
         self.start_video()
 
