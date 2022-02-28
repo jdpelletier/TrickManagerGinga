@@ -427,7 +427,7 @@ class FitsViewer(QtGui.QMainWindow):
     def video_mode(self):
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.resize(512, 512)
+        self.resize(500, 500)
         self.wstopvideo.setVisible(True)
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
