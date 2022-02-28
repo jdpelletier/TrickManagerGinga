@@ -157,15 +157,15 @@ class FitsViewer(QtGui.QMainWindow):
         self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
         self.wfullframemode.clicked.connect(self.full_frame_mode)
         self.wfullframemode = QtGui.QPushButton("Video Mode")
-        self.wfullframemode.clicked.connect(self.video_mode)
-        self.wfullframemode.setEnabled(False)
+        self.wvideomode.clicked.connect(self.video_mode)
+        self.wvideomode.setEnabled(False)
         self.wstopvideo = QtGui.QPushButton("Stop Video")
         self.wstopvideo.clicked.connect(self.stop_video)
         self.wstopvideo.setEnabled(False)
         self.wquit = QtGui.QPushButton("Quit")
         self.wquit.clicked.connect(self.quit)
         hbox4.addStretch(1)
-        for w in (self.wfullframemod, self.wstopvideo, self.wstopvideo, self.wquit):
+        for w in (self.wfullframemode, self.wvideomode, self.wstopvideo, self.wquit):
             hbox4.addWidget(w, stretch=0)
 
         hw4 = QtGui.QWidget()
