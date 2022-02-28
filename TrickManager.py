@@ -18,6 +18,7 @@ from ginga.qtw.QtHelp import QtGui, QtCore
 from ginga.qtw.ImageViewQt import CanvasView, ScrolledView
 from ginga.util import iqcalc
 from ginga.util.loader import load_data
+from ginga.AstroImage import AstroImage
 
 import ktl
 
