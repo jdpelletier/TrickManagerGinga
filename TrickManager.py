@@ -240,6 +240,16 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode = QtGui.QPushButton("Video Mode")
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setEnabled(False)
+        hbox4.addStretch(1)
+        for w in (self.wfullframemode, self.wvideomod):
+            hbox4.addWidget(w, stretch=0)
+
+        hw4 = QtGui.QWidget()
+        hw4.setLayout(hbox4)
+        vbox.addWidget(hw4, stretch=0)
+
+        hbox5 = QtGui.QHBoxLayout()
+        hbox5.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
         #TODO remove this after other stuff gets tested
         self.wstartvideo = QtGui.QPushButton("Start Video")
         self.wstartvideo.clicked.connect(self.start_video)
@@ -248,13 +258,13 @@ class FitsViewer(QtGui.QMainWindow):
         self.wstopvideo.setEnabled(False)
         self.wquit = QtGui.QPushButton("Quit")
         self.wquit.clicked.connect(self.quit)
-        hbox4.addStretch(1)
-        for w in (self.wfullframemode, self.wvideomode, self.wstartvideo, self.wstopvideo, self.wquit):
-            hbox4.addWidget(w, stretch=0)
+        hbox5.addStretch(1)
+        for w in (self.wstartvideo, self.wstopvideo, self.wquit):
+            hbox5.addWidget(w, stretch=0)
 
-        hw4 = QtGui.QWidget()
-        hw4.setLayout(hbox4)
-        vbox.addWidget(hw4, stretch=0)
+        hw5 = QtGui.QWidget()
+        hw5.setLayout(hbox5)
+        vbox.addWidget(hw5, stretch=0)
 
         vw = QtGui.QWidget()
         self.setCentralWidget(vw)
@@ -262,6 +272,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.recdc, self.compdc = self.add_canvas()
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
+
+
+
 
 
     def add_canvas(self, tag=None):
