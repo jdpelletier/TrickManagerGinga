@@ -439,7 +439,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     def video_mode(self):
         self.fitsimage.clear()
-        self.resize(400, 400)
         self.fitsimage.rotate(0)
         self.wstopvideo.setVisible(True)
         self.winittrick.setVisible(True)
@@ -454,6 +453,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.sky_info.setVisible(False)
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
+        self.resize(400, 400)
         time.sleep(1)
         #TODO replace this with restart_video
         self.start_video()
