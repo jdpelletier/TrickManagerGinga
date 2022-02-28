@@ -281,7 +281,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wstartvideo.clicked.connect(self.start_video)
         self.wstopvideo = QtGui.QPushButton("Stop Video")
         self.wstopvideo.clicked.connect(self.stop_video)
-        self.wstopvideo.setEnabled(False)
+        self.wstopvideo.setVisible(False)
         self.wquit = QtGui.QPushButton("Quit")
         self.wquit.clicked.connect(self.quit)
         hbox5.addStretch(1)
@@ -401,7 +401,8 @@ class FitsViewer(QtGui.QMainWindow):
 
     ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
-        self.wstopvideo.setEnabled(True)
+        self.wstartvideo.setVisible(False)
+        self.wstopvideo.setVisible(True)
         self.video = True
         print("video started")
         video = Video(self.display_video)
@@ -411,7 +412,8 @@ class FitsViewer(QtGui.QMainWindow):
     #TODO make this actually stop video mode
     def stop_video(self):
         print("video stopped")
-        self.wstopvideo.setEnabled(False)
+        self.wstopvideo.setVisible(False)
+        self.wstartvideo.setVisible(True)
         self.video = False
 
     def reboot_trick(self):
