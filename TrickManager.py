@@ -816,8 +816,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            x = self.trickxpos.read() + (self.trickxsize.read() - self.xclick)
-            y = self.trickypos.read() + (self.trickysize.read() - self.yclick)
+            x = float(self.trickxpos.read()) + (float(self.trickxsize.read()) - self.xclick)
+            y = float(self.trickypos.read()) + (float(self.trickysize.read()) - float(self.yclick))
             self.trickxpos.write(x)
             self.trickypos.write(y)
             self.trkenapx.write(0)
