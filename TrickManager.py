@@ -231,6 +231,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.winittrick.clicked.connect(self.init_trick)
         self.wrestartvideo = QtGui.QPushButton("Restart Video")
         self.wrestartvideo.clicked.connect(self.restart_video)
+        self.wrestartvideo.setEnabled(False)
         self.wreboottrick = QtGui.QPushButton("Reboot Trick")
         self.wreboottrick.clicked.connect(self.reboot_trick)
         ##FF mode
@@ -383,6 +384,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.threadpool.start(video)
         self.wquit.setEnabled(True)
         self.mode = 'video'
+        self.wrestartvideo.setEnabled(True)
 
     def restart_video(self):
         self.stopex.write(1)
@@ -493,7 +495,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
         #TODO replace this with restart_video
-        self.start_video()
+        self.restart_video()
         self.mode = 'video'
 
     ##Full frame stuff
