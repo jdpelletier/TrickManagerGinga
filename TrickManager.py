@@ -231,7 +231,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.winittrick.clicked.connect(self.init_trick)
         self.wrestartvideo = QtGui.QPushButton("Restart Video")
         self.wrestartvideo.clicked.connect(self.restart_video)
-        self.wrestartvideo.setEnabled(False)
+        # self.wrestartvideo.setEnabled(False)
         self.wreboottrick = QtGui.QPushButton("Reboot Trick")
         self.wreboottrick.clicked.connect(self.reboot_trick)
         ##FF mode
@@ -402,7 +402,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkfpspx.write('1 second')
         self.trkenapx.write(1)
         self.trkstsx.write(1)
-        self.mode = 'video'
+        self.start_video()
 
 
     ##TODO remove this when switching back to video mode is replaced with restart_video
@@ -497,8 +497,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
         #TODO replace this with restart_video
-        self.mode = 'video'
-        # self.restart_video()
+        self.restart_video()
 
     ##Full frame stuff
     def start_scan(self):
