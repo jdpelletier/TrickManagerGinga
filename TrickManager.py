@@ -110,6 +110,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkstsx = ktl.cache('trick', 'trkstsx')
 
         self.rawfile = ''
+        self.mode = ''
 
         self.img = AstroImage()
 
@@ -232,7 +233,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.clicked.connect(self.restart_video)
         self.wreboottrick = QtGui.QPushButton("Reboot Trick")
         self.wreboottrick.clicked.connect(self.reboot_trick)
-        fi.set_callback('cursor-changed', self.motion_cb)
         ##FF mode
         self.wopen = QtGui.QPushButton("Open File")
         self.wopen.clicked.connect(self.open_file)
@@ -382,6 +382,7 @@ class FitsViewer(QtGui.QMainWindow):
         video.signals.load.connect(self.show_images)
         self.threadpool.start(video)
         self.wquit.setEnabled(True)
+        self.mode = 'video'
 
     def restart_video(self):
         self.stopex.write(1)
@@ -397,6 +398,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkfpspx.write('1 second')
         self.trkenapx.write(1)
         self.trkstsx.write(1)
+        self.mode = 'video'
 
 
     ##TODO remove this when switching back to video mode is replaced with restart_video
@@ -408,6 +410,7 @@ class FitsViewer(QtGui.QMainWindow):
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         self.threadpool.start(video)
+        self.mode = 'video'
 
     #TODO make this actually stop video mode
     def stop_video(self):
@@ -468,6 +471,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wfullframemode.setEnabled(False)
         self.wvideomode.setEnabled(True)
         self.start_scan()
+        self.mode = 'fullframe'
 
     def video_mode(self):
         self.wvideomode.setVisible(False)
@@ -490,6 +494,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.setEnabled(False)
         #TODO replace this with restart_video
         self.start_video()
+        self.mode = 'video'
 
     ##Full frame stuff
     def start_scan(self):
@@ -806,8 +811,24 @@ class FitsViewer(QtGui.QMainWindow):
         # self.fitsimage.set_pan(data_x, data_y)
         self.xclick = data_x
         self.yclick = data_y
-        self.wsetroi.setEnabled(True)
-        self.pickstar(self.fitsimage)
+        ##todo video mode adjusting ROI
+        if self.mode == "video":
+            x = self.trickxpos.read() + (self.trickxsize.read() - self.xclick)
+            y = self.trickypos.read() + (self.trickysize.read() - self.yclick)
+            self.trickxpos.write(x)
+            self.trickypos.write(y)
+            self.trkenapx.write(0)
+            self.trkfpspx.write('Passive')
+            self.trkstop.write(1)
+            time.sleep(1)
+            self.trkfpspx.write('1 second')
+            self.trkenapx.write(1)
+            self.trkstsx.write(1)
+        else:
+            self.wsetroi.setEnabled(True)
+            self.pickstar(self.fitsimage)
+        # self.wsetroi.setEnabled(True)
+        # self.pickstar(self.fitsimage)
 
 
 
