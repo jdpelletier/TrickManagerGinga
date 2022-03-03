@@ -264,6 +264,8 @@ class FitsViewer(QtGui.QMainWindow):
         hbox4.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
         self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
         self.wfullframemode.clicked.connect(self.full_frame_mode)
+        #TODO disable this button after init testing
+        # self.wfullframemode.setEnabled(False)
         self.wvideomode = QtGui.QPushButton("Video Mode")
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setVisible(False)
@@ -495,8 +497,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
         #TODO replace this with restart_video
-        self.restart_video()
         self.mode = 'video'
+        # self.restart_video()
 
     ##Full frame stuff
     def start_scan(self):
