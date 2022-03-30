@@ -145,6 +145,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.image_display_hbox.setObjectName("image_display_hbox")
         w = fi.get_widget()
         w.setObjectName("w")
+        w.resize(240, 240)
         self.image_display_hbox.addWidget(w, stretch=1)
         self.roi_info = QtGui.QLabel(self.centralwidget)
         self.roi_info.setGeometry(QtCore.QRect(20, 520, 121, 16))
@@ -397,6 +398,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
+        self.fitsimage.get_widget().resize(240, 240)
         self.MainWindow.resize(400, 400)
 
     def pixels_to_image(self, pix):
@@ -422,6 +424,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_video()
         self.fitsimage.clear()
         self.MainWindow.resize(700, 700)
+        self.fitsimage.get_widget().resize(512, 512)
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
