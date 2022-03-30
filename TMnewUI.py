@@ -456,7 +456,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
         self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 310, 240))
-        self.fitsimage.get_widet().resize(240,240)
+        self.fitsimage.get_widget().resize(240,240)
         self.readout.setGeometry(QtCore.QRect(30, 240, 251, 16))
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
