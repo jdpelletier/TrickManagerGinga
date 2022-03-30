@@ -121,7 +121,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         MainWindow.setObjectName("MainWindow")
         self.MainWindow = MainWindow
-        self.MainWindow.resize(400, 400)
+        self.MainWindow.resize(400, 370)
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
@@ -138,7 +138,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.hbox_layout = QtGui.QWidget(self.centralwidget)
-        self.hbox_layout.setGeometry(QtCore.QRect(9, 9, 381, 231))
+        self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 400, 240))
         self.hbox_layout.setObjectName("hbox_layout")
         self.display_hbox = QtGui.QHBoxLayout(self.hbox_layout)
         self.display_hbox.setContentsMargins(0, 0, 0, 0)
@@ -228,19 +228,15 @@ class FitsViewer(QtGui.QMainWindow):
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
         self.wopenfile = QtGui.QAction(MainWindow)
         self.wopenfile.setObjectName("wopenfile")
         self.wopenfile.triggered.connect(self.open_file)
-        self.wquit = QtGui.QAction(MainWindow)
-        self.wquit.setObjectName("wquit")
-        self.wquit.triggered.connect(self.quit)
+        self.wmquit = QtGui.QAction(MainWindow)
+        self.wmquit.setObjectName("wquit")
+        self.wmquit.triggered.connect(self.quit)
         self.menuFile.addAction(self.wopenfile)
-        self.menuFile.addAction(self.wquit)
+        self.menuFile.addAction(self.wmquit)
         self.menubar.addAction(self.menuFile.menuAction())
-
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -271,6 +267,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.wopenfile.setText(_translate("MainWindow", "Open"))
         self.wquit.setText(_translate("MainWindow", "Quit"))
+        self.wmquit.setText(_translate("MainWindow", "Quit"))
         self.wvideomode.setVisible(False)
         self.ff_roi_info.setVisible(False)
         self.ff_readout.setVisible(False)
@@ -407,7 +404,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.MainWindow.resize(400, 400)
+        self.MainWindow.resize(400, 370)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
@@ -459,7 +456,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.hbox_layout.setGeometry(QtCore.QRect(9, 9, 381, 231))
+        self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 400, 240))
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
