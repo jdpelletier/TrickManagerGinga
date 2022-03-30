@@ -120,7 +120,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.iqcalc = iqcalc.IQCalc(self.logger)
 
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(400, 400)
+        self.MainWindow = MainWindow
+        self.MainWindow.resize(400, 400)
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
@@ -396,7 +397,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        MainWindow.resize(400, 400)
+        self.MainWindow.resize(400, 400)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
@@ -420,7 +421,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.setVisible(True)
         self.stop_video()
         self.fitsimage.clear()
-        MainWindow.resize(700, 700)
+        self.MainWindow.resize(700, 700)
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
