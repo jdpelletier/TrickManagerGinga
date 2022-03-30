@@ -363,8 +363,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
-        self.wstartvideo.setVisible(False)
-        self.wstopvideo.setVisible(True)
         self.video = True
         print("video started")
         video = Video(self.display_video)
@@ -375,8 +373,6 @@ class FitsViewer(QtGui.QMainWindow):
     #TODO make this actually stop video mode
     def stop_video(self):
         print("video stopped")
-        self.wstopvideo.setVisible(False)
-        self.wstartvideo.setVisible(True)
         self.video = False
 
     def reboot_trick(self):
@@ -416,7 +412,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_video()
         self.fitsimage.clear()
         self.resize(700, 700)
-        self.wstopvideo.setVisible(False)
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
@@ -439,7 +434,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.wstopvideo.setVisible(True)
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
@@ -544,7 +538,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.getdcskw.write(1)
         self.getaokw.write(1)
         self.go.write(1)
-        self.wstartvideo.setEnabled(True)
 
     def set_roi(self):
         self.trickxpos.write(self.xclick-8)
