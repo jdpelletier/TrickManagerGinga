@@ -242,6 +242,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        fi.set_callback('cursor-changed', self.motion_cb)
+        fi.add_callback('cursor-down', self.btndown)
+
         self.recdc, self.compdc = self.add_canvas()
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
@@ -434,7 +437,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick.setVisible(False)
         self.display_hbox.setGeometry(QtCore.QRect(0, 0, 700, 512))
         self.fitsimage.get_widget().resize(512,512)
-        self.roi_info.setGeometry(QtCore.QRect(30, 20, 81, 20))
+        self.roi_info.setGeometry(QtCore.QRect(20, 270, 71, 20))
         self.readout.setGeometry(QtCore.QRect(210, 520, 281, 16))
         self.wsky.setVisible(True)
         self.wtakeff.setVisible(True)
@@ -462,7 +465,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
         self.wfullframemode.setEnabled(True)
-        self.roi_info.setGeometry(QtCore.QRect(20, 270, 71, 20))
+        self.roi_info.setGeometry(QtCore.QRect(30, 20, 81, 20))
         self.wquit.setVisible(True)
         self.wsky.setVisible(False)
         self.wtakeff.setVisible(False)
