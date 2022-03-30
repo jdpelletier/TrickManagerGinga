@@ -437,7 +437,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick.setVisible(False)
         self.display_hbox.setGeometry(QtCore.QRect(0, 0, 700, 512))
         self.fitsimage.get_widget().setParent(None)
-        self.load_viewer()
+        self.load_viewer(512)
         self.roi_info.setGeometry(QtCore.QRect(20, 520, 171, 20))
         self.readout.setGeometry(QtCore.QRect(210, 520, 281, 16))
         self.wcolor.setVisible(True)
@@ -463,7 +463,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.rotate(0)
         self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 310, 240))
         self.fitsimage.get_widget().setParent(None)
-        self.load_viewer()
+        self.load_viewer(240)
         self.readout.setGeometry(QtCore.QRect(30, 240, 251, 16))
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
@@ -484,10 +484,11 @@ class FitsViewer(QtGui.QMainWindow):
         #TODO replace this with restart video
         self.start_video()
 
-    def load_viewer(self):
+    def load_viewer(self, size):
         w = self.fitsimage.get_widget()
         w.setObjectName("w")
         self.display_hbox.addWidget(w, stretch=1)
+        self.w.resize(size, size)
 
     ##Full frame stuff
     def start_scan(self):
