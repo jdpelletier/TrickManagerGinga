@@ -145,7 +145,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.display_hbox.setObjectName("display_hbox")
         w = fi.get_widget()
         w.setObjectName("w")
-        self.image_display_hbox.addWidget(w, stretch=1)
         self.ff_roi_info = QtGui.QLabel(self.centralwidget)
         self.ff_roi_info.setGeometry(QtCore.QRect(20, 520, 121, 16))
         self.ff_roi_info.setObjectName("roi_info")
