@@ -168,13 +168,13 @@ class FitsViewer(QtGui.QMainWindow):
         self.ff_readout.setGeometry(QtCore.QRect(210, 520, 281, 16))
         self.ff_readout.setObjectName("readout")
         self.wcut = QtGui.QComboBox(self.centralwidget)
-        self.wcut.setGeometry(QtCore.QRect(300, 660, 73, 22))
+        self.wcut.setGeometry(QtCore.QRect(540, 520, 73, 22))
         self.wcut.setObjectName("wcut")
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
         self.wcut.currentIndexChanged.connect(self.cut_change)
         self.wcolor = QtGui.QComboBox(self.centralwidget)
-        self.wcolor.setGeometry(QtCore.QRect(480, 660, 73, 22))
+        self.wcolor.setGeometry(QtCore.QRect(620, 520, 73, 22))
         self.wcolor.setObjectName("wcolor")
         for name in fi.get_color_algorithms():
             self.wcolor.addItem(name)
@@ -279,6 +279,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
         self.menubar.setVisible(False)
+        self.wcolor.setVisible(False)
+        self.wcut.setVisible(False)
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
@@ -439,6 +441,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_widget().resize(512,512)
         self.roi_info.setGeometry(QtCore.QRect(20, 270, 71, 20))
         self.readout.setGeometry(QtCore.QRect(210, 520, 281, 16))
+        self.wcolor.setVisible(True)
+        self.wcut.setVisible(True)
         self.wsky.setVisible(True)
         self.wtakeff.setVisible(True)
         self.wsetroi.setVisible(True)
@@ -467,6 +471,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.wfullframemode.setEnabled(True)
         self.roi_info.setGeometry(QtCore.QRect(30, 20, 81, 20))
         self.wquit.setVisible(True)
+        self.wcolor.setVisible(False)
+        self.wcut.setVisible(False)
         self.wsky.setVisible(False)
         self.wtakeff.setVisible(False)
         self.wsetroi.setVisible(False)
