@@ -223,6 +223,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wquit = QtGui.QPushButton(self.centralwidget)
         self.wquit.setGeometry(QtCore.QRect(290, 310, 93, 28))
         self.wquit.setObjectName("wquit")
+        self.wquit.clicked.connect(self.quit)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 700, 26))
