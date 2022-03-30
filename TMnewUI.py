@@ -234,7 +234,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.menuFile.addAction(self.wquit)
         self.menubar.addAction(self.menuFile.menuAction())
 
-        MainWindow.setCentralWidget(self.centralwidget)
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
