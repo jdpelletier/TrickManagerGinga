@@ -150,7 +150,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.readout.setGeometry(QtCore.QRect(30, 240, 251, 16))
         self.readout.setObjectName("readout")
         self.roi_info = QtGui.QLabel(self.centralwidget)
-        self.roi_info.setGeometry(QtCore.QRect(20, 270, 171, 20))
+        self.roi_info.setGeometry(QtCore.QRect(30, 250, 171, 20))
         self.roi_info.setObjectName("roi_info")
         self.image_info = QtGui.QLabel(self.centralwidget)
         self.image_info.setGeometry(QtCore.QRect(480, 610, 111, 16))
@@ -469,7 +469,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
         self.wfullframemode.setEnabled(True)
-        self.roi_info.setGeometry(QtCore.QRect(30, 20, 171, 20))
+        self.roi_info.setGeometry(QtCore.QRect(30, 250, 171, 20))
         self.wquit.setVisible(True)
         self.wcolor.setVisible(False)
         self.wcut.setVisible(False)
@@ -481,7 +481,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
         self.menubar.setVisible(False)
-        self.restart_video()
+        #TODO replace this with restart video
+        self.start_video()
 
     ##Full frame stuff
     def start_scan(self):
