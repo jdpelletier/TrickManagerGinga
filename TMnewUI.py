@@ -138,7 +138,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.hbox_layout = QtGui.QWidget(self.centralwidget)
-        self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 310, 240))
+        self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 330, 240))
         self.hbox_layout.setObjectName("hbox_layout")
         self.display_hbox = QtGui.QHBoxLayout(self.hbox_layout)
         self.display_hbox.setContentsMargins(0, 0, 0, 0)
