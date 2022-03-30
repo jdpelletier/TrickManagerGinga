@@ -433,7 +433,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.display_hbox.setGeometry(QtCore.QRect(0, 0, 701, 511))
-        self.roi_info.setGeometry(QtCore.QRect(30, 20, 81, 20)
+        self.roi_info.setGeometry(QtCore.QRect(30, 20, 81, 20))
         self.readout.setGeometry(QtCore.QRect(210, 520, 281, 16))
         self.wsky.setVisible(True)
         self.wtakeff.setVisible(True)
