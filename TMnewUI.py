@@ -120,6 +120,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.iqcalc = iqcalc.IQCalc(self.logger)
 
         MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(400, 400)
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
@@ -261,6 +262,15 @@ class FitsViewer(QtGui.QMainWindow):
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.wopenfile.setText(_translate("MainWindow", "Open"))
         self.wquit.setText(_translate("MainWindow", "Quit"))
+        self.wvideomode.setVisible(False)
+        self.wsky.setVisible(False)
+        self.wtakeff.setVisible(False)
+        self.wsetroi.setVisible(False)
+        self.image_info.setVisible(False)
+        self.sky_info.setVisible(False)
+        self.filt_info.setVisible(False)
+        self.wvideomode.setEnabled(False)
+        self.menubar.setVisible(False)
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
