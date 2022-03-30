@@ -396,7 +396,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.resize(400, 400)
+        MainWindow.resize(400, 400)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
@@ -420,7 +420,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.setVisible(True)
         self.stop_video()
         self.fitsimage.clear()
-        self.resize(700, 700)
+        MainWindow.resize(700, 700)
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
