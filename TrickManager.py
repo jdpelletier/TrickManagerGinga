@@ -242,6 +242,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wsky.clicked.connect(self.load_sky)
         self.wsky.setEnabled(False)
         self.wsky.setVisible(False)
+        self.wsky.setGeometry(QtCore.QRect(330, 610, 93, 28))
         self.wtakeff = QtGui.QPushButton("Take Full Frame")
         self.wtakeff.clicked.connect(self.take_ff)
         self.wtakeff.setVisible(False)
