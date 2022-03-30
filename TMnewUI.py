@@ -220,7 +220,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.box_readout = QtGui.QLabel(self.centralwidget)
         self.box_readout.setGeometry(QtCore.QRect(20, 550, 281, 16))
         self.box_readout.setObjectName("box_readout")
-        self.wquit = QtWidgets.QPushButton(self.centralwidget)
+        self.wquit = QtGui.QPushButton(self.centralwidget)
         self.wquit.setGeometry(QtCore.QRect(290, 310, 93, 28))
         self.wquit.setObjectName("wquit")
         MainWindow.setCentralWidget(self.centralwidget)
