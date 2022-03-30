@@ -143,9 +143,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.display_hbox = QtGui.QHBoxLayout(self.hbox_layout)
         self.display_hbox.setContentsMargins(0, 0, 0, 0)
         self.display_hbox.setObjectName("display_hbox")
-        w = fi.get_widget()
-        w.setObjectName("w")
-        self.display_hbox.addWidget(w, stretch=1)
+        self.load_viewer()
         self.readout = QtGui.QLabel(self.centralwidget)
         self.readout.setGeometry(QtCore.QRect(30, 240, 251, 16))
         self.readout.setObjectName("readout")
@@ -438,7 +436,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.display_hbox.setGeometry(QtCore.QRect(0, 0, 700, 512))
-        self.fitsimage.get_widget().resize(512,512)
+        self.fitsimage.setParent(None)
+        self.load_viewer()
         self.roi_info.setGeometry(QtCore.QRect(20, 520, 171, 20))
         self.readout.setGeometry(QtCore.QRect(210, 520, 281, 16))
         self.wcolor.setVisible(True)
@@ -463,7 +462,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
         self.hbox_layout.setGeometry(QtCore.QRect(0, 0, 310, 240))
-        self.fitsimage.get_widget().resize(240,240)
+        self.fitsimage.setParent(None)
+        self.load_viewer()
         self.readout.setGeometry(QtCore.QRect(30, 240, 251, 16))
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
@@ -483,6 +483,11 @@ class FitsViewer(QtGui.QMainWindow):
         self.menubar.setVisible(False)
         #TODO replace this with restart video
         self.start_video()
+
+    def load_viewer(self):
+        w = self.fitsimage.get_widget()
+        w.setObjectName("w")
+        self.display_hbox.addWidget(w, stretch=1)
 
     ##Full frame stuff
     def start_scan(self):
