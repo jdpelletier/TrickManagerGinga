@@ -143,7 +143,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.display_hbox = QtGui.QHBoxLayout(self.hbox_layout)
         self.display_hbox.setContentsMargins(0, 0, 0, 0)
         self.display_hbox.setObjectName("display_hbox")
-        self.load_viewer()
+        self.load_viewer(240)
         self.readout = QtGui.QLabel(self.centralwidget)
         self.readout.setGeometry(QtCore.QRect(30, 240, 251, 16))
         self.readout.setObjectName("readout")
