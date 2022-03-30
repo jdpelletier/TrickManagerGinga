@@ -120,7 +120,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.iqcalc = iqcalc.IQCalc(self.logger)
 
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(400, 400)
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
