@@ -459,6 +459,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.image_info.setVisible(False)
         self.sky_info.setVisible(False)
         self.filt_info.setVisible(False)
+        self.box_readout.setVisible(False)
         self.wopen.setVisible(False)
         #TODO replace this with restart video
         self.start_video()
