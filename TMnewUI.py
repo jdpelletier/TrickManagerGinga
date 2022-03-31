@@ -77,7 +77,7 @@ class Video(QtCore.QRunnable):
 
 class FitsViewer(QtGui.QMainWindow):
 
-    def __init__(self, logger, MainWindow):
+    def __init__(self, logger):
         super(FitsViewer, self).__init__()
         self.logger = logger
 
@@ -118,10 +118,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.threadpool = QtCore.QThreadPool()
 
         self.iqcalc = iqcalc.IQCalc(self.logger)
-
-        MainWindow.setObjectName("MainWindow")
-        self.MainWindow = MainWindow
-        self.MainWindow.resize(330, 370)
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
@@ -403,7 +399,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.MainWindow.resize(330, 370)
+        self.resize(330, 370)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
@@ -427,7 +423,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.setVisible(True)
         self.stop_video()
         self.fitsimage.clear()
-        self.MainWindow.resize(700, 700)
+        self.resize(700, 700)
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
@@ -826,10 +822,11 @@ def main():
     # using null=True in this call instead of log_stderr=True
     logger = log.get_logger("TrickManager", log_stderr=True, level=40)
 
-    MainWindow = QtGui.QMainWindow()
-
-    w = FitsViewer(logger, MainWindow)
-    MainWindow.show()
+    w = FitsViewer(logger)
+    w.show()
+    app.setActiveWindow(w)
+    w.raise_()
+    w.activateWindow()
     w.start_video()
     sys.exit(app.exec_())
 
