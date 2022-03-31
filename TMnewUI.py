@@ -177,7 +177,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.box_readout.setObjectName("box_readout")
         self.box_readout.setVisible(False)
         roi_hbox.addWidget(self.box_readout)
-        self.vbox.addLayout(readout_hbox)
         hw = QtGui.QWidget()
         hw.setLayout(roi_hbox)
         vbox.addWidget(hw)
