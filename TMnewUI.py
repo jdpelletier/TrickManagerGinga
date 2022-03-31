@@ -237,7 +237,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.winittrick.setObjectName("winittrick")
         self.winittrick.clicked.connect(self.init_trick)
         self.buttons_vbox_right.addWidget(self.winittrick)
-        self.wopen = QtGui.QPushButton(self.widget)
+        self.wopen = QtGui.QPushButton("Open File")
         self.wopen.setObjectName("wopen")
         self.wopen.clicked.connect(self.open_file)
         self.wopen.setVisible(False)
