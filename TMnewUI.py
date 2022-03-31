@@ -438,7 +438,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.sky_info.setVisible(True)
         self.filt_info.setVisible(True)
         self.wopen.setVisible(True)
-        self.wvideomode.setEnabled(True)
+        self.box_readout.setVisible(True)
         self.start_scan()
         self.mode = 'fullframe'
 
