@@ -428,8 +428,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
-        self.fitsimage.get_widget().setParent(None)
-        self.load_viewer(512)
         self.wcolor.setVisible(True)
         self.wcut.setVisible(True)
         self.wsky.setVisible(True)
@@ -451,8 +449,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.fitsimage.get_widget().setParent(None)
-        self.load_viewer(240)
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
@@ -470,12 +466,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.menubar.setVisible(False)
         #TODO replace this with restart video
         self.start_video()
-
-    def load_viewer(self, size):
-        w = self.fitsimage.get_widget()
-        w.setObjectName("w")
-        w.resize(size, size)
-        self.image_display_hbox.addWidget(w)
 
     ##Full frame stuff
     def start_scan(self):
