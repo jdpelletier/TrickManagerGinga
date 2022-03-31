@@ -439,7 +439,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.wfullframemode.setEnabled(False)
         self.wquit.setVisible(False)
         self.wvideomode.setEnabled(True)
-        self.menubar.setVisible(True)
         self.start_scan()
         self.mode = 'fullframe'
 
@@ -463,7 +462,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.sky_info.setVisible(False)
         self.filt_info.setVisible(False)
         self.wvideomode.setEnabled(False)
-        self.menubar.setVisible(False)
         #TODO replace this with restart video
         self.start_video()
 
