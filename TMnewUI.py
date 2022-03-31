@@ -475,7 +475,7 @@ class FitsViewer(QtGui.QMainWindow):
         w = self.fitsimage.get_widget()
         w.setObjectName("w")
         w.resize(size, size)
-        self.display_hbox.addWidget(w)
+        self.image_display_hbox.addWidget(w)
 
     ##Full frame stuff
     def start_scan(self):
