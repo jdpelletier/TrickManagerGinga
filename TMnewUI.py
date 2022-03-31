@@ -181,7 +181,7 @@ class FitsViewer(QtGui.QMainWindow):
         buttons_vbox_left = QtGui.QVBoxLayout()
         buttons_vbox_left.setObjectName("buttons_vbox_left")
         self.spacerItem = QtGui.QSpacerItem(105, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        buttons_vbox_left.addItem(spacerItem)
+        buttons_vbox_left.addItem(self.spacerItem)
         self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
         self.wfullframemode.setObjectName("wfullframemode")
         self.wfullframemode.clicked.connect(self.full_frame_mode)
