@@ -313,8 +313,12 @@ class FitsViewer(QtGui.QMainWindow):
             ra_txt = 'BAD WCS'
             dec_txt = 'BAD WCS'
 
-        text = "X: %.2f  Y: %.2f  Value: %s" % (fits_x, fits_y, value)
-        self.readout.setText(text)
+        if (fits_x > 2048 or fits_x <0) or (fits_y > 2048 or fits_y <0):
+            text = "X: Y:  Value:"
+            self.readout.setText(text)
+        else:
+            text = f"X: {int(fits_x)} Y: {int(fits_y)}  Value: {value}"
+            self.readout.setText(text)
 
     def quit(self, *args):
         self.logger.info("Attempting to shut down the application...")
@@ -376,7 +380,7 @@ class FitsViewer(QtGui.QMainWindow):
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         left, right, up, down = self.getROI()
-        self.roi_info.setText(f"ROI: {left} {right} {up} {down}")
+        self.roi_info.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())})
         self.threadpool.start(video)
         self.mode = 'video'
 
@@ -639,7 +643,7 @@ class FitsViewer(QtGui.QMainWindow):
         right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
         up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
         down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        print("ROI box: %d %d %d %d" %(left, right, up, down))
+        self.roi_info.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())})
         return left, right, up, down
 
     def nightpath(self):
