@@ -146,7 +146,7 @@ class FitsViewer(QtGui.QMainWindow):
         readout_hbox.setObjectName("readout_hbox")
         self.readout = QtGui.QLabel("X:                 Y:                    Value:")
         self.readout.setObjectName("readout")
-        # self.readout.setMinimumSize(QtCore.QSize(350, 0))
+        self.readout.setMinimumSize(QtCore.QSize(350, 0))
         readout_hbox.addWidget(self.readout)
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
