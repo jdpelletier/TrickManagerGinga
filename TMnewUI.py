@@ -291,7 +291,7 @@ class FitsViewer(QtGui.QMainWindow):
         try:
             # We report the value across the pixel, even though the coords
             # change halfway across the pixel
-            value = viewer.get_data(int(data_x), int(data_y))
+            value = viewer.get_data(int(data_x + 0.5), int(data_y + 0.5))
 
         except Exception:
             value = None
@@ -313,11 +313,11 @@ class FitsViewer(QtGui.QMainWindow):
             ra_txt = 'BAD WCS'
             dec_txt = 'BAD WCS'
 
-        if (fits_x > 2048 or fits_x <0) or (fits_y > 2048 or fits_y <0):
+        if (fits_x+0.5 > 2048 or fits_x+0.5 <0) or (fits_y+0.5 > 2048 or fits_y+0.5 <0):
             text = "X: Y:  Value:"
             self.readout.setText(text)
         else:
-            text = f"X: {fits_x} Y: {fits_y}  Value: {value}"
+            text = f"X: {int(fits_x+0.5)} Y: {int(fits_y+0.5))}  Value: {value}"
             self.readout.setText(text)
 
     def quit(self, *args):
