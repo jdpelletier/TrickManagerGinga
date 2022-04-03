@@ -291,7 +291,7 @@ class FitsViewer(QtGui.QMainWindow):
         try:
             # We report the value across the pixel, even though the coords
             # change halfway across the pixel
-            value = viewer.get_data(int(data_x + 0.5), int(data_y + 0.5))
+            value = viewer.get_data(int(data_x), int(data_y)
 
         except Exception:
             value = None
