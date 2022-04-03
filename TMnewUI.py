@@ -380,7 +380,6 @@ class FitsViewer(QtGui.QMainWindow):
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         left, right, up, down = self.getROI()
-        self.roi_info.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())})
         self.threadpool.start(video)
         self.mode = 'video'
 
@@ -643,7 +642,7 @@ class FitsViewer(QtGui.QMainWindow):
         right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
         up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
         down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        self.roi_info.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())})
+        self.roi_info.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())}")
         return left, right, up, down
 
     def nightpath(self):
