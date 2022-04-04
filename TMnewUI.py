@@ -587,7 +587,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.trickxpos.write(xroi)
         self.trickypos.write(yroi)
         distcoeff = np.zeros(20)
-        rows = csv.reader(open('TRICK_DistCoeff.dat','r'))
+        rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
         for idx,row in enumerate(rows):
             distcoeff[idx] = float(row[0][5:])
         self.trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None)
@@ -598,6 +598,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.box = self.recdc(left, down, right, up, color='green')
         self.fitsimage.get_canvas().add(self.box, tag=self.boxtag, redraw=True)
         self.wsetroi.setEnabled(False)
+
     def trk_distortion_model(self, x0 ,y0, p):
         # Translation of DistortionModel into Python
         x0T = x0-p[0]
