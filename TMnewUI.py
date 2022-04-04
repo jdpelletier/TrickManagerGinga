@@ -138,6 +138,7 @@ class FitsViewer(QtGui.QMainWindow):
         vid_roi_hbox.setObjectName("vid_roi_hbox")
         self.roi_info_vid = QtGui.QLabel("ROI: ")
         self.roi_info_vid.setObjectName("roi_info")
+        self.roi_info_vid.setMaximumSize(QtCore.QSize(0, 10))
         vid_roi_hbox.addWidget(self.roi_info_vid)
         hw = QtGui.QWidget()
         hw.setLayout(vid_roi_hbox)
