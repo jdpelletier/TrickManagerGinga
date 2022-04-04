@@ -145,7 +145,7 @@ class FitsViewer(QtGui.QMainWindow):
         viewer_hbox = QtGui.QHBoxLayout()
         viewer_hbox.setObjectName("viewer_hbox")
         w = fi.get_widget()
-        w.setMinimumSize(QtCore.QSize(240, 240))
+        w.setMinimumSize(QtCore.QSize(240, 250))
         viewer_hbox.addWidget(w)
         hw = QtGui.QWidget()
         hw.setLayout(viewer_hbox)
@@ -301,7 +301,7 @@ class FitsViewer(QtGui.QMainWindow):
         try:
             # We report the value across the pixel, even though the coords
             # change halfway across the pixel
-            value = viewer.get_data(int(data_x + 1.5), int(data_y + 1.5))
+            value = viewer.get_data(int(data_x + 0.5), int(data_y + 0.5))
 
         except Exception:
             value = None
@@ -327,7 +327,7 @@ class FitsViewer(QtGui.QMainWindow):
             text = "X: Y:  Value:"
             self.readout.setText(text)
         else:
-            text = f"X: {int(fits_x+0.5)} Y: {int(fits_y+0.5)}  Value: {value}"
+            text = f"X: {int(fits_x+1.5)} Y: {int(fits_y+1.5)}  Value: {value}"
             self.readout.setText(text)
 
     def quit(self, *args):
@@ -462,7 +462,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
+        self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 250))
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
