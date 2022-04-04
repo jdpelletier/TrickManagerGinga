@@ -168,7 +168,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.roi_info.setObjectName("roi_info")
         roi_hbox.addWidget(self.roi_info)
         self.box_readout = QtGui.QLabel("Amplitude:                  FWHM: ")
-        self.box_readout.setMinimumSize(QtCore.QSize(350, 0))
+        self.box_readout.setMinimumSize(QtCore.QSize(200, 0))
         self.box_readout.setObjectName("box_readout")
         self.box_readout.setVisible(False)
         roi_hbox.addWidget(self.box_readout)
