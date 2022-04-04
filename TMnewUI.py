@@ -145,7 +145,7 @@ class FitsViewer(QtGui.QMainWindow):
         viewer_hbox = QtGui.QHBoxLayout()
         viewer_hbox.setObjectName("viewer_hbox")
         w = fi.get_widget()
-        # w.setMinimumSize(QtCore.QSize(240, 240))
+        w.setMinimumSize(QtCore.QSize(240, 240))
         viewer_hbox.addWidget(w)
         hw = QtGui.QWidget()
         hw.setLayout(viewer_hbox)
@@ -408,7 +408,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.resize(300, 300)
+        self.resize(250, 300)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
