@@ -411,7 +411,8 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        # self.resize(250, 300)
+        self.fitsimage.center_image()
+        self.resize(250, 300)
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
