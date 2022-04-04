@@ -419,7 +419,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         image = []
 
-        for(i in range(1, size+1):
+        for i in range(1, size+1):
             row = []
             for k in range(1, size+1):
                 row.append(dct[(i*(size))+k])
