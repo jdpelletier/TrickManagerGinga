@@ -138,7 +138,6 @@ class FitsViewer(QtGui.QMainWindow):
         vid_roi_hbox.setObjectName("vid_roi_hbox")
         self.roi_info_vid = QtGui.QLabel("ROI: ")
         self.roi_info_vid.setObjectName("roi_info")
-        self.roi_info_vid.setMaximumSize(QtCore.QSize(0, 10))
         vid_roi_hbox.addWidget(self.roi_info_vid)
         hw = QtGui.QWidget()
         hw.setLayout(vid_roi_hbox)
@@ -271,7 +270,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         vw = QtGui.QWidget()
         self.setCentralWidget(vw)
-        vw.setLayout(vbox)
+        vw.setLayout(vbox, spacing=0)
 
         fi.set_callback('cursor-changed', self.motion_cb)
         fi.add_callback('cursor-down', self.btndown)
