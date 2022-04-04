@@ -147,6 +147,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.readout = QtGui.QLabel("X:                 Y:                    Value:")
         self.readout.setObjectName("readout")
         readout_hbox.addWidget(self.readout)
+        self.roi_info_vid = QtGui.QLabel("ROI: ")
+        self.roi_info_vid.setObjectName("roi_info")
+        readout_hbox.addWidget(self.roi_info_vid)
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
@@ -164,9 +167,10 @@ class FitsViewer(QtGui.QMainWindow):
         vbox.addWidget(hw)
         roi_hbox = QtGui.QHBoxLayout()
         roi_hbox.setObjectName("roi_hbox")
-        self.roi_info = QtGui.QLabel("ROI: ")
-        self.roi_info.setObjectName("roi_info")
-        roi_hbox.addWidget(self.roi_info)
+        self.roi_info_ff = QtGui.QLabel("ROI: ")
+        self.roi_info_ff.setObjectName("roi_info")
+        roi_hbox.addWidget(self.roi_info_ff)
+        self.roi_info_ff.setVisible(False)
         self.box_readout = QtGui.QLabel("Amplitude:                  FWHM: ")
         self.box_readout.setMinimumSize(QtCore.QSize(200, 0))
         self.box_readout.setObjectName("box_readout")
@@ -430,6 +434,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
+        self.roi_info_vid.setVisiable(False)
+        self.roi_info_ff.setVisiable(True)
         self.wcolor.setVisible(True)
         self.wcut.setVisible(True)
         self.wsky.setVisible(True)
@@ -643,7 +649,8 @@ class FitsViewer(QtGui.QMainWindow):
         right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
         up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
         down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        self.roi_info.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())}")
+        self.roi_info_ff.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())}")
+        self.roi_info_vid.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())}")
         return left, right, up, down
 
     def nightpath(self):
