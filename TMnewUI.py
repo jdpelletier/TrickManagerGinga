@@ -263,6 +263,7 @@ class FitsViewer(QtGui.QMainWindow):
         buttons_vbox_right.addWidget(self.wquit)
         hw = QtGui.QWidget()
         hw.setLayout(buttons_vbox_right)
+        buttons_hbox.setSpacing(0)
         buttons_hbox.addWidget(hw)
         hw = QtGui.QWidget()
         hw.setLayout(buttons_hbox)
