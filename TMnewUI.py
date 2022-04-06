@@ -739,8 +739,8 @@ class FitsViewer(QtGui.QMainWindow):
         right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
         up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
         down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        self.roi_info_ff.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())}")
-        self.roi_info_vid.setText(f"ROI: {str(self.trickxpos.read())} {str(self.trickypos.read())}")
+        self.roi_info_ff.setText(f"ROI: {str(self.trickxpos.read()) + 8} {str(self.trickypos.read()) + 8}")
+        self.roi_info_vid.setText(f"ROI: {str(self.trickxpos.read()) + 8} {str(self.trickypos.read()) + 8}")
         return left, right, up, down
 
     def nightpath(self):
@@ -881,17 +881,15 @@ class FitsViewer(QtGui.QMainWindow):
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            x = float(self.trickxpos.read()) - (float(self.trickxsize.read())/2.0 - self.xclick)
-            y = float(self.trickypos.read()) - (float(self.trickysize.read())/2.0 - float(self.yclick))
-            self.trickxpos.write(x)
-            self.trickypos.write(y)
-            # self.trkenapx.write(0)
-            # self.trkfpspx.write('Passive')
-            self.trkstop.write(1)
-            time.sleep(1)
-            # self.trkfpspx.write('1 second')
-            # self.trkenapx.write(1)
-            self.trkstsx.write(1)
+            xroi = float(self.trickxpos.read()) - (float(self.trickxsize.read())/2.0 - self.xclick)
+            yroi = float(self.trickypos.read()) - (float(self.trickysize.read())/2.0 - float(self.yclick))
+            self.trickxpos.write(xroi)
+            self.trickypos.write(yroi)
+            distcoeff = np.zeros(20)
+            rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
+            for idx,row in enumerate(rows):
+                distcoeff[idx] = float(row[0][5:])
+            self.trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None)
         else:
             self.wsetroi.setEnabled(True)
             self.pickstar(self.fitsimage)
