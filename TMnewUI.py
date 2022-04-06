@@ -413,6 +413,7 @@ class FitsViewer(QtGui.QMainWindow):
     def display_video(self, file_callback):
         while self.video:
             file_callback.emit(self.roipixels)
+            left, right, up, down = self.getROI()
             time.sleep(1)
 
     def show_images(self, pix):
@@ -424,19 +425,9 @@ class FitsViewer(QtGui.QMainWindow):
 
     def pixels_to_image(self, pix):
         lst = str(pix).strip().replace(':', '').split()
-        dct = {int(lst[i]): float(lst[i + 1]) for i in range(0, len(lst), 2)}
-        size = int(math.sqrt(len(dct)))
-
-        image = []
-
-        for i in range(size):
-            row = []
-            for k in range(size):
-                row.append(dct[(i*(size-1))+k])
-            image.append(row)
-
-        image = np.array(image)
-
+        pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        dims = int(np.sqrt(pixelvalues.shape))
+        image = np.reshape(pixelvalues,(dims,dims))
         return(image)
 
     def full_frame_mode(self):
