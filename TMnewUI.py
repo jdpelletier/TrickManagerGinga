@@ -433,14 +433,12 @@ class FitsViewer(QtGui.QMainWindow):
         dims = int(np.sqrt(pixelvalues.shape))
         image = np.reshape(pixelvalues,(dims,dims))
         lst_ff = str(ff).strip().replace(':', '').split()
-        pixelvalues_ff = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
-        dims_ff = int(np.sqrt(pixelvalues.shape))
-        ff = np.reshape(pixelvalues,(dims,dims))
+        pixelvalues_ff = np.array(lst_ff[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        ff = np.reshape(pixelvalues_ff,(dims,dims))
         lst_bg = str(pix).strip().replace(':', '').split()
-        pixelvalues_bg = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
-        dims_bg = int(np.sqrt(pixelvalues.shape))
-        bg = np.reshape(pixelvalues,(dims,dims))
-        new_image = (image*ff) - bg
+        pixelvalues_bg = np.array(lst_bg[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        bg = np.reshape(pixelvalues_bg,(dims,dims))
+        new_image = image * ff - bg
         return(new_image)
 
     def full_frame_mode(self):
