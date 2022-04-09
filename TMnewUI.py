@@ -260,7 +260,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.winittrick = QtGui.QPushButton("Init Trick")
         self.winittrick.setObjectName("winittrick")
         self.winittrick.clicked.connect(self.init_trick)
-        buttons_vbox_right.addWidget(self.winittrick)
+        # buttons_vbox_right.addWidget(self.winittrick)
         self.wreboottrick = QtGui.QPushButton("Reboot Trick")
         self.wreboottrick.setObjectName("wreboottrick")
         self.wreboottrick.clicked.connect(self.reboot_trick)
@@ -425,7 +425,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
         self.fitsimage.center_image()
-        self.resize(240, 350)
+        self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
         lst = str(pix).strip().replace(':', '').split()
