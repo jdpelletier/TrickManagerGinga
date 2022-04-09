@@ -51,7 +51,7 @@ class Scanner(QtCore.QRunnable):
         self.fn(*self.args, **self.kwargs)
 
 class VideoSignals(QtCore.QObject):
-    load = QtCore.Signal(pix, ff, bg)
+    load = QtCore.Signal(object, object, object)
 
 class Video(QtCore.QRunnable):
     '''
