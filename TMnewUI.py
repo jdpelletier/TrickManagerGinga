@@ -429,14 +429,14 @@ class FitsViewer(QtGui.QMainWindow):
 
     def pixels_to_image(self, pix, ff, bg):
         lst = str(pix).strip().replace(':', '').split()
+        lst_ff = str(ff).strip().replace(':', '').split()
+        lst_bg = str(bg).strip().replace(':', '').split()
         pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        pixelvalues_ff = np.array(lst_ff[1::2],dtype=float)
+        pixelvalues_bg = np.array(lst_bg[1::2],dtype=float)
         dims = int(np.sqrt(pixelvalues.shape))
         image = np.reshape(pixelvalues,(dims,dims))
-        lst_ff = str(ff).strip().replace(':', '').split()
-        pixelvalues_ff = np.array(lst_ff[1::2],dtype=float) # take every second value, since the first value is the pixel number
         ff = np.reshape(pixelvalues_ff,(dims,dims))
-        lst_bg = str(bg).strip().replace(':', '').split()
-        pixelvalues_bg = np.array(lst_bg[1::2],dtype=float) # take every second value, since the first value is the pixel number
         bg = np.reshape(pixelvalues_bg,(dims,dims))
         new_image = image * ff - bg
         return(new_image)
