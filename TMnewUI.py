@@ -290,6 +290,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         fi.set_callback('cursor-changed', self.motion_cb)
         fi.add_callback('cursor-down', self.btndown)
+        fi.set_limits(((1,-0.5), (14,15.5)),coord='data')
 
         self.recdc, self.compdc = self.add_canvas()
         self.boxtag = "roi-box"
@@ -425,8 +426,6 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix, ff, bg)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
-        # self.fitsimage.set_pan(8, 7, coord='data', no_reset=False)
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
@@ -450,6 +449,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.clear()
         self.resize(500, 700)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(512, 512))
+        self.fitsimage.reset_limits()
         self.readout.setMinimumSize(QtCore.QSize(240, 0))
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
@@ -477,6 +477,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 250))
+        self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
