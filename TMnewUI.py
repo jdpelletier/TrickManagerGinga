@@ -217,7 +217,7 @@ class FitsViewer(QtGui.QMainWindow):
         buttons_hbox.addWidget(hw)
         buttons_vbox_mid = QtGui.QVBoxLayout()
         buttons_vbox_mid.setObjectName("buttons_vbox_mid")
-        self.wfullframemode = QtGui.QPushButton("FF Mode")
+        self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
         self.wfullframemode.setObjectName("wfullframemode")
         self.wfullframemode.clicked.connect(self.full_frame_mode)
         buttons_vbox_mid.addWidget(self.wfullframemode)
