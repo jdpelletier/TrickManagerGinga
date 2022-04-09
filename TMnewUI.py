@@ -440,9 +440,8 @@ class FitsViewer(QtGui.QMainWindow):
         pixelvalues_bg = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
         dims_bg = int(np.sqrt(pixelvalues.shape))
         bg = np.reshape(pixelvalues,(dims,dims))
-        image = image*ff
-        image = image-bg
-        return(image)
+        new_image = (image*ff) - bg
+        return(new_image)
 
     def full_frame_mode(self):
         self.wfullframemode.setVisible(False)
