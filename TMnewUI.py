@@ -261,7 +261,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.winittrick.setObjectName("winittrick")
         self.winittrick.clicked.connect(self.init_trick)
         buttons_vbox_right.addWidget(self.winittrick)
-        self.wreboottrick = QtGui.QPushButton("Reboot Trick")
+        self.wreboottrick = QtGui.QPushButton("Reboot")
         self.wreboottrick.setObjectName("wreboottrick")
         self.wreboottrick.clicked.connect(self.reboot_trick)
         buttons_vbox_right.addWidget(self.wreboottrick)
