@@ -424,7 +424,8 @@ class FitsViewer(QtGui.QMainWindow):
         image = self.pixels_to_image(pix, ff, bg)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.fitsimage.set_pan(8, 7, coord='data', no_reset=False)
+        self.fitsimage.set_limits((1, 16),coord='data')
+        # self.fitsimage.set_pan(8, 7, coord='data', no_reset=False)
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
