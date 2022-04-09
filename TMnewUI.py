@@ -449,7 +449,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.clear()
         self.resize(500, 700)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(512, 512))
-        self.fitsimage.reset_limits()
+        self.fitsimage.set_limits(None)
         self.readout.setMinimumSize(QtCore.QSize(240, 0))
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
