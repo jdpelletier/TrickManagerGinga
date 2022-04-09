@@ -427,7 +427,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.center_image()
         self.resize(250, 300)
 
-    def pixels_to_image(self, pix):
+    def pixels_to_image(self, pix, ff, bg):
         lst = str(pix).strip().replace(':', '').split()
         pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
         dims = int(np.sqrt(pixelvalues.shape))
