@@ -103,8 +103,12 @@ class FitsViewer(QtGui.QMainWindow):
         self.getaokw = ktl.cache('tds', 'GETAOKW')
         self.go = ktl.cache('tds', 'GO')
         self.progress = ktl.cache('tds', 'progress')
-        self.roipixels = ktl.cache('ao', 'TRKRO1PX')
-        self.roipixels.monitor()
+        self.trkro1px = ktl.cache('ao', 'TRKRO1PX')
+        self.trkro1px.monitor()
+        self.trkro1ff = ktl.cache('ao', 'TRKRO1FF')
+        self.trkro1ff.monitor()
+        self.trkro1bg = ktl.cache('ao', 'TRKRO1BG')
+        self.trkro1bg.monitor()
         self.cyclespr = ktl.cache('tds', 'cyclespr')
         self.trkstop = ktl.cache('trick', 'trkstop')
         self.trkstsx = ktl.cache('trick', 'trkstsx')
@@ -412,12 +416,12 @@ class FitsViewer(QtGui.QMainWindow):
 
     def display_video(self, file_callback):
         while self.video:
-            file_callback.emit(self.roipixels)
+            file_callback.emit(self.trkro1px, self.trkro1ff, self.trkro1bg)
             left, right, up, down = self.getROI()
             time.sleep(1)
 
-    def show_images(self, pix):
-        image = self.pixels_to_image(pix)
+    def show_images(self, pix, ff, bg):
+        image = self.pixels_to_image(pix, ff, bg)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
         self.fitsimage.center_image()
@@ -428,6 +432,16 @@ class FitsViewer(QtGui.QMainWindow):
         pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
         dims = int(np.sqrt(pixelvalues.shape))
         image = np.reshape(pixelvalues,(dims,dims))
+        lst_ff = str(ff).strip().replace(':', '').split()
+        pixelvalues_ff = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        dims_ff = int(np.sqrt(pixelvalues.shape))
+        ff = np.reshape(pixelvalues,(dims,dims))
+        lst_bg = str(pix).strip().replace(':', '').split()
+        pixelvalues_bg = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        dims_bg = int(np.sqrt(pixelvalues.shape))
+        bg = np.reshape(pixelvalues,(dims,dims))
+        image = image*ff
+        image = image-bg
         return(image)
 
     def full_frame_mode(self):
