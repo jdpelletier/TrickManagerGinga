@@ -194,7 +194,7 @@ class FitsViewer(QtGui.QMainWindow):
         filter_hbox.addWidget(self.wchangefilter)
         self.winitfilter = QtGui.QPushButton("Init Wheel")
         self.winitfilter.setObjectName("winitfilter")
-        self.wchangefilter.clicked.connect(self.init_filter)
+        self.winitfilter.clicked.connect(self.init_filter)
         filter_hbox.addWidget(self.winitfilter)
         hw = QtGui.QWidget()
         hw.setLayout(filter_hbox)
