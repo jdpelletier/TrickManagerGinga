@@ -162,6 +162,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.readout = QtGui.QLabel("X:                 Y:                    Value:")
         self.readout.setObjectName("readout")
         readout_hbox.addWidget(self.readout)
+        self.wdesaturate = QtGui.QPushButton("Desaturate")
+        self.wdesaturate.setObjectName("wdesaturate")
+        self.wdesaturate.clicked.connect(self.desaturate)
+        readout_hbox.addWidget(self.wdesaturate)
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
@@ -371,7 +375,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.threadpool = False
         QtGui.QApplication.instance().quit()
 
-    ##TODO verify init trick, restart video, stop video, reboot trick, change_filter
+    ##TODO verify init trick, restart video, stop video, reboot trick, change_filter, desaturate
+
+    def desaturate(self):
+        print("Desaturating")
 
     def filter_popup(self):
         msg = QtGui.QMessageBox()
