@@ -183,6 +183,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.roi_info.setObjectName("roi_info")
         roi_hbox.addWidget(self.roi_info)
         self.vid_filter = QtGui.QLabel("Filter: ")
+        self.vid_filter.setContentsMargins(QtCore.QMargins(0, 0, 0, 0))
         self.vid_filter.setObjectName("vid_filter")
         roi_hbox.addWidget(self.vid_filter)
         self.wchangefilter = QtGui.QPushButton(f"{self.targname.read()}")
