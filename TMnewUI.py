@@ -375,7 +375,7 @@ class FitsViewer(QtGui.QMainWindow):
         msg.setText("Change filter to:")
         msg.setIcon(QtGui.QMessageBox.Information)
         for filter in self.trick_filters:
-            msg.addButton(QtGui.QPushButton(f"{filter}"))
+            msg.addButton(f'{filter}', QtGui.QMessageBox.YesRole)
         msg.buttonClicked.connect(self.change_filter)
         x = msg.exec_()
 
