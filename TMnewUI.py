@@ -165,6 +165,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wdesaturate = QtGui.QPushButton("Desaturate")
         self.wdesaturate.setObjectName("wdesaturate")
         self.wdesaturate.clicked.connect(self.desaturate)
+        self.wdesaturate.setContentsMargins(QtCore.QMargins(10, 2, 10, 2))
         readout_hbox.addWidget(self.wdesaturate)
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
