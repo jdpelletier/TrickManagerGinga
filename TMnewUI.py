@@ -368,6 +368,10 @@ class FitsViewer(QtGui.QMainWindow):
     ##TODO verify init trick, restart video, stop video, reboot trick, change_filter
 
     def change_filter(self):
+        msg = QtGui.QMessage()
+        msg.setWindowTitle("Change Trick Filter")
+        msg.setText("Test")
+        msg.setIcon(QMessage.Information)
         return
 
     def init_trick(self):
