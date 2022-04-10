@@ -299,7 +299,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
 
-        fi.get_canvas().add(self.crossdc(8, 8, 10, color='skyblue'))
+        fi.get_canvas().add(self.crossdc(8, 8, color='skyblue'))
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
@@ -307,7 +307,7 @@ class FitsViewer(QtGui.QMainWindow):
         RecCanvas = my_canvas.get_draw_class('rectangle')
         CompCanvas = my_canvas.get_draw_class('compass')
         CrossCanvas = my_canvas.get_draw_class('crosshair')
-        return RecCanvas, CompCanvas
+        return RecCanvas, CompCanvas, CrossCanvas
 
 
     def cut_change(self):
