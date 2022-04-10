@@ -155,7 +155,7 @@ class FitsViewer(QtGui.QMainWindow):
         hw.setLayout(vid_roi_hbox)
         vbox.addWidget(hw)
         viewer_hbox = QtGui.QHBoxLayout()
-        viewer_hbox.setContentsMargins(QtCore.QMargins(40, 2, 40, 2))
+        viewer_hbox.setContentsMargins(QtCore.QMargins(45, 2, 45, 2))
         viewer_hbox.setObjectName("viewer_hbox")
         w = fi.get_widget()
         w.setMinimumSize(QtCore.QSize(240, 240))
@@ -295,15 +295,18 @@ class FitsViewer(QtGui.QMainWindow):
         fi.add_callback('cursor-down', self.btndown)
         fi.set_limits(((1,-0.5), (14,15.5)),coord='data')
 
-        self.recdc, self.compdc = self.add_canvas()
+        self.recdc, self.compdc, self.crossdc = self.add_canvas()
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
+
+        fi.get_canvas().add(self.crossdc(8, 8, color='skyblue'))
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
         my_canvas = self.fitsimage.get_canvas()
         RecCanvas = my_canvas.get_draw_class('rectangle')
         CompCanvas = my_canvas.get_draw_class('compass')
+        CrossCanvas = my_canvas.get_draw_class('crosshair')
         return RecCanvas, CompCanvas
 
 
