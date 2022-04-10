@@ -305,7 +305,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.picktag = "pick-box"
         self.crosstag = "vid-crosshair"
 
-        fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text="", tag=self.crosstag))
+        fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
@@ -493,7 +493,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.rotate(0)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
         self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
-        self.fitsimage.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text="", tag=self.crosstag))
+        self.fitsimage.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
