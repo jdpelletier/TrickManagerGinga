@@ -303,6 +303,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.recdc, self.compdc, self.crossdc = self.add_canvas()
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
+        self.crosstag = "vid-crosshair"
 
         fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""))
 
@@ -461,6 +462,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.setVisible(True)
         self.stop_video()
         self.fitsimage.clear()
+        self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
+        self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.resize(500, 700)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(512, 512))
         self.fitsimage.set_limits(None)
@@ -490,6 +493,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.rotate(0)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
         self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
+        self.fitsimage.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""))
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
