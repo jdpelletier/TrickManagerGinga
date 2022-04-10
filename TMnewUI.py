@@ -190,7 +190,7 @@ class FitsViewer(QtGui.QMainWindow):
         filter_hbox.addWidget(self.vid_filter)
         self.wchangefilter = QtGui.QPushButton(f"{self.targname.read()}")
         self.wchangefilter.setObjectName("wchangefilter")
-        self.wchangefilter.clicked.connect(self.change_filter)
+        self.wchangefilter.clicked.connect(self.filter_popup)
         filter_hbox.addWidget(self.wchangefilter)
         hw = QtGui.QWidget()
         hw.setLayout(filter_hbox)
@@ -307,6 +307,8 @@ class FitsViewer(QtGui.QMainWindow):
 
         fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
 
+        self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
+
     def add_canvas(self, tag=None):
         # add a canvas to the view
         my_canvas = self.fitsimage.get_canvas()
@@ -367,12 +369,18 @@ class FitsViewer(QtGui.QMainWindow):
 
     ##TODO verify init trick, restart video, stop video, reboot trick, change_filter
 
-    def change_filter(self):
+    def filter_popup(self):
         msg = QtGui.QMessageBox()
         msg.setWindowTitle("Change Trick Filter")
-        msg.setText("Test")
+        msg.setText("Change filter to:")
         msg.setIcon(QtGui.QMessageBox.Information)
+        for filter in self.trick_filters:
+            msgbox.addButton(QtGui.QPushButton(f"{filter}"))
+        msg.buttonClicked.connect(self.change_filter)
         x = msg.exec_()
+
+    def change_filter(self, button):
+        print(button.text())
 
     def init_trick(self):
         print("Initing TRICK")
