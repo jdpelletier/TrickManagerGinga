@@ -182,6 +182,13 @@ class FitsViewer(QtGui.QMainWindow):
         self.roi_info = QtGui.QLabel("ROI: ")
         self.roi_info.setObjectName("roi_info")
         roi_hbox.addWidget(self.roi_info)
+        self.vid_filter = QtGui.QLabel("Filter: ")
+        self.vid_filter.setObjectName("vid_filter")
+        roi_hbox.addWidget(self.vid_filter)
+        self.wchangefilter = QtGui.QPushButton(f"{self.targname.read()}")
+        self.wchangefilter.setObjectName("wchangefilter")
+        self.wchangefilter.clicked.connect(self.change_filter)
+        roi_hbox.addWidget(self.change_filter)
         self.box_readout = QtGui.QLabel("Amplitude:                  FWHM: ")
         self.box_readout.setMinimumSize(QtCore.QSize(200, 0))
         self.box_readout.setObjectName("box_readout")
@@ -351,7 +358,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.threadpool = False
         QtGui.QApplication.instance().quit()
 
-    ##TODO verify init trick, restart video, stop video, reboot trick
+    ##TODO verify init trick, restart video, stop video, reboot trick, change_filter
+
+    def change_filter(self):
+        return
 
     def init_trick(self):
         print("Initing TRICK")
