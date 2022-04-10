@@ -299,7 +299,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
 
-        fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue'))
+        fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=None))
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
