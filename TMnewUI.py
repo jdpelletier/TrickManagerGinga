@@ -121,6 +121,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.tkcrevyo = ktl.cache('ao','tkcrevyo')
         self.tkcxim = ktl.cache('ao','tkcxim')
         self.tkcyim = ktl.cache('ao','tkcyim')
+        self.targname = ktl.cache('tfs', 'TARGNAME')
 
         self.rawfile = ''
         self.mode = ''
@@ -146,14 +147,6 @@ class FitsViewer(QtGui.QMainWindow):
         vbox = QtGui.QVBoxLayout()
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setObjectName("vbox")
-        vid_roi_hbox = QtGui.QHBoxLayout()
-        vid_roi_hbox.setObjectName("vid_roi_hbox")
-        self.roi_info_vid = QtGui.QLabel("ROI: ")
-        self.roi_info_vid.setObjectName("roi_info")
-        vid_roi_hbox.addWidget(self.roi_info_vid)
-        hw = QtGui.QWidget()
-        hw.setLayout(vid_roi_hbox)
-        vbox.addWidget(hw)
         viewer_hbox = QtGui.QHBoxLayout()
         viewer_hbox.setContentsMargins(QtCore.QMargins(48, 2, 48, 2))
         viewer_hbox.setObjectName("viewer_hbox")
@@ -186,10 +179,9 @@ class FitsViewer(QtGui.QMainWindow):
         vbox.addWidget(hw)
         roi_hbox = QtGui.QHBoxLayout()
         roi_hbox.setObjectName("roi_hbox")
-        self.roi_info_ff = QtGui.QLabel("ROI: ")
-        self.roi_info_ff.setObjectName("roi_info")
-        roi_hbox.addWidget(self.roi_info_ff)
-        self.roi_info_ff.setVisible(False)
+        self.roi_info = QtGui.QLabel("ROI: ")
+        self.roi_info.setObjectName("roi_info")
+        roi_hbox.addWidget(self.roi_info)
         self.box_readout = QtGui.QLabel("Amplitude:                  FWHM: ")
         self.box_readout.setMinimumSize(QtCore.QSize(200, 0))
         self.box_readout.setObjectName("box_readout")
@@ -461,8 +453,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
-        self.roi_info_vid.setVisible(False)
-        self.roi_info_ff.setVisible(True)
         self.wcolor.setVisible(True)
         self.wcut.setVisible(True)
         self.wsky.setVisible(True)
@@ -759,8 +749,7 @@ class FitsViewer(QtGui.QMainWindow):
         right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
         up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
         down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        self.roi_info_ff.setText(f"ROI: {int(self.trickxpos.read()) + 8} {int(self.trickypos.read()) + 8}")
-        self.roi_info_vid.setText(f"ROI: {int(self.trickxpos.read()) + 8} {int(self.trickypos.read()) + 8}")
+        self.roi_info.setText(f"ROI: {int(self.trickxpos.read()) + 8} {int(self.trickypos.read()) + 8}")
         return left, right, up, down
 
     def nightpath(self):
