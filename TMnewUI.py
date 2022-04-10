@@ -371,7 +371,7 @@ class FitsViewer(QtGui.QMainWindow):
         msg = QtGui.QMessageBox()
         msg.setWindowTitle("Change Trick Filter")
         msg.setText("Test")
-        msg.setIcon(QMessageBox.Information)
+        msg.setIcon(QtGui.QMessageBox.Information)
         return
 
     def init_trick(self):
