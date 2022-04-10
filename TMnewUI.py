@@ -201,7 +201,7 @@ class FitsViewer(QtGui.QMainWindow):
         buttons_hbox = QtGui.QHBoxLayout()
         buttons_hbox.setObjectName("buttons_hbox")
         buttons_vbox_left = QtGui.QVBoxLayout()
-        buttons_vbox_left.setContentsMargins(QtCore.QMargins(0, 0, 0, 0))
+        buttons_vbox_left.setContentsMargins(QtCore.QMargins(0, 0, 10, 0))
         buttons_vbox_left.setObjectName("buttons_vbox_left")
         self.wtakeff = QtGui.QPushButton("Take Full Frame")
         self.wtakeff.setObjectName("wtakeff")
