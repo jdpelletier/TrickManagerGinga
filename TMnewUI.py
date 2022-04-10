@@ -192,6 +192,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.wchangefilter.setObjectName("wchangefilter")
         self.wchangefilter.clicked.connect(self.filter_popup)
         filter_hbox.addWidget(self.wchangefilter)
+        self.winitfilter = QtGui.QPushButton("Init Wheel")
+        self.winitfilter.setObjectName("winitfilter")
+        self.wchangefilter.clicked.connect(self.init_filter)
+        filter_hbox.addWidget(self.winitfilter)
         hw = QtGui.QWidget()
         hw.setLayout(filter_hbox)
         roi_hbox.addWidget(hw)
@@ -381,6 +385,9 @@ class FitsViewer(QtGui.QMainWindow):
 
     def change_filter(self, button):
         print(button.text())
+
+    def init_filter(self):
+        print("Initing filter")
 
     def init_trick(self):
         print("Initing TRICK")
