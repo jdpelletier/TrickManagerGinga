@@ -155,7 +155,7 @@ class FitsViewer(QtGui.QMainWindow):
         hw.setLayout(vid_roi_hbox)
         vbox.addWidget(hw)
         viewer_hbox = QtGui.QHBoxLayout()
-        viewer_hbox.setContentsMargins(QtCore.QMargins(45, 2, 45, 2))
+        viewer_hbox.setContentsMargins(QtCore.QMargins(50, 2, 50, 2))
         viewer_hbox.setObjectName("viewer_hbox")
         w = fi.get_widget()
         w.setMinimumSize(QtCore.QSize(240, 240))
@@ -299,7 +299,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
 
-        fi.get_canvas().add(self.crossdc(8, 8, color='skyblue'))
+        fi.get_canvas().add(self.crossdc(6.5, 6.5, color='skyblue'))
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
