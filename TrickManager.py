@@ -963,6 +963,15 @@ class FitsViewer(QtGui.QMainWindow):
             for idx,row in enumerate(rows):
                 distcoeff[idx] = float(row[0][5:])
             self.trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None)
+            if self.ops == "MGAO":
+                self.trkenapx.write(0)
+                self.trkfpspx.write('Passive')
+            self.trkstop.write(1)
+            time.sleep(1)
+            if self.ops == "MGAO":
+                self.trkfpspx.write('1 second')
+                self.trkenapx.write(1)
+            self.trkstsx.write(1)
         else:
             self.wsetroi.setEnabled(True)
             self.pickstar(self.fitsimage)
