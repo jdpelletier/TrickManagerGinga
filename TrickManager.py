@@ -3,6 +3,8 @@ from os import listdir
 from os.path import abspath, isfile, join
 from pathlib import Path
 import datetime
+import csv
+import copy
 
 import numpy as np
 from astropy.io import fits
@@ -49,7 +51,7 @@ class Scanner(QtCore.QRunnable):
         self.fn(*self.args, **self.kwargs)
 
 class VideoSignals(QtCore.QObject):
-    load = QtCore.Signal(object)
+    load = QtCore.Signal(object, object, object)
 
 class Video(QtCore.QRunnable):
     '''
@@ -83,6 +85,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.cachedFiles = None
         self.video = False
+        self.ops = "MGAO" #set mode to MGAO by default, then checks for missing keywords
         #KTL stuff
         #Cache KTL keywords
         self.trickxpos = ktl.cache('tds', 'TRKRO1X')
@@ -101,13 +104,30 @@ class FitsViewer(QtGui.QMainWindow):
         self.getaokw = ktl.cache('tds', 'GETAOKW')
         self.go = ktl.cache('tds', 'GO')
         self.progress = ktl.cache('tds', 'progress')
-        self.roipixels = ktl.cache('ao', 'TRKRO1PX')
-        self.roipixels.monitor()
+        self.trkro1px = ktl.cache('ao', 'TRKRO1PX')
+        self.trkro1px.monitor()
+        self.trkro1ff = ktl.cache('ao', 'TRKRO1FF')
+        self.trkro1ff.monitor()
+        self.trkro1bg = ktl.cache('ao', 'TRKRO1BG')
+        self.trkro1bg.monitor()
         self.cyclespr = ktl.cache('tds', 'cyclespr')
-        # self.trkenapx = ktl.cache('ao', 'trkenapx')
-        # self.trkfpspx = ktl.cache('ao', 'trkfpspx')
+        try:
+            self.trkenapx = ktl.cache('ao', 'trkenapx')
+            self.trkfpspx = ktl.cache('ao', 'trkfpspx')
+        except KeyError:
+            self.ops = "RTC"
         self.trkstop = ktl.cache('trick', 'trkstop')
         self.trkstsx = ktl.cache('trick', 'trkstsx')
+        self.tkenrup = ktl.cache('ao', 'tkenrup')
+        self.tkcrxs = ktl.cache('ao','tkcrxs')
+        self.tkcrys = ktl.cache('ao','tkcrys')
+        self.tkcrevxp = ktl.cache('ao','tkcrevxp')
+        self.tkcrevyp = ktl.cache('ao','tkcrevyp')
+        self.tkcrevxo = ktl.cache('ao','tkcrevxo')
+        self.tkcrevyo = ktl.cache('ao','tkcrevyo')
+        self.tkcxim = ktl.cache('ao','tkcxim')
+        self.tkcyim = ktl.cache('ao','tkcyim')
+        self.targname = ktl.cache('tfs', 'TARGNAME')
 
         self.rawfile = ''
         self.mode = ''
@@ -118,7 +138,6 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.iqcalc = iqcalc.IQCalc(self.logger)
 
-        # create the ginga viewer and configure it
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
         fi.set_autocut_params('zscale')
@@ -131,188 +150,186 @@ class FitsViewer(QtGui.QMainWindow):
         # enable some user interaction
         self.bd = fi.get_bindings()
         self.bd.enable_all(True)
-
-        w = fi.get_widget()
-        w.resize(512, 512)
-
         vbox = QtGui.QVBoxLayout()
-        vbox.setContentsMargins(QtCore.QMargins(2, 2, 2, 2))
-        vbox.setSpacing(1)
-        vbox.addWidget(w, stretch=1)
-
-        hbox = QtGui.QHBoxLayout()
-        hbox.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-
-        self.roi_info = QtGui.QLabel("")
-
-        self.image_info = QtGui.QLabel("")
-
-        self.sky_info = QtGui.QLabel("")
-
-        self.filt_info = QtGui.QLabel("")
-
-        hbox.addStretch(1)
-        hbox.addWidget(self.roi_info, stretch = 0)
-
-        text = f"ROI {self.trickxpos.read()} {self.trickypos.read()}"
-        self.roi_info.setText(text)
-
-        hbox.addStretch(1)
-        hbox.addWidget(self.image_info, stretch = 0)
-
-        text = f"Image:"
-        self.image_info.setText(text)
-        self.image_info.setVisible(False)
-
-        hbox.addStretch(1)
-        hbox.addWidget(self.filt_info, stretch = 0)
-
-        text = f"Filter:"
-        self.filt_info.setText(text)
-        self.filt_info.setVisible(False)
-
-        hbox.addStretch(1)
-        hbox.addWidget(self.sky_info, stretch = 0)
-
-        text = f"Sky:"
-        self.sky_info.setText(text)
-        self.sky_info.setVisible(False)
-
+        vbox.setContentsMargins(0, 0, 0, 0)
+        vbox.setObjectName("vbox")
+        viewer_hbox = QtGui.QHBoxLayout()
+        viewer_hbox.setContentsMargins(QtCore.QMargins(48, 10, 48, 2))
+        viewer_hbox.setObjectName("viewer_hbox")
+        w = fi.get_widget()
+        w.setMinimumSize(QtCore.QSize(240, 240))
+        viewer_hbox.addWidget(w, stretch=1)
         hw = QtGui.QWidget()
-        hw.setLayout(hbox)
-        vbox.addWidget(hw, stretch=0)
-
-        hbox2 = QtGui.QHBoxLayout()
-        hbox2.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-
-        self.readout = QtGui.QLabel("")
-
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.readout, stretch = 0)
-
-        self.box_readout = QtGui.QLabel("")
-
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.box_readout, stretch = 0)
-
-        hw = QtGui.QWidget()
-        hw.setLayout(hbox)
-        vbox.addWidget(hw, stretch=0)
-
-        hbox2 = QtGui.QHBoxLayout()
-        hbox2.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-
-        self.readout = QtGui.QLabel("")
-
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.readout, stretch = 0)
-
+        hw.setLayout(viewer_hbox)
+        vbox.addWidget(hw)
+        readout_hbox = QtGui.QHBoxLayout()
+        readout_hbox.setObjectName("readout_hbox")
+        self.readout = QtGui.QLabel("X:                 Y:                    Value:")
+        self.readout.setObjectName("readout")
+        readout_hbox.addWidget(self.readout)
+        self.wdesaturate = QtGui.QPushButton("Desaturate")
+        self.wdesaturate.setObjectName("wdesaturate")
+        self.wdesaturate.setMaximumSize(QtCore.QSize(100, 100))
+        self.wdesaturate.clicked.connect(self.desaturate)
+        readout_hbox.addWidget(self.wdesaturate)
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
         self.wcut.currentIndexChanged.connect(self.cut_change)
+        readout_hbox.addWidget(self.wcut)
+        self.wcut.setVisible(False)
         self.wcolor = QtGui.QComboBox()
         for name in fi.get_color_algorithms():
             self.wcolor.addItem(name)
         self.wcolor.currentIndexChanged.connect(self.color_change)
-        hbox2.addStretch(1)
-
-        for w in (self.wcut, self.wcolor):
-            hbox2.addWidget(w, stretch=0)
-
-        hw2 = QtGui.QWidget()
-        hw2.setLayout(hbox2)
-        vbox.addWidget(hw2, stretch=0)
-
-        hbox3 = QtGui.QHBoxLayout()
-        hbox3.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-        ##Video Mode
-        self.winittrick = QtGui.QPushButton("Init Trick")
-        self.winittrick.clicked.connect(self.init_trick)
-        self.wrestartvideo = QtGui.QPushButton("Restart Video")
-        self.wrestartvideo.clicked.connect(self.restart_video)
-        # self.wrestartvideo.setEnabled(False)
-        self.wreboottrick = QtGui.QPushButton("Reboot Trick")
-        self.wreboottrick.clicked.connect(self.reboot_trick)
-        ##FF mode
-        self.wopen = QtGui.QPushButton("Open File")
-        self.wopen.clicked.connect(self.open_file)
-        self.wopen.setVisible(False)
-        self.wsky = QtGui.QPushButton("Load Sky")
-        self.wsky.clicked.connect(self.load_sky)
-        self.wsky.setEnabled(False)
-        self.wsky.setVisible(False)
-        self.wsky.setGeometry(QtCore.QRect(330, 610, 93, 28))
+        readout_hbox.addWidget(self.wcolor)
+        self.wcolor.setVisible(False)
+        hw = QtGui.QWidget()
+        hw.setLayout(readout_hbox)
+        vbox.addWidget(hw)
+        roi_hbox = QtGui.QHBoxLayout()
+        roi_hbox.setObjectName("roi_hbox")
+        roi_hbox.setContentsMargins(QtCore.QMargins(10, 0, 10, 0))
+        self.roi_info = QtGui.QLabel("ROI: ")
+        self.roi_info.setObjectName("roi_info")
+        roi_hbox.addWidget(self.roi_info)
+        filter_hbox = QtGui.QHBoxLayout()
+        filter_hbox.setObjectName("roi_hbox")
+        self.vid_filter = QtGui.QLabel("Filter: ")
+        self.vid_filter.setObjectName("vid_filter")
+        filter_hbox.addWidget(self.vid_filter)
+        self.wchangefilter = QtGui.QPushButton(f"{self.targname.read()}")
+        self.wchangefilter.setObjectName("wchangefilter")
+        self.wchangefilter.clicked.connect(self.filter_popup)
+        filter_hbox.addWidget(self.wchangefilter)
+        self.winitfilter = QtGui.QPushButton("Init Wheel")
+        self.winitfilter.setObjectName("winitfilter")
+        self.winitfilter.clicked.connect(self.init_filter)
+        filter_hbox.addWidget(self.winitfilter)
+        hw = QtGui.QWidget()
+        hw.setLayout(filter_hbox)
+        roi_hbox.addWidget(hw)
+        self.box_readout = QtGui.QLabel("Amplitude:                  FWHM: ")
+        self.box_readout.setMinimumSize(QtCore.QSize(200, 0))
+        self.box_readout.setObjectName("box_readout")
+        self.box_readout.setVisible(False)
+        roi_hbox.addWidget(self.box_readout)
+        hw = QtGui.QWidget()
+        hw.setLayout(roi_hbox)
+        vbox.addWidget(hw)
+        buttons_hbox = QtGui.QHBoxLayout()
+        buttons_hbox.setObjectName("buttons_hbox")
+        buttons_vbox_left = QtGui.QVBoxLayout()
+        buttons_vbox_left.setContentsMargins(QtCore.QMargins(0, 0, 10, 0))
+        buttons_vbox_left.setObjectName("buttons_vbox_left")
         self.wtakeff = QtGui.QPushButton("Take Full Frame")
+        self.wtakeff.setObjectName("wtakeff")
         self.wtakeff.clicked.connect(self.take_ff)
         self.wtakeff.setVisible(False)
-        self.wsetroi = QtGui.QPushButton("Set ROI")
-        self.wsetroi.clicked.connect(self.set_roi)
-        self.wsetroi.setEnabled(False)
-        self.wsetroi.setVisible(False)
-        fi.set_callback('cursor-changed', self.motion_cb)
-        fi.add_callback('cursor-down', self.btndown)
-        hbox3.addStretch(1)
-        for w in (self.winittrick, self.wrestartvideo, self.wreboottrick,
-                  self.wopen, self.wsky, self.wtakeff, self.wsetroi):
-            hbox3.addWidget(w, stretch=0)
-
-        hw3 = QtGui.QWidget()
-        hw3.setLayout(hbox3)
-        vbox.addWidget(hw3, stretch=0)
-
-        hbox4 = QtGui.QHBoxLayout()
-        hbox4.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-        self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
-        self.wfullframemode.clicked.connect(self.full_frame_mode)
-        #TODO disable this button after init testing
-        # self.wfullframemode.setEnabled(False)
+        buttons_vbox_left.addWidget(self.wtakeff)
         self.wvideomode = QtGui.QPushButton("Video Mode")
+        self.wvideomode.setObjectName("wvideomode")
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setVisible(False)
-        hbox4.addStretch(1)
-        for w in (self.wfullframemode, self.wvideomode):
-            hbox4.addWidget(w, stretch=0)
-
-        hw4 = QtGui.QWidget()
-        hw4.setLayout(hbox4)
-        vbox.addWidget(hw4, stretch=0)
-
-        hbox5 = QtGui.QHBoxLayout()
-        hbox5.setContentsMargins(QtCore.QMargins(4, 2, 4, 2))
-        #TODO remove this after other stuff gets tested
-        self.wstartvideo = QtGui.QPushButton("Start Video")
-        self.wstartvideo.clicked.connect(self.start_video)
-        self.wstopvideo = QtGui.QPushButton("Stop Video")
-        self.wstopvideo.clicked.connect(self.stop_video)
-        self.wstopvideo.setVisible(False)
+        buttons_vbox_left.addWidget(self.wvideomode)
+        self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
+        self.wfullframemode.setObjectName("wfullframemode")
+        self.wfullframemode.clicked.connect(self.full_frame_mode)
+        buttons_vbox_left.addWidget(self.wfullframemode)
+        hw = QtGui.QWidget()
+        hw.setLayout(buttons_vbox_left)
+        buttons_hbox.addWidget(hw)
+        buttons_vbox_mid = QtGui.QVBoxLayout()
+        buttons_vbox_mid.setContentsMargins(QtCore.QMargins(10, 0, 0, 0))
+        buttons_vbox_mid.setObjectName("buttons_vbox_mid")
+        self.winittrick = QtGui.QPushButton("Init Trick")
+        self.winittrick.setObjectName("winittrick")
+        self.winittrick.clicked.connect(self.init_trick)
+        buttons_vbox_mid.addWidget(self.winittrick)
+        self.wreboottrick = QtGui.QPushButton("Reboot Trick")
+        self.wreboottrick.setObjectName("wreboottrick")
+        self.wreboottrick.clicked.connect(self.reboot_trick)
+        buttons_vbox_mid.addWidget(self.wreboottrick)
+        self.wsetroi = QtGui.QPushButton("Set ROI")
+        self.wsetroi.setObjectName("wsetroi")
+        self.wsetroi.clicked.connect(self.set_roi)
+        self.wsetroi.setVisible(False)
+        buttons_vbox_mid.addWidget(self.wsetroi)
+        self.wsky = QtGui.QPushButton("Load Sky")
+        self.wsky.clicked.connect(self.load_sky)
+        self.wsky.setVisible(False)
+        self.wsky.setVisible(False)
+        buttons_vbox_mid.addWidget(self.wsky)
+        hw = QtGui.QWidget()
+        hw.setLayout(buttons_vbox_mid)
+        buttons_hbox.addWidget(hw)
+        image_info_vbox = QtGui.QVBoxLayout()
+        image_info_vbox.setObjectName("image_info_vbox")
+        self.sky_info = QtGui.QLabel("Sky: ")
+        self.sky_info.setObjectName("sky_info")
+        self.sky_info.setVisible(False)
+        image_info_vbox.addWidget(self.sky_info)
+        self.filt_info = QtGui.QLabel("Filter: ")
+        self.filt_info.setObjectName("filt_info")
+        self.filt_info.setVisible(False)
+        image_info_vbox.addWidget(self.filt_info)
+        self.image_info = QtGui.QLabel("Image: ")
+        self.image_info.setMinimumSize(QtCore.QSize(175, 0))
+        self.image_info.setObjectName("image_info")
+        self.image_info.setVisible(False)
+        image_info_vbox.addWidget(self.image_info)
+        hw = QtGui.QWidget()
+        hw.setLayout(image_info_vbox)
+        buttons_hbox.addWidget(hw)
+        buttons_vbox_right = QtGui.QVBoxLayout()
+        buttons_vbox_right.setContentsMargins(QtCore.QMargins(0, 0, 0, 0))
+        buttons_vbox_right.setObjectName("buttons_vbox_right")
+        self.wopen = QtGui.QPushButton("Open File")
+        self.wopen.setObjectName("wopen")
+        self.wopen.clicked.connect(self.open_file)
+        self.wopen.setVisible(False)
+        buttons_vbox_right.addWidget(self.wopen)
+        self.wrestartvideo = QtGui.QPushButton("Restart Video")
+        self.wrestartvideo.setObjectName("wrestartvideo")
+        self.wrestartvideo.clicked.connect(self.restart_video)
+        buttons_vbox_right.addWidget(self.wrestartvideo)
         self.wquit = QtGui.QPushButton("Quit")
+        self.wquit.setObjectName("wquit")
         self.wquit.clicked.connect(self.quit)
-        hbox5.addStretch(1)
-        for w in (self.wstartvideo, self.wstopvideo, self.wquit):
-            hbox5.addWidget(w, stretch=0)
+        buttons_vbox_right.addWidget(self.wquit)
+        hw = QtGui.QWidget()
+        hw.setLayout(buttons_vbox_right)
+        buttons_hbox.setSpacing(0)
+        buttons_hbox.addWidget(hw)
+        hw = QtGui.QWidget()
+        hw.setLayout(buttons_hbox)
+        vbox.addWidget(hw)
 
-        hw5 = QtGui.QWidget()
-        hw5.setLayout(hbox5)
-        vbox.addWidget(hw5, stretch=0)
-
+        vbox.setSpacing(0)
         vw = QtGui.QWidget()
         self.setCentralWidget(vw)
         vw.setLayout(vbox)
-        self.recdc, self.compdc = self.add_canvas()
+
+        fi.set_callback('cursor-changed', self.motion_cb)
+        fi.add_callback('cursor-down', self.btndown)
+        fi.set_limits(((1,-0.5), (14,15.5)),coord='data')
+
+        self.recdc, self.compdc, self.crossdc = self.add_canvas()
         self.boxtag = "roi-box"
         self.picktag = "pick-box"
+        self.crosstag = "vid-crosshair"
 
+        fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
 
-
-
+        self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
         my_canvas = self.fitsimage.get_canvas()
         RecCanvas = my_canvas.get_draw_class('rectangle')
         CompCanvas = my_canvas.get_draw_class('compass')
-        return RecCanvas, CompCanvas
+        CrossCanvas = my_canvas.get_draw_class('crosshair')
+        return RecCanvas, CompCanvas, CrossCanvas
 
 
     def cut_change(self):
@@ -349,8 +366,12 @@ class FitsViewer(QtGui.QMainWindow):
             ra_txt = 'BAD WCS'
             dec_txt = 'BAD WCS'
 
-        text = "X: %.2f  Y: %.2f  Value: %s" % (fits_x, fits_y, value)
-        self.readout.setText(text)
+        if (fits_x+0.5 > 2048 or fits_x+0.5 <0) or (fits_y+0.5 > 2048 or fits_y+0.5 <0):
+            text = "X: Y:  Value:"
+            self.readout.setText(text)
+        else:
+            text = f"X: {int(fits_x+1.5)} Y: {int(fits_y+1.5)}  Value: {value}"
+            self.readout.setText(text)
 
     def quit(self, *args):
         self.logger.info("Attempting to shut down the application...")
@@ -358,9 +379,28 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         time.sleep(2)
         self.threadpool = False
-        self.deleteLater()
+        QtGui.QApplication.instance().quit()
 
-    ##TODO verify init trick, restart video, stop video, reboot trick
+    ##TODO verify init trick, restart video, stop video, reboot trick, change_filter, desaturate
+
+    def desaturate(self):
+        print("Desaturating")
+
+    def filter_popup(self):
+        msg = QtGui.QMessageBox()
+        msg.setWindowTitle("Change Trick Filter")
+        msg.setText("Change filter to:")
+        msg.setIcon(QtGui.QMessageBox.Information)
+        for filter in self.trick_filters:
+            msg.addButton(f'{filter}', QtGui.QMessageBox.YesRole)
+        msg.buttonClicked.connect(self.change_filter)
+        x = msg.exec_()
+
+    def change_filter(self, button):
+        print(button.text())
+
+    def init_filter(self):
+        print("Initing filter")
 
     def init_trick(self):
         print("Initing TRICK")
@@ -374,12 +414,14 @@ class FitsViewer(QtGui.QMainWindow):
         self.readmode.write(3)
         self.go.write(1)
         time.sleep(3)
-        # self.trkenapx.write(0)
-        # self.trkfpspx.write('Passive')
+        if self.ops == "MGAO":
+            self.trkenapx.write(0)
+            self.trkfpspx.write('Passive')
         self.trkstop.write(1)
         time.sleep(1)
-        # self.trkfpspx.write('1 second')
-        # self.trkenapx.write(1)
+        if self.ops == "MGAO":
+            self.trkfpspx.write('1 second')
+            self.trkenapx.write(1)
         self.trkstsx.write(1)
         self.video = True
         video = Video(self.display_video)
@@ -395,32 +437,31 @@ class FitsViewer(QtGui.QMainWindow):
         self.cdsmode.write(1)
         self.readmode.write(3)
         self.go.write(1)
-        self.trkenapx.write(0)
-        # self.trkfpspx.write('Passive')
-        # self.trkstop.write(1)
+        if self.ops == "MGAO":
+            self.trkenapx.write(0)
+            self.trkfpspx.write('Passive')
+        self.trkstop.write(1)
         time.sleep(1)
-        # self.trkfpspx.write('1 second')
-        # self.trkenapx.write(1)
+        if self.ops == "MGAO":
+            self.trkfpspx.write('1 second')
+            self.trkenapx.write(1)
         self.trkstsx.write(1)
         self.start_video()
 
 
     ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
-        self.wstartvideo.setVisible(False)
-        self.wstopvideo.setVisible(True)
         self.video = True
         print("video started")
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
+        left, right, up, down = self.getROI()
         self.threadpool.start(video)
         self.mode = 'video'
 
     #TODO make this actually stop video mode
     def stop_video(self):
         print("video stopped")
-        self.wstopvideo.setVisible(False)
-        self.wstartvideo.setVisible(True)
         self.video = False
 
     def reboot_trick(self):
@@ -428,52 +469,59 @@ class FitsViewer(QtGui.QMainWindow):
 
     def display_video(self, file_callback):
         while self.video:
-            file_callback.emit(self.roipixels)
+            file_callback.emit(self.trkro1px, self.trkro1ff, self.trkro1bg)
+            left, right, up, down = self.getROI()
             time.sleep(1)
 
-    def show_images(self, pix):
-        image = self.pixels_to_image(pix)
+    def show_images(self, pix, ff, bg):
+        image = self.pixels_to_image(pix, ff, bg)
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        self.resize(400, 400)
+        self.resize(240, 300)
 
-    def pixels_to_image(self, pix):
+    def pixels_to_image(self, pix, ff, bg):
         lst = str(pix).strip().replace(':', '').split()
-        dct = {int(lst[i]): float(lst[i + 1]) for i in range(0, len(lst), 2)}
-        size = int(math.sqrt(len(dct)))
-
-        image = []
-
-        for i in range(size):
-            row = []
-            for k in range(size):
-                row.append(dct[(i*16)+k])
-            image.append(row)
-
-        image = np.array(image)
-
-        return(image)
+        lst_ff = str(ff).strip().replace(':', '').split()
+        lst_bg = str(bg).strip().replace(':', '').split()
+        pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        pixelvalues_ff = np.array(lst_ff[1::2],dtype=float)
+        pixelvalues_bg = np.array(lst_bg[1::2],dtype=float)
+        dims = int(np.sqrt(pixelvalues.shape))
+        image = np.reshape(pixelvalues,(dims,dims))
+        ff = np.reshape(pixelvalues_ff,(dims,dims))
+        bg = np.reshape(pixelvalues_bg,(dims,dims))
+        new_image = image * ff - bg
+        return(new_image)
 
     def full_frame_mode(self):
         self.wfullframemode.setVisible(False)
         self.wvideomode.setVisible(True)
         self.stop_video()
         self.fitsimage.clear()
-        self.resize(700, 700)
-        self.wstopvideo.setVisible(False)
+        self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
+        self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
+        self.resize(500, 700)
+        self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(512, 512))
+        self.fitsimage.set_limits(None)
+        self.readout.setMinimumSize(QtCore.QSize(240, 0))
+        self.wdesaturate.setVisible(False)
+        self.vid_filter.setVisible(False)
+        self.wchangefilter.setVisible(False)
+        self.winitfilter.setVisible(False)
         self.winittrick.setVisible(False)
         self.wrestartvideo.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
-        self.wopen.setVisible(True)
+        self.wcolor.setVisible(True)
+        self.wcut.setVisible(True)
         self.wsky.setVisible(True)
         self.wtakeff.setVisible(True)
         self.wsetroi.setVisible(True)
         self.image_info.setVisible(True)
         self.sky_info.setVisible(True)
         self.filt_info.setVisible(True)
-        self.wfullframemode.setEnabled(False)
-        self.wvideomode.setEnabled(True)
+        self.wopen.setVisible(True)
+        self.box_readout.setVisible(True)
         self.start_scan()
         self.mode = 'fullframe'
 
@@ -483,21 +531,31 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.wstopvideo.setVisible(True)
+        self.resize(240, 300)
+        self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
+        self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
+        self.fitsimage.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
+        self.wdesaturate.setVisible(True)
+        self.vid_filter.setVisible(True)
+        self.wchangefilter.setVisible(True)
+        self.winitfilter.setVisible(True)
         self.winittrick.setVisible(True)
         self.wrestartvideo.setVisible(True)
         self.wreboottrick.setVisible(True)
-        self.wfullframemode.setEnabled(True)
-        self.wopen.setVisible(False)
+        self.wquit.setVisible(True)
+        self.wcolor.setVisible(False)
+        self.wcut.setVisible(False)
         self.wsky.setVisible(False)
         self.wtakeff.setVisible(False)
         self.wsetroi.setVisible(False)
         self.image_info.setVisible(False)
         self.sky_info.setVisible(False)
         self.filt_info.setVisible(False)
-        self.wvideomode.setEnabled(False)
-        #TODO replace this with restart_video
-        self.restart_video()
+        self.box_readout.setVisible(False)
+        self.wopen.setVisible(False)
+        self.readout.setMinimumSize(QtCore.QSize(0, 0))
+        #TODO replace this with restart video
+        self.start_video()
 
     ##Full frame stuff
     def start_scan(self):
@@ -588,11 +646,17 @@ class FitsViewer(QtGui.QMainWindow):
         self.getdcskw.write(1)
         self.getaokw.write(1)
         self.go.write(1)
-        self.wstartvideo.setEnabled(True)
 
     def set_roi(self):
-        self.trickxpos.write(self.xclick-8)
-        self.trickypos.write(self.yclick-8)
+        xroi = self.xclick-8
+        yroi = self.yclick-8
+        self.trickxpos.write(xroi)
+        self.trickypos.write(yroi)
+        distcoeff = np.zeros(20)
+        rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
+        for idx,row in enumerate(rows):
+            distcoeff[idx] = float(row[0][5:])
+        self.trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None)
         print("TRICK ROI set")
         left, right, up, down = self.getROI()
         self.fitsimage.get_canvas().get_object_by_tag(self.boxtag)
@@ -600,6 +664,81 @@ class FitsViewer(QtGui.QMainWindow):
         self.box = self.recdc(left, down, right, up, color='green')
         self.fitsimage.get_canvas().add(self.box, tag=self.boxtag, redraw=True)
         self.wsetroi.setEnabled(False)
+
+    def trk_distortion_model(self, x0, y0, p):
+        # Translation of DistortionModel into Python
+        x0T = x0-p[0]
+        y0T = y0-p[10]
+
+        x1 = p[0]+p[1]*y0T+p[2]*x0T+p[3]*y0T**2+p[4]*y0T*x0T+p[5]*x0T**2+\
+            p[6]*y0T**3+p[7]*y0T**2*x0T+p[8]*y0T*x0T**2+p[9]*x0T**3
+
+        y1 = p[10]+p[11]*y0T+p[12]*x0T+p[13]*y0T**2+p[14]*y0T*x0T+p[15]*x0T**2+\
+            p[16]*y0T**3+p[17]*y0T**2*x0T+p[18]*y0T*x0T**2+p[19]*x0T**3
+
+        return (x1,y1)
+
+    def trk_undo_distmodel(self, x1, y1, DistC):
+        eps = 0.5 # error in pixels
+        maxiter = 20
+
+        k = 0
+        x0 = copy.copy(x1)
+        y0 = copy.copy(y1)
+        (x1p,y1p) = self.trk_distortion_model(x0,y0,DistC)
+
+        while (np.sqrt((x1p-x1)**2+(y1p-y1)**2) > eps):
+            if k >= maxiter:
+                print('No convergence in '+str(iter)+' iterations')
+                break
+
+            x0 -= (x1p-x1)
+            y0 -= (y1p-y1)
+
+            (x1p,y1p) = self.trk_distortion_model(x0,y0,DistC)
+            k += 1
+
+        return (x0,y0)
+
+
+    def trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None):
+        # TODO: error handling
+
+        if roisz not in [None,2, 4, 8, 16]:
+            raise('Invalid value for roisz')
+            return
+
+        sctrack = self.tkenrup.read() # what is the error handling here?
+        if sctrack:
+            # turn sctracking off
+            status = self.tkenrup.write(0)
+
+        if roisz is not None:
+            status = self.tkcrxs.write(roisz)
+            status = self.tkcrys.write(roisz)
+
+        (xp,yp) = self.trk_undo_distmodel(xroi, yroi, distcoeff)
+        status = self.tkcrevxp.write(xp)
+        status = self.tkcrevyp.write(yp)
+
+        xim = self.tkcrevxo.read()
+        yim = self.tkcrevyo.read()
+        status = self.tkcxim.write(xim)
+        status = self.tkcyim.write(yim)
+
+        # need to tigger the ROI calculator TWICE (as told to Bruno Femenia by Paul Stomski)
+        status = self.tksrtrg.write(1)
+        time.sleep(0.1)    # wait 0.1 s
+        status = self.tksrtrg.write(1)
+
+        # need to set to propagate SPOC-Camera-WFC
+        status = self.tkenrup.write(1)
+        if sctrack == 0:
+            status = self.tkenrup.write(0)
+
+        # Setting trkrordy syncs SPOC and camera values with WFC and triggers actions by WFC: bad pixel map, etc
+        status = self.trkrordy.write(1)
+        return
 
     ##Start of image find and processing code
 
@@ -675,7 +814,7 @@ class FitsViewer(QtGui.QMainWindow):
         right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
         up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
         down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        print("ROI box: %d %d %d %d" %(left, right, up, down))
+        self.roi_info.setText(f"ROI: {int(self.trickxpos.read()) + 8} {int(self.trickypos.read()) + 8}")
         return left, right, up, down
 
     def nightpath(self):
@@ -811,27 +950,22 @@ class FitsViewer(QtGui.QMainWindow):
 
 
     def btndown(self, canvas, event, data_x, data_y):
-        # self.fitsimage.set_pan(data_x, data_y)
         self.xclick = data_x
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            x = float(self.trickxpos.read()) - (float(self.trickxsize.read())/2.0 - self.xclick)
-            y = float(self.trickypos.read()) - (float(self.trickysize.read())/2.0 - float(self.yclick))
-            self.trickxpos.write(x)
-            self.trickypos.write(y)
-            self.trkenapx.write(0)
-            # self.trkfpspx.write('Passive')
-            # self.trkstop.write(1)
-            time.sleep(1)
-            # self.trkfpspx.write('1 second')
-            # self.trkenapx.write(1)
-            self.trkstsx.write(1)
+            xroi = float(self.trickxpos.read()) - (float(self.trickxsize.read())/2.0 - self.xclick)
+            yroi = float(self.trickypos.read()) - (float(self.trickysize.read())/2.0 - float(self.yclick))
+            self.trickxpos.write(xroi)
+            self.trickypos.write(yroi)
+            distcoeff = np.zeros(20)
+            rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
+            for idx,row in enumerate(rows):
+                distcoeff[idx] = float(row[0][5:])
+            self.trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None)
         else:
             self.wsetroi.setEnabled(True)
             self.pickstar(self.fitsimage)
-        # self.wsetroi.setEnabled(True)
-        # self.pickstar(self.fitsimage)
 
 
 
@@ -843,17 +977,15 @@ def main():
     # ginga needs a logger.
     # If you don't want to log anything you can create a null logger by
     # using null=True in this call instead of log_stderr=True
-    logger = log.get_logger("example1", log_stderr=True, level=40)
-
-
+    logger = log.get_logger("TrickManager", log_stderr=True, level=40)
 
     w = FitsViewer(logger)
-    w.resize(400, 400)
     w.show()
     app.setActiveWindow(w)
     w.raise_()
     w.activateWindow()
-    app.exec_()
+    w.start_video()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()
