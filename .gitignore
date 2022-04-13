@@ -1,4 +1,7 @@
 
 *.ui
 FullFrame.py
-*.py
+FullFrameVBOX.py
+OldTMnewUI.py
+Video.py
+VideoVBOX.py
