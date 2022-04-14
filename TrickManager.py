@@ -517,7 +517,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
-        self.resize(240, 300)
+        self.resize(500, 300)
 
     def pixels_to_image(self, pix, ff, bg):
         lst = str(pix).strip().replace(':', '').split()
