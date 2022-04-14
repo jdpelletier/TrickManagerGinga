@@ -118,6 +118,7 @@ class FitsViewer(QtGui.QMainWindow):
             self.ops = "RTC"
         self.trkstop = ktl.cache('trick', 'trkstop')
         self.trkstsx = ktl.cache('trick', 'trkstsx')
+        self.trkrocpr = ktl.cache('trick', 'trkrocpr')
         self.tkenrup = ktl.cache('ao', 'tkenrup')
         self.tkcrxs = ktl.cache('ao','tkcrxs')
         self.tkcrys = ktl.cache('ao','tkcrys')
@@ -385,6 +386,23 @@ class FitsViewer(QtGui.QMainWindow):
 
     def desaturate(self):
         print("Desaturating")
+        cpr = int(self.trkrocpr)
+        xsatu = 128*cpr/(69700.*NbCoadd[0]^2)*100 #info.maxroi
+        if xsatu >= 40:
+            newcpr = LONG(FLOOR(cpr*40/xsatu))
+            newcpr = newcpr > 2 # cannot be less than 2
+
+            if cpr != newcpr:
+                print(f'Resetting CPR to {newcpr}')
+
+                status = self.trkstop.write(1)
+                status = self.trkrocpr.write(newcpr)
+                status = self.trkstsx.write(1)
+           else:
+               print('Unable to change CPR to desaturate detector')
+        else:
+            print('The detector is not near saturation')
+
 
     def filter_popup(self):
         msg = QtGui.QMessageBox()
@@ -490,8 +508,13 @@ class FitsViewer(QtGui.QMainWindow):
 
     def show_images(self, pix, ff, bg):
         image = self.pixels_to_image(pix, ff, bg)
+        roix = int(self.trickxsize.read())
+        roiy = int(self.trickysize.read())
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
+        #TODO this
+        # self.fitsimage.set_limits(((17-roix, 15.5-roiy),(17-roix, 15.5-roiy)),coord='data')
+        self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
@@ -506,7 +529,10 @@ class FitsViewer(QtGui.QMainWindow):
         ff = np.reshape(pixelvalues_ff,(dims,dims))
         bg = np.reshape(pixelvalues_bg,(dims,dims))
         new_image = image * ff - bg
-        return(new_image)
+        roix = int(self.trickxsize.read())
+        roiy = int(self.trickysize.read())
+        roi_image = new_image[0:roix, 0:roiy]
+        return(roi_image)
 
     def full_frame_mode(self):
         self.wfullframemode.setVisible(False)
