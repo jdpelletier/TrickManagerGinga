@@ -126,6 +126,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.tkcrevyp = ktl.cache('ao','tkcrevyp')
         self.tkcrevxo = ktl.cache('ao','tkcrevxo')
         self.tkcrevyo = ktl.cache('ao','tkcrevyo')
+        self.tksrtrg = ktl.cache('ao','tksrtrg')
         self.tkcxim = ktl.cache('ao','tkcxim')
         self.tkcyim = ktl.cache('ao','tkcyim')
         self.targname = ktl.cache('tfs', 'TARGNAME')
