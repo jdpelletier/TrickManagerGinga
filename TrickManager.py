@@ -324,7 +324,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.picktag = "pick-box"
         self.crosstag = "vid-crosshair"
 
-        fi.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
+        fi.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='skyblue', text=""), tag=self.crosstag)
 
         self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
 
@@ -517,6 +517,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
+        self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
+        self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
+        self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
@@ -584,7 +587,7 @@ class FitsViewer(QtGui.QMainWindow):
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
-        self.fitsimage.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
+        self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.wdesaturate.setVisible(True)
         self.vid_filter.setVisible(True)
         self.wchangefilter.setVisible(True)
