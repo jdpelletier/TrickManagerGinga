@@ -703,7 +703,7 @@ class FitsViewer(QtGui.QMainWindow):
         rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
         for idx,row in enumerate(rows):
             distcoeff[idx] = float(row[0][5:])
-        self.trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None)
+        self.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
         print("TRICK ROI set")
         left, right, up, down = self.getROI()
         self.fitsimage.get_canvas().get_object_by_tag(self.boxtag)
