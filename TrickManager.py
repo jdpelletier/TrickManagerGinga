@@ -521,13 +521,16 @@ class FitsViewer(QtGui.QMainWindow):
         lst = str(pix).strip().replace(':', '').split()
         lst_ff = str(ff).strip().replace(':', '').split()
         lst_bg = str(bg).strip().replace(':', '').split()
-        pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
-        pixelvalues_ff = np.array(lst_ff[1::2],dtype=float)
-        pixelvalues_bg = np.array(lst_bg[1::2],dtype=float)
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
-        reduction = 16/roix
-        dims = int(np.sqrt(pixelvalues.shape)/reduction)
+        reduction = roix^2
+        pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
+        pixelvalues= pixelvalues[0:reduction]
+        pixelvalues_ff = np.array(lst_ff[1::2],dtype=float)
+        pixelvalues_ff= pixelvalues_ff[0:reduction]
+        pixelvalues_bg = np.array(lst_bg[1::2],dtype=float)
+        pixelvalues_bg= pixelvalues_bg[0:reduction]
+        dims = int(np.sqrt(pixelvalues.shape))
         image = np.reshape(pixelvalues,(dims,dims))
         ff = np.reshape(pixelvalues_ff,(dims,dims))
         bg = np.reshape(pixelvalues_bg,(dims,dims))
