@@ -313,7 +313,9 @@ class FitsViewer(QtGui.QMainWindow):
 
         fi.set_callback('cursor-changed', self.motion_cb)
         fi.add_callback('cursor-down', self.btndown)
-        fi.set_limits(((1,-0.5), (14,15.5)),coord='data')
+        roix = int(self.trickxsize.read())
+        roiy = int(self.trickysize.read())
+        self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
 
         self.recdc, self.compdc, self.crossdc = self.add_canvas()
         self.boxtag = "roi-box"
@@ -512,9 +514,7 @@ class FitsViewer(QtGui.QMainWindow):
         roiy = int(self.trickysize.read())
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
-        #TODO this
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
-        # self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
@@ -578,7 +578,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.rotate(0)
         self.resize(240, 300)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
-        self.fitsimage.set_limits(((1,-0.5), (14,15.5)),coord='data')
+        roix = int(self.trickxsize.read())
+        roiy = int(self.trickysize.read())
+        self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
         self.fitsimage.get_canvas().add(self.crossdc(7.5, 7.5, color='skyblue', text=""), tag=self.crosstag)
         self.wdesaturate.setVisible(True)
         self.vid_filter.setVisible(True)
