@@ -531,7 +531,7 @@ class FitsViewer(QtGui.QMainWindow):
         new_image = image * ff - bg
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
-        roi_image = new_image[roix:roix*2, roiy:roiy*2]
+        roi_image = new_image[roix:16, roiy:16]
         return(roi_image)
 
     def full_frame_mode(self):
