@@ -529,7 +529,7 @@ class FitsViewer(QtGui.QMainWindow):
         reduction = 16/roix
         dims = int(np.sqrt(pixelvalues.shape))
         print(dims)
-        image = np.reshape(pixelvalues,(dims,dims)
+        image = np.reshape(pixelvalues,(dims,dims))
         ff = np.reshape(pixelvalues_ff,(dims,dims))
         bg = np.reshape(pixelvalues_bg,(dims,dims))
         new_image = image * ff - bg
