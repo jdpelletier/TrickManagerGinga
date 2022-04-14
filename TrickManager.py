@@ -564,6 +564,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wsky.setVisible(True)
         self.wtakeff.setVisible(True)
         self.wsetroi.setVisible(True)
+        self.wsetroi.setEnabled(False)
         self.image_info.setVisible(True)
         self.sky_info.setVisible(True)
         self.filt_info.setVisible(True)
@@ -650,6 +651,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
                                        fontsize=8))
         self.bd._orient(self.fitsimage, righthand=False, msg=True)
+        self.wsetroi.setEnabled(True)
 
     def open_file(self):
         res = QtGui.QFileDialog.getOpenFileName(self, "Open FITS file",
