@@ -398,7 +398,7 @@ class FitsViewer(QtGui.QMainWindow):
                 status = self.trkstop.write(1)
                 status = self.trkrocpr.write(newcpr)
                 status = self.trkstsx.write(1)
-           else:
+            else:
                print('Unable to change CPR to desaturate detector')
         else:
             print('The detector is not near saturation')
