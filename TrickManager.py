@@ -524,7 +524,6 @@ class FitsViewer(QtGui.QMainWindow):
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
         roi_size = roix * roiy
-        print(roi_size)
         pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
         pixelvalues= pixelvalues[:roi_size]
         pixelvalues_ff = np.array(lst_ff[1::2],dtype=float)
