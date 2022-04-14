@@ -407,7 +407,7 @@ class FitsViewer(QtGui.QMainWindow):
         # self.targname.write(target)
         print(target)
 
-    def tiptilt_pop(self):
+    def tiptilt_popup(self):
         msg = QtGui.QMessageBox()
         msg.setWindowTitle("Tip-tilt loop closed on TRICK")
         msg.setText("Open the loop or switch to STRAP before changing filter")
