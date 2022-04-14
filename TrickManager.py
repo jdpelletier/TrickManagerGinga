@@ -517,7 +517,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
-        self.resize(500, 300)
+        self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
         lst = str(pix).strip().replace(':', '').split()
@@ -867,7 +867,7 @@ class FitsViewer(QtGui.QMainWindow):
         roiy = int(self.trickysize.read())
         centerx = int(int(self.trickxpos.read()) + roix/2)
         centery = int(int(self.trickypos.read()) + roiy/2)
-        self.roi_info.setText(f"ROI: {centerx} {centery}")
+        self.roi_info.setText(f"ROI {centerx} {centery}")
         return left, right, up, down
 
     def nightpath(self):
