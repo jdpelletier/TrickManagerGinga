@@ -1038,7 +1038,7 @@ class FitsViewer(QtGui.QMainWindow):
             self.trkstsx.write(1)
         else:
             self.wsetroi.setEnabled(True)
-            self.pickstar(self.fitsimage)
+            # self.pickstar(self.fitsimage)
 
 
 
