@@ -180,13 +180,13 @@ class FitsViewer(QtGui.QMainWindow):
             self.wcut.addItem(name)
         self.wcut.currentIndexChanged.connect(self.cut_change)
         readout_hbox.addWidget(self.wcut)
-        self.wcut.setVisible(False)
+        # self.wcut.setVisible(False)
         self.wcolor = QtGui.QComboBox()
         for name in fi.get_color_algorithms():
             self.wcolor.addItem(name)
         self.wcolor.currentIndexChanged.connect(self.color_change)
         readout_hbox.addWidget(self.wcolor)
-        self.wcolor.setVisible(False)
+        # self.wcolor.setVisible(False)
         hw = QtGui.QWidget()
         hw.setLayout(readout_hbox)
         vbox.addWidget(hw)
@@ -654,7 +654,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
                                        fontsize=8))
         self.bd._orient(self.fitsimage, righthand=False, msg=True)
-        self.wsetroi.setEnabled(True)
 
     def open_file(self):
         res = QtGui.QFileDialog.getOpenFileName(self, "Open FITS file",
