@@ -992,7 +992,7 @@ class FitsViewer(QtGui.QMainWindow):
         return amplitude, fwhm
 
     def pickstar(self, viewer):
-        warnings.warn("deprecated", VisibleDeprecationWarning)
+        warnings.warn("deprecated", DeprecationWarning)
         try:
             self.fitsimage.get_canvas().get_object_by_tag(self.picktag)
             self.fitsimage.get_canvas().delete_object_by_tag(self.picktag)
