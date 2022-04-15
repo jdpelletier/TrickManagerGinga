@@ -401,7 +401,7 @@ class FitsViewer(QtGui.QMainWindow):
     def desaturate(self):
         print("Desaturate button pressed")
         cpr = int(self.trkrocpr.read())
-        coadd = int(self.trknamd1.read())
+        coadd = int(self.trknmad1.read())
         xsatu = int(128*cpr/(69700.*coadd^2)*100) #info.maxroi = 128
         if xsatu >= 40:
             newcpr = int(cpr*40/xsatu)
