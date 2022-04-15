@@ -557,6 +557,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(512, 512))
         self.fitsimage.set_limits(None)
         self.readout.setMinimumSize(QtCore.QSize(240, 0))
+        self.fitsimage.set_autocut_params('median')
+        self.fitsimage.set_color_algorithm('linear')
         self.wdesaturate.setVisible(False)
         self.vid_filter.setVisible(False)
         self.wchangefilter.setVisible(False)
@@ -591,6 +593,8 @@ class FitsViewer(QtGui.QMainWindow):
         roiy = int(self.trickysize.read())
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
+        self.fitsimage.set_autocut_params('minmax')
+        self.fitsimage.set_color_algorithm('log')
         self.wdesaturate.setVisible(True)
         self.vid_filter.setVisible(True)
         self.wchangefilter.setVisible(True)
@@ -974,7 +978,7 @@ class FitsViewer(QtGui.QMainWindow):
         return int(xc), int(yc), data
 
     def fitstars(self, y_line):
-        x = np.linspace(-30, 30, 60)
+        x = np.linspace(-30, 30, 60, dtype='object')
         model_gauss = models.Gaussian1D()
         fitter_gauss = fitting.LevMarLSQFitter()
         # gx = fitter_gauss(model_gauss, x, x_line)
