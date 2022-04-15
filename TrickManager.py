@@ -132,6 +132,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.tkcxim = ktl.cache('ao','tkcxim')
         self.tkcyim = ktl.cache('ao','tkcyim')
         self.targname = ktl.cache('tfs', 'TARGNAME')
+        self.tfshome = ktl.cache('tfs', 'home')
+        self.tfsinit = ktl.cache('tfs', 'init')
+        self.tfsstatus = ktl.cache('tfs', 'status')
+        self.tfsposname = ktl.cache('tfs', 'posname')
 
         self.rawfile = ''
         self.mode = ''
@@ -430,7 +434,13 @@ class FitsViewer(QtGui.QMainWindow):
         #     if self.tiptilt == "closed": #todo figure out keyword here
         #         self.tiptilt_popup()
         #         return
-        # self.targname.write(target)
+            if target == 'DISMISS':
+                return
+            if target == 'Block':
+                target = 'blocking'
+            if target == 'home' or target == 'open':
+                target = target.lower()
+            self.targname.write(target)
         return
 
     def tiptilt_popup(self):
@@ -442,6 +452,28 @@ class FitsViewer(QtGui.QMainWindow):
 
     def init_filter(self):
         print("Initing filter")
+        #if self.tiptilt == "closed": #todo figure out keyword here
+        #         self.tiptilt_popup()
+        #         return
+        targname = self.targname.read()
+        print('Sending TRICK filter wheel home')
+        status = self.tfshome.write(1)
+        time.sleep(3)
+        print('Initializing TRICK filter wheel')
+        status = self.tfsinit.write(1)
+        tfsstatus = self.tfsstatus.read()
+        while tfsstatus != 'OK':
+            print('tfsstatus')
+            time.sleep(1)
+            tfsstatus = self.tfsstatus.read()
+        posname = self.tfsposname.read()
+        if posname != 'home':
+            print('Waiting for TFS to go home, this could take 30s')
+        while posname != 'home':
+            time.sleep(0.5)
+            posname = self.tfsposname.read()
+        print(f'Sending TRICK filter wheel to {targname}')
+        status = self.targname.write(targname)
 
     def init_trick(self):
         print("Initing TRICK")
