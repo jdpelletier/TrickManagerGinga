@@ -207,7 +207,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.vid_filter = QtGui.QLabel("Filter: ")
         self.vid_filter.setObjectName("vid_filter")
         filter_hbox.addWidget(self.vid_filter)
-        self.wchangefilter = QtGui.QPushButton(f"{self.targname.read()}")
+        self.wchangefilter = QtGui.QPushButton(f"{self.targname}")
         self.wchangefilter.setObjectName("wchangefilter")
         self.wchangefilter.clicked.connect(self.filter_popup)
         filter_hbox.addWidget(self.wchangefilter)
@@ -432,7 +432,7 @@ class FitsViewer(QtGui.QMainWindow):
     def change_filter(self, button):
         target = button.text()
 
-        if target != str(self.targname.read()):
+        if target != str(self.targname):
         #     if self.tiptilt == "closed": #todo figure out keyword here
         #         self.tiptilt_popup()
         #         return
@@ -443,7 +443,6 @@ class FitsViewer(QtGui.QMainWindow):
             if target == 'home' or target == 'open':
                 target = target.lower()
             self.targname.write(target)
-            self.wchangefilter.setText(target)
         return
 
     def tiptilt_popup(self):
@@ -458,7 +457,7 @@ class FitsViewer(QtGui.QMainWindow):
         #if self.tiptilt == "closed": #todo figure out keyword here
         #         self.tiptilt_popup()
         #         return
-        targname = self.targname.read()
+        targname = self.targname
         print('Sending TRICK filter wheel home')
         status = self.tfshome.write(1)
         time.sleep(3)
@@ -559,6 +558,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
+        # self.wchangefilter.setText(self.targname)
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
