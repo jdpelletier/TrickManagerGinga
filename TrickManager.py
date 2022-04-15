@@ -955,7 +955,7 @@ class FitsViewer(QtGui.QMainWindow):
         x1, x2 = view[1].start, view[1].stop
 
         # mask non-containing members
-        mdata = np.ma.array(data, mask=np.logical_not(mask))
+        mdata = np.ma.array(data, mask=np.logical_not(mask), dtype='object')
 
         return x1, y1, x2, y2, mdata
 
@@ -978,7 +978,7 @@ class FitsViewer(QtGui.QMainWindow):
         return int(xc), int(yc), data
 
     def fitstars(self, y_line):
-        x = np.linspace(-30, 30, 60, dtype='object')
+        x = np.linspace(-30, 30, 60)
         model_gauss = models.Gaussian1D()
         fitter_gauss = fitting.LevMarLSQFitter()
         # gx = fitter_gauss(model_gauss, x, x_line)
@@ -1038,7 +1038,7 @@ class FitsViewer(QtGui.QMainWindow):
             self.trkstsx.write(1)
         else:
             self.wsetroi.setEnabled(True)
-            # self.pickstar(self.fitsimage)
+            self.pickstar(self.fitsimage)
 
 
 
