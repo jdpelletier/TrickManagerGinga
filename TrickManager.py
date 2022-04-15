@@ -443,7 +443,7 @@ class FitsViewer(QtGui.QMainWindow):
             if target == 'home' or target == 'open':
                 target = target.lower()
             self.targname.write(target)
-            wchangefilter.setText(target)
+            self.wchangefilter.setText(target)
         return
 
     def tiptilt_popup(self):
