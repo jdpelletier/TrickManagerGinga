@@ -955,7 +955,7 @@ class FitsViewer(QtGui.QMainWindow):
         x1, x2 = view[1].start, view[1].stop
 
         # mask non-containing members
-        mdata = np.ma.array(data, mask=np.logical_not(mask), dtype='object')
+        mdata = np.ma.array(data, mask=np.logical_not(mask))
 
         return x1, y1, x2, y2, mdata
 
