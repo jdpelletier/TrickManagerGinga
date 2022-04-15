@@ -430,7 +430,6 @@ class FitsViewer(QtGui.QMainWindow):
         target = button.text()
 
         if target != str(self.targname.read()):
-            self.tiptilt_popup()
         #     if self.tiptilt == "closed": #todo figure out keyword here
         #         self.tiptilt_popup()
         #         return
