@@ -313,6 +313,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.setCentralWidget(vw)
         vw.setLayout(vbox)
 
+        fi.set_autocut_params('minmax')
+        fi.set_color_algorithm('log')
+
         fi.set_callback('cursor-changed', self.motion_cb)
         fi.add_callback('cursor-down', self.btndown)
         roix = int(self.trickxsize.read())
