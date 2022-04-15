@@ -458,7 +458,7 @@ class FitsViewer(QtGui.QMainWindow):
         #if self.tiptilt == "closed": #todo figure out keyword here
         #         self.tiptilt_popup()
         #         return
-        targname = self.targname
+        targname = str(self.targname)
         print('Sending TRICK filter wheel home')
         status = self.tfshome.write(1)
         time.sleep(3)
@@ -559,7 +559,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
-        self.wchangefilter.setText(self.targname)
+        self.wchangefilter.setText(str(self.targname))
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
