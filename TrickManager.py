@@ -136,6 +136,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.tfsinit = ktl.cache('tfs', 'init')
         self.tfsstatus = ktl.cache('tfs', 'status')
         self.tfsposname = ktl.cache('tfs', 'posname')
+        self.trknmad1 = ktl.cache('ao', 'trknmad1')
 
         self.rawfile = ''
         self.mode = ''
@@ -397,12 +398,14 @@ class FitsViewer(QtGui.QMainWindow):
     ##TODO verify init trick, restart video, stop video, reboot trick, change_filter, desaturate
 
     def desaturate(self):
-        print("Desaturating")
-        cpr = int(self.trkrocpr)
-        xsatu = 128*cpr/(69700.*NbCoadd[0]^2)*100 #info.maxroi
+        print("Desaturate button pressed")
+        cpr = int(self.trkrocpr.read())
+        coadd = int(self.trknamd1.read())
+        xsatu = int(128*cpr/(69700.*coadd^2)*100) #info.maxroi = 128
         if xsatu >= 40:
-            newcpr = LONG(FLOOR(cpr*40/xsatu))
-            newcpr = newcpr > 2 # cannot be less than 2
+            newcpr = int(cpr*40/xsatu)
+            if newcpr < 2: #cannot be less than 2
+                newcpr = 2
 
             if cpr != newcpr:
                 print(f'Resetting CPR to {newcpr}')
