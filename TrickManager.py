@@ -5,6 +5,7 @@ from pathlib import Path
 import datetime
 import csv
 import copy
+import warnings
 
 import numpy as np
 from astropy.io import fits
@@ -991,6 +992,7 @@ class FitsViewer(QtGui.QMainWindow):
         return amplitude, fwhm
 
     def pickstar(self, viewer):
+        warnings.warn("deprecated", VisibleDeprecationWarning)
         try:
             self.fitsimage.get_canvas().get_object_by_tag(self.picktag)
             self.fitsimage.get_canvas().delete_object_by_tag(self.picktag)
@@ -1038,7 +1040,9 @@ class FitsViewer(QtGui.QMainWindow):
             self.trkstsx.write(1)
         else:
             self.wsetroi.setEnabled(True)
-            self.pickstar(self.fitsimage)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.pickstar(self.fitsimage)
 
 
 
