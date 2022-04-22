@@ -84,8 +84,8 @@ class ControlWindow(QtGui.QWidget):
     """
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout()
-        self.label = QLabel("Another Window")
+        layout = QtGui.QVBoxLayout()
+        self.label = QtGui.QLabel("Another Window")
         layout.addWidget(self.label)
         self.setLayout(layout)
 
