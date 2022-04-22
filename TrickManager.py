@@ -567,7 +567,7 @@ class FitsViewer(QtGui.QMainWindow):
 
     def control_popup(self):
         self.c = ControlWindow()
-        self.w.show()
+        self.c.show()
 
 
     def show_images(self, pix, ff, bg):
