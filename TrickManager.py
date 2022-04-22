@@ -85,7 +85,6 @@ class ControlWindow(QtGui.QWidget):
     def __init__(self):
         super().__init__()
         vbox = QtGui.QVBoxLayout()
-        vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setObjectName("vbox")
         title_hbox = QtGui.QHBoxLayout()
         title_hbox.setObjectName("title_hbox")
@@ -107,6 +106,7 @@ class ControlWindow(QtGui.QWidget):
         hw = QtGui.QWidget()
         hw.setLayout(roisz_hbox)
         vbox.addWidget(hw)
+        vbox.setSpacing(0)
         self.setLayout(vbox)
 
     def roisz_change(self):
