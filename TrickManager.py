@@ -236,6 +236,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.tslabel  = QtGui.QLabel("Status: ")
         status_hbox.addWidget(self.tslabel)
         self.trickstatus  = QtGui.QLabel("")
+        self.trickstatus.setStyleSheet("border: 1px solid black;")
         status_hbox.addWidget(self.trickstatus)
         self.dtlabel = QtGui.QLabel("DT Sensor: ")
         status_hbox.addWidget(self.dtlabel)
