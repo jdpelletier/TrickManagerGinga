@@ -655,9 +655,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.dtstatus.setText(str(self.dtsensor))
         self.trickstatus.setText(str(self.trkstat))
         m = self.readmode.read()
-        if m = "3":
+        if m == "3":
             self.rmstatus.setText("Video")
-        elif m = "2":
+        elif m == "2":
             self.rmstatus.setText("Filmstrip")
         else:
             self.rmstatus.setText("Full Frame")
