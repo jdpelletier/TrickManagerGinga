@@ -227,7 +227,7 @@ class FitsViewer(QtGui.QMainWindow):
         vbox.setObjectName("vbox")
         status_hbox = QtGui.QHBoxLayout()
         self.dtstatus = QtGui.QLabel("")
-        status_hbox.addWidget(dtstatus)
+        status_hbox.addWidget(self.dtstatus)
         vbox.addLayout(status_hbox)
         viewer_hbox = QtGui.QHBoxLayout()
         viewer_hbox.setContentsMargins(QtCore.QMargins(48, 10, 48, 2))
