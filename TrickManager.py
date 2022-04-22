@@ -9,6 +9,7 @@ import warnings
 
 import numpy as np
 from astropy.io import fits
+from astropy.io.fits.verify import VerifyError
 from astropy import wcs
 import astropy.units as u
 from astropy.stats import gaussian_sigma_to_fwhm
@@ -1027,7 +1028,7 @@ class FitsViewer(QtGui.QMainWindow):
         dec = float(header['DEC'])
         try:
             rot = float(header['ROTPOSN'])
-        except astropy.io.fits.verify.VerifyError:
+        except VerifyError:
             print("Invalid rotator angle in header, unable to rotate image")
             rot = 0.0
         filter = header['TRFWNAME']
