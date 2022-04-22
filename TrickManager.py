@@ -99,7 +99,7 @@ class ControlWindow(QtGui.QWidget):
         roisz_hbox = QtGui.QHBoxLayout()
         roisz_hbox.setObjectName("roisz_hbox")
         self.wroisz = QtGui.QComboBox()
-        sizes = [2,4,8,16]
+        sizes = ['2','4','8','16']
         for size in sizes:
             self.wroisz.addItem(size)
         self.wroisz.currentIndexChanged.connect(self.roisz_change)
