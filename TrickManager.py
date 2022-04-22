@@ -90,16 +90,16 @@ class ControlWindow(QtGui.QWidget):
         # title.setAlignment(QtCore.Qt.AlignHCenter)
         title_hbox.addWidget(title)
         vbox.addLayout(title_hbox)
-        roisz_hbox = QtGui.QHBoxLayout()
-        roisz_label = QtGui.QLabel("ROI Size: ")
-        roisz_hbox.addWidget(roisz_label)
-        self.wroisz = QtGui.QComboBox()
-        sizes = ['2','4','8','16']
-        for size in sizes:
-            self.wroisz.addItem(size)
-        self.wroisz.currentIndexChanged.connect(self.roisz_change)
-        roisz_hbox.addWidget(self.wroisz)
-        vbox.addLayout(roisz_hbox)
+        # roisz_hbox = QtGui.QHBoxLayout()
+        # roisz_label = QtGui.QLabel("ROI Size: ")
+        # roisz_hbox.addWidget(roisz_label)
+        # self.wroisz = QtGui.QComboBox()
+        # sizes = ['2','4','8','16']
+        # for size in sizes:
+        #     self.wroisz.addItem(size)
+        # self.wroisz.currentIndexChanged.connect(self.roisz_change)
+        # roisz_hbox.addWidget(self.wroisz)
+        # vbox.addLayout(roisz_hbox)
         self.setLayout(vbox)
 
     def roisz_change(self):
