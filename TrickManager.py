@@ -323,6 +323,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick = QtGui.QPushButton("Reboot Trick")
         self.wreboottrick.setObjectName("wreboottrick")
         self.wreboottrick.clicked.connect(self.reboot_trick)
+        self.wreboottrick.setEnabled(False)
         buttons_vbox_mid.addWidget(self.wreboottrick)
         self.wsetroi = QtGui.QPushButton("Set ROI")
         self.wsetroi.setObjectName("wsetroi")
@@ -739,14 +740,12 @@ class FitsViewer(QtGui.QMainWindow):
             os.remove('procImage.fits')
             hdu.writeto('procImage.fits')
         self.cachedFiles = self.walkDirectory()
-        print("scan started...")
         scanner = Scanner(self.scan)
         scanner.signals.load.connect(self.processData)
         self.threadpool.start(scanner)
 
     def stop_scan(self):
         self.scanning = False
-        print('Scanning stopped.')
 
     def load_file(self, filepath):
         image = load_data(filepath, logger=self.logger)
@@ -829,7 +828,6 @@ class FitsViewer(QtGui.QMainWindow):
         for idx,row in enumerate(rows):
             distcoeff[idx] = float(row[0][5:])
         self.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
-        print("TRICK ROI set")
         left, right, up, down = self.getROI()
         self.fitsimage.get_canvas().get_object_by_tag(self.boxtag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.boxtag)
