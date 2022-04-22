@@ -17,7 +17,7 @@ import PIL.Image as PILimage
 
 from ginga import Bindings
 from ginga.misc import log
-from ginga.qtw.QtHelp import QtGui, QtCore
+from ginga.qtw.QtHelp import QtGui, QtCore, QDesktopWidget
 from ginga.qtw.ImageViewQt import CanvasView, ScrolledView
 from ginga.util import iqcalc
 from ginga.util.loader import load_data
@@ -101,6 +101,12 @@ class ControlWindow(QtGui.QWidget):
         roisz_hbox.addWidget(self.wroisz)
         vbox.addLayout(roisz_hbox)
         self.setLayout(vbox)
+
+        screen = QDesktopWidget().screenGeometry()
+        widget = self.geometry()
+        x = screen.width() - widget.width()
+        y = screen.height() - widget.height()
+        self.move(x, y)
 
     def roisz_change(self):
         print(self.wroisz.currentText())
