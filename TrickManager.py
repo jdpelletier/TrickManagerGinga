@@ -227,7 +227,10 @@ class FitsViewer(QtGui.QMainWindow):
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setObjectName("vbox")
         status_hbox = QtGui.QHBoxLayout()
-        self.dtstatus = QtGui.QLabel("DT Sensor: ")
+        self.dtlabel = QtGui.QLabel("DT Sensor: ")
+        status_hbox.addWidget(self.dtlabel)
+        self.dtstatus = QtGui.QLabel("")
+        self.dtstatus.setStyleSheet("border: 1px solid black;")
         status_hbox.addWidget(self.dtstatus)
         vbox.addLayout(status_hbox)
         viewer_hbox = QtGui.QHBoxLayout()
@@ -637,7 +640,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.wchangefilter.setText(str(self.targname))
-        self.dtstatus.setText(f"DTSensor: {str(self.dtsensor)}")
+        self.dtstatus.setText(str(self.dtsensor))
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
