@@ -402,6 +402,8 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
 
+        self.c = None #ControlWindow
+
     def add_canvas(self, tag=None):
         # add a canvas to the view
         my_canvas = self.fitsimage.get_canvas()
@@ -653,6 +655,8 @@ class FitsViewer(QtGui.QMainWindow):
         return(roi_image)
 
     def full_frame_mode(self):
+        if self.c != None:
+            self.c = None
         self.wfullframemode.setVisible(False)
         self.wvideomode.setVisible(True)
         self.stop_video()
