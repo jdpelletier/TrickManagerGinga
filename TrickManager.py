@@ -135,7 +135,7 @@ class ControlWindow(QtGui.QWidget):
         print("Applied")
 
     def dismiss(self):
-        print("Dimissed")
+        QtGui.QApplication.instance().quit()
 
 
 class FitsViewer(QtGui.QMainWindow):
