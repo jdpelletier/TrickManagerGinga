@@ -231,8 +231,9 @@ class FitsViewer(QtGui.QMainWindow):
         status_hbox = QtGui.QHBoxLayout()
         self.rmlabel = QtGui.QLabel("Read Mode: ")
         status_hbox.addWidget(self.rmlabel)
-        self.readmode = QtGui.QLabel("")
-        status_hbox.addWidget(self.readmode)
+        self.rmstatus = QtGui.QLabel("")
+        self.rmstatus.setStyleSheet("border: 1px solid black;")
+        status_hbox.addWidget(self.rmstatus)
         self.tslabel  = QtGui.QLabel("Status: ")
         status_hbox.addWidget(self.tslabel)
         self.trickstatus  = QtGui.QLabel("")
@@ -653,6 +654,13 @@ class FitsViewer(QtGui.QMainWindow):
         self.wchangefilter.setText(str(self.targname))
         self.dtstatus.setText(str(self.dtsensor))
         self.trickstatus.setText(str(self.trkstat))
+        m = self.readmode.read()
+        if m = "3":
+            self.rmstatus.setText("Video")
+        elif m = "2":
+            self.rmstatus.setText("Filmstrip")
+        else:
+            self.rmstatus.setText("Full Frame")
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
