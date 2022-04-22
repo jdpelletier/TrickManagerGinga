@@ -1025,7 +1025,10 @@ class FitsViewer(QtGui.QMainWindow):
         name = header['DATAFILE']
         ra = float(header['RA'])
         dec = float(header['DEC'])
-        rot = float(header['ROTPOSN'])
+        try:
+            rot = float(header['ROTPOSN'])
+        except VerifyError:
+            print("Invalid rotator angle in header, defaulting to 0")
         filter = header['TRFWNAME']
         w.wcs.crpix = [y, x]
         w.wcs.cdelt = np.array([-0.05, 0.05])
