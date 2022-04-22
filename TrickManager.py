@@ -121,6 +121,12 @@ class ControlWindow(QtGui.QWidget):
     def roisz_change(self):
         print(self.wroisz.currentText())
 
+    def apply(self):
+        print("Applied")
+
+    def dismiss(self):
+        print("Dimissed")
+
 
 class FitsViewer(QtGui.QMainWindow):
 
