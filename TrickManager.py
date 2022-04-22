@@ -1172,4 +1172,7 @@ def main():
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
