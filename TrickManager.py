@@ -200,7 +200,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.tfsposname = ktl.cache('tfs', 'posname')
         self.trknmad1 = ktl.cache('ao', 'trknmad1')
         self.dtsensor = ktl.cache('ao', 'dtsensor')
-        self.targname.monitor()
+        self.dtsensor.monitor()
 
         self.rawfile = ''
         self.mode = ''
