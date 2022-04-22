@@ -135,7 +135,7 @@ class ControlWindow(QtGui.QWidget):
         print("Applied")
 
     def dismiss(self):
-        QtGui.QApplication.instance().quit()
+        self.close()
 
 
 class FitsViewer(QtGui.QMainWindow):
@@ -614,8 +614,11 @@ class FitsViewer(QtGui.QMainWindow):
             time.sleep(1)
 
     def control_popup(self):
-        self.c = ControlWindow()
-        self.c.show()
+        if self.c == None:
+            self.c = ControlWindow()
+            self.c.show()
+        else:
+            self.c = None
 
 
     def show_images(self, pix, ff, bg):
