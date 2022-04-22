@@ -1027,8 +1027,8 @@ class FitsViewer(QtGui.QMainWindow):
         dec = float(header['DEC'])
         try:
             rot = float(header['ROTPOSN'])
-        except VerifyError:
-            print("Invalid rotator angle in header, defaulting to 0")
+        except astropy.io.fits.verify.VerifyError:
+            print("Invalid rotator angle in header, unable to rotate image")
             rot = 0.0
         filter = header['TRFWNAME']
         w.wcs.crpix = [y, x]
