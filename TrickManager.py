@@ -15,6 +15,8 @@ from astropy.stats import gaussian_sigma_to_fwhm
 from astropy.modeling import models, fitting
 import PIL.Image as PILimage
 
+from PyQt5.QtWidgets import QDesktopWidget
+
 from ginga import Bindings
 from ginga.misc import log
 from ginga.qtw.QtHelp import QtGui, QtCore, QDesktopWidget
