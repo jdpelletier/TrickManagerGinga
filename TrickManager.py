@@ -77,6 +77,18 @@ class Video(QtCore.QRunnable):
 
         self.fn(*self.args, **self.kwargs)
 
+class ControlWindow(QtGui.QWidget):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window as we want.
+    """
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.label = QLabel("Another Window")
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
 
 class FitsViewer(QtGui.QMainWindow):
 
@@ -242,6 +254,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.wvideomode.clicked.connect(self.video_mode)
         self.wvideomode.setVisible(False)
         buttons_vbox_left.addWidget(self.wvideomode)
+        self.wtrickcontrol = QtGui.QPushButton("Control")
+        self.wtrickcontrol.setObjectName("wtrickcontrol")
+        self.wtrickcontrol.clicked.connect(self.control_popup)
+        buttons_vbox_left.addWidget(self.wtrickcontrol)
         self.wfullframemode = QtGui.QPushButton("Full Frame Mode")
         self.wfullframemode.setObjectName("wfullframemode")
         self.wfullframemode.clicked.connect(self.full_frame_mode)
@@ -548,6 +564,11 @@ class FitsViewer(QtGui.QMainWindow):
             file_callback.emit(self.trkro1px, self.trkro1ff, self.trkro1bg)
             left, right, up, down = self.getROI()
             time.sleep(1)
+
+    def control_popup(self):
+        self.c = ControlWindow()
+        self.w.show()
+
 
     def show_images(self, pix, ff, bg):
         image = self.pixels_to_image(pix, ff, bg)
