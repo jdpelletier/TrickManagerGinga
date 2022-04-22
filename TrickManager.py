@@ -595,7 +595,6 @@ class FitsViewer(QtGui.QMainWindow):
     ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
         self.video = True
-        print("video started")
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         left, right, up, down = self.getROI()
@@ -604,7 +603,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     #TODO make this actually stop video mode
     def stop_video(self):
-        print("video stopped")
         self.video = False
 
     def reboot_trick(self):
