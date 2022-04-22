@@ -84,13 +84,12 @@ class ControlWindow(QtGui.QWidget):
     """
     def __init__(self):
         super().__init__()
-        vbox = QtGui.QVBoxLayout()
-        title_hbox = QtGui.QHBoxLayout()
-        title = QtGui.QLabel("Trick Control")
-        # title.setAlignment(QtCore.Qt.AlignHCenter)
-        title_hbox.addWidget(title)
+        # vbox = QtGui.QVBoxLayout()
+        # title_hbox = QtGui.QHBoxLayout()
+        # title = QtGui.QLabel("Trick Control")
+        # # title.setAlignment(QtCore.Qt.AlignHCenter)
+        # title_hbox.addWidget(title)
         # vbox.addLayout(title_hbox)
-        vbox.addWidget(title)
         # roisz_hbox = QtGui.QHBoxLayout()
         # roisz_label = QtGui.QLabel("ROI Size: ")
         # roisz_hbox.addWidget(roisz_label)
@@ -101,7 +100,12 @@ class ControlWindow(QtGui.QWidget):
         # self.wroisz.currentIndexChanged.connect(self.roisz_change)
         # roisz_hbox.addWidget(self.wroisz)
         # vbox.addLayout(roisz_hbox)
-        self.setLayout(vbox)
+        # self.setLayout(vbox)
+
+        layout = QtGui.QVBoxLayout()
+        self.label = QtGui.QLabel("Another Window")
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
     def roisz_change(self):
         print(self.wroisz.currentText())
