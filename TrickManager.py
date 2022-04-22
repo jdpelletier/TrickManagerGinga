@@ -91,7 +91,7 @@ class ControlWindow(QtGui.QWidget):
         title_hbox.setObjectName("title_hbox")
         title = QtGui.QLabel("Trick Control")
         title.setObjectName("readout")
-        title.setAlignment(QtCore.Qt.AlignHRight)
+        title.setAlignment(QtCore.Qt.AlignHCenter)
         title_hbox.addWidget(title)
         hw = QtGui.QWidget()
         hw.setLayout(title_hbox)
