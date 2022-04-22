@@ -402,6 +402,8 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
 
+        self.c = None #ControlWindow popup
+
     def add_canvas(self, tag=None):
         # add a canvas to the view
         my_canvas = self.fitsimage.get_canvas()
