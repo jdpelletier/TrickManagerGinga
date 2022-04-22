@@ -84,10 +84,36 @@ class ControlWindow(QtGui.QWidget):
     """
     def __init__(self):
         super().__init__()
-        layout = QtGui.QVBoxLayout()
-        self.label = QtGui.QLabel("Another Window")
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+        vbox = QtGui.QVBoxLayout()
+        vbox.setContentsMargins(0, 0, 0, 0)
+        vbox.setObjectName("vbox")
+        title_hbox = QtGui.QHBoxLayout()
+        title_hbox.setObjectName("title_hbox")
+        title = QtGui.QLabel("Trick Control")
+        title.setObjectName("readout")
+        title.setAlignment(QtCore.Qt.AlignHRight)
+        title_hbox.addWidget(title)
+        hw = QtGui.QWidget()
+        hw.setLayout(title_hbox)
+        vbox.addWidget(hw)
+        roisz_hbox = QtGui.QHBoxLayout()
+        roisz_hbox.setObjectName("roisz_hbox")
+        self.wroisz = QtGui.QComboBox()
+        sizes = [2,4,8,16]
+        for size in sizes:
+            self.wroisz.addItem(size)
+        self.wroisz.currentIndexChanged.connect(self.roisz_change)
+        roisz_hbox.addWidget(self.wroisz)
+        hw = QtGui.QWidget()
+        hw.setLayout(roisz_hbox)
+        vbox.addWidget(hw)
+        vbox.setSpacing(0)
+        vw = QtGui.QWidget()
+        self.setCentralWidget(vw)
+        vw.setLayout(vbox)
+
+    def roisz_change(self):
+        print(self.wroisz.currentText())
 
 
 class FitsViewer(QtGui.QMainWindow):
