@@ -107,7 +107,7 @@ class ControlWindow(QtGui.QWidget):
         wapply.clicked.connect(self.apply)
         apply_hbox.addWidget(wapply)
         wdismiss = QtGui.QPushButton("Apply")
-        wawdismisspply.clicked.connect(self.apply)
+        wdismiss.clicked.connect(self.apply)
         apply_hbox.addWidget(wdismiss)
         vbox.addLayout(apply_hbox)
         self.setLayout(vbox)
