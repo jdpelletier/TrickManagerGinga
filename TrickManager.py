@@ -104,7 +104,7 @@ class ControlWindow(QtGui.QWidget):
             self.wroisz.addItem(size)
         self.wroisz.currentIndexChanged.connect(self.roisz_change)
         roisz_hbox.addWidget(self.wroisz)
-        vbox.addLayout(title_hbox)
+        vbox.addLayout(roisz_hbox)
         self.setLayout(vbox)
 
     def roisz_change(self):
