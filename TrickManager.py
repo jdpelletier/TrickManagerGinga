@@ -637,7 +637,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.wchangefilter.setText(str(self.targname))
-        self.dtstatus.setText(f"DTSensor{str(self.dtsensor)}")
+        self.dtstatus.setText(f"DTSensor: {str(self.dtsensor)}")
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
