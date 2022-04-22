@@ -229,6 +229,7 @@ class FitsViewer(QtGui.QMainWindow):
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setObjectName("vbox")
         status_hbox = QtGui.QHBoxLayout()
+        status_hbox.setSpacing(1)
         self.rmlabel = QtGui.QLabel("Read Mode: ")
         status_hbox.addWidget(self.rmlabel)
         self.rmstatus = QtGui.QLabel("")
