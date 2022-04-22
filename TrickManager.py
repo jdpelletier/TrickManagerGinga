@@ -97,7 +97,7 @@ class ControlWindow(QtGui.QWidget):
         roisz_hbox.setObjectName("roisz_hbox")
         roisz_label = QtGui.QLabel("ROI Size: ")
         roisz_label.setObjectName("roisz_label")
-        roisz_hbox.addWidget(self.roisz_label)
+        roisz_hbox.addWidget(roisz_label)
         self.wroisz = QtGui.QComboBox()
         sizes = ['2','4','8','16']
         for size in sizes:
