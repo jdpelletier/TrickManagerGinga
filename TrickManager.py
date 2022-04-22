@@ -201,6 +201,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.trknmad1 = ktl.cache('ao', 'trknmad1')
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
+        self.trkstat = self.trkstsx = ktl.cache('trick', 'trkstat')
+        self.trkstat.monitor()
 
         self.rawfile = ''
         self.mode = ''
@@ -231,9 +233,9 @@ class FitsViewer(QtGui.QMainWindow):
         status_hbox.addWidget(self.rmlabel)
         self.readmode = QtGui.QLabel("")
         status_hbox.addWidget(self.readmode)
-        self.tslabel  = QtGui.QLabel("Read Mode: ")
+        self.tslabel  = QtGui.QLabel("Status: ")
         status_hbox.addWidget(self.tslabel)
-        self.trickstatus  = QtGui.QLabel("Read Mode: ")
+        self.trickstatus  = QtGui.QLabel("")
         status_hbox.addWidget(self.trickstatus)
         self.dtlabel = QtGui.QLabel("DT Sensor: ")
         status_hbox.addWidget(self.dtlabel)
@@ -649,6 +651,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.wchangefilter.setText(str(self.targname))
         self.dtstatus.setText(str(self.dtsensor))
+        self.trickstatus.setText(str(self.trkstat))
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
