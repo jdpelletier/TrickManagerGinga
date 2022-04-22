@@ -106,7 +106,6 @@ class ControlWindow(QtGui.QWidget):
         hw = QtGui.QWidget()
         hw.setLayout(roisz_hbox)
         vbox.addWidget(hw)
-        vbox.setSpacing(0)
         self.setLayout(vbox)
 
     def roisz_change(self):
