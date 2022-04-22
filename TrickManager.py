@@ -1029,6 +1029,7 @@ class FitsViewer(QtGui.QMainWindow):
         try:
             rot = float(header['ROTPOSN'])
         except VerifyError:
+            self.rotator_invalid_popup()
             print("Invalid rotator angle in header, unable to rotate image")
             rot = 0.0
         filter = header['TRFWNAME']
@@ -1047,6 +1048,13 @@ class FitsViewer(QtGui.QMainWindow):
         # Now, write out the WCS object as a FITS header
         header = w.to_header()
         return name, header, fitsData, filter
+
+    def rotator_invalid_popup(self):
+        msg = QtGui.QMessageBox()
+        msg.setWindowTitle("Invalid Header")
+        msg.setText("Invalid rotator angle in header, unable to rotate image")
+        msg.setIcon(QtGui.QMessageBox.Critical)
+        y = msg.exec_()
 
     def writeFits(self, headerinfo, image_data):
         hdu = fits.PrimaryHDU(header=headerinfo, data=image_data)
