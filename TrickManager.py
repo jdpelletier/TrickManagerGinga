@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import QDesktopWidget
 
 from ginga import Bindings
 from ginga.misc import log
-from ginga.qtw.QtHelp import QtGui, QtCore, QDesktopWidget
+from ginga.qtw.QtHelp import QtGui, QtCore
 from ginga.qtw.ImageViewQt import CanvasView, ScrolledView
 from ginga.util import iqcalc
 from ginga.util.loader import load_data
