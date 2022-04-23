@@ -656,7 +656,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wchangefilter.setText(str(self.targname))
         self.dtstatus.setText(str(self.dtsensor))
         ts = str(self.trkstat)
-        if ts = '2nd-channel video in progress':
+        if ts == '2nd-channel video in progress':
             ts = '2C Video'
         self.trickstatus.setText(ts)
         m = self.readmode.read()
