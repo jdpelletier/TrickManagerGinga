@@ -90,6 +90,8 @@ class ControlWindow(QtGui.QWidget):
 
         self.trickxpos = ktl.cache('tds', 'TRKRO1X')
         self.trickypos = ktl.cache('tds', 'TRKRO1Y')
+        self.trickxsize = ktl.cache('tds', 'TRKRO1SX')
+        self.trickysize = ktl.cache('tds', 'TRKRO1SY')
 
         vbox = QtGui.QVBoxLayout()
         title_hbox = QtGui.QHBoxLayout()
