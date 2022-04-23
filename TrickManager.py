@@ -665,7 +665,7 @@ class FitsViewer(QtGui.QMainWindow):
         elif m == "2":
             self.rmstatus.setText("Filmstrip")
         else:
-            self.rmstatus.setText("Full Frame")
+            self.rmstatus.setText("FFrame")
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
@@ -713,6 +713,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick.setVisible(False)
         self.wreboottrick.setVisible(False)
         self.wtrickcontrol.setVisible(False)
+        self.rmstatus.setVisible(False)
+        self.trickstatus.setVisible(False)
+        self.dtstatus.setVisible(False)
         self.wcolor.setVisible(True)
         self.wcut.setVisible(True)
         self.wsky.setVisible(True)
@@ -750,6 +753,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.wreboottrick.setVisible(True)
         self.wquit.setVisible(True)
         self.wtrickcontrol.setVisible(True)
+        self.rmstatus.setVisible(True)
+        self.trickstatus.setVisible(True)
+        self.dtstatus.setVisible(True)
         self.wcolor.setVisible(False)
         self.wcut.setVisible(False)
         self.wsky.setVisible(False)
