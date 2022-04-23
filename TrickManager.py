@@ -196,6 +196,8 @@ class ControlWindow(QtGui.QWidget):
             print("COADD change")
         if set_cpr != cpr:
             print("CPR change")
+            v = FitsViewer()
+            v.test()
 
     def dismiss(self):
         self.close()
@@ -499,6 +501,9 @@ class FitsViewer(QtGui.QMainWindow):
         self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
 
         self.c = None #ControlWindow
+
+    def test(self):
+        print('TEST WORKED')
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
