@@ -110,7 +110,6 @@ class ControlWindow(QtGui.QWidget):
             self.wroisz.addItem(size)
         item = str(self.trickxsize.read())
         self.wroisz.setCurrentText(item)
-        self.wroisz.currentIndexChanged.connect(self.roisz_change)
         roisz_hbox.addWidget(self.wroisz)
         vbox.addLayout(roisz_hbox)
         roixy_hbox = QtGui.QHBoxLayout()
@@ -165,14 +164,26 @@ class ControlWindow(QtGui.QWidget):
         self.coadd_label.setText(f"Coadd: {coadd}")
         self.cpr_label.setText(f"CPR: {cpr}")
 
-    def roisz_change(self):
-        return
-
     def apply(self):
-        print("Applied")
+        roix = int(self.trickxsize.read())
+        roiy = int(self.trickysize.read())
+        centerx = int(int(self.trickxpos.read()) + roix/2)
+        centery = int(int(self.trickypos.read()) + roiy/2)
+        coadd = self.trknmad1.read()
+        cpr = self.trkrocpr.read()
+        if (int(self.roix.text()) != roix) or (int(self.roiy.text()) != roiy):
+            print("ROI change")
+        if self.wroisz.currentText() != self.roi_label.text():
+            print("ROI size change")
+        if self.coadd.text() != coadd:
+            print("COADD change")
+        if self.cpr.text() != cpr:
+            print("CPR change")
 
     def dismiss(self):
         self.close()
+
+
 
 
 class FitsViewer(QtGui.QMainWindow):
