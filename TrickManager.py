@@ -169,21 +169,21 @@ class ControlWindow(QtGui.QWidget):
         roiy = int(self.trickysize.read())
         centerx = int(int(self.trickxpos.read()) + roix/2)
         centery = int(int(self.trickypos.read()) + roiy/2)
-        coadd = self.trknmad1.read()
-        cpr = self.trkrocpr.read()
-        if self.roix.text() = '':
+        coadd = int(self.trknmad1.read())
+        cpr = int(self.trkrocpr.read())
+        if self.roix.text() == '':
             set_roix = roix
         else:
             set_roix = int(self.roix.text())
-        if self.roiy.text() = '':
+        if self.roiy.text() == '':
             set_roiy = roiy
         else:
             set_roiy = int(self.roiy.text())
-        if self.coadd.text() = '':
+        if self.coadd.text() == '':
             set_coadd = coadd
         else:
             set_coadd = int(self.coadd.text())
-        if self.cpr.text() = '':
+        if self.cpr.text() == '':
             set_cpr = cpr
         else:
             set_cpr = int(self.cpr.text())
