@@ -360,7 +360,7 @@ class ControlWindow(QtGui.QWidget):
         set_roisz = None
         if self.wroisz.currentText() != roisz:
             set_roisz = int(self.wroisz.currentText())
-        if (set_roix != centerx) or (set_roiy != centery):
+        if (set_roix != centerx) or (set_roiy != centery) or (set_roisz != None):
             print("ROI change")
             xroi = set_roix-int(self.wroisz.currentText())/2
             yroi = set_roiy-int(self.wroisz.currentText())/2
