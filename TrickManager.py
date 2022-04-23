@@ -171,13 +171,29 @@ class ControlWindow(QtGui.QWidget):
         centery = int(int(self.trickypos.read()) + roiy/2)
         coadd = self.trknmad1.read()
         cpr = self.trkrocpr.read()
-        if (int(self.roix.text()) != roix) or (int(self.roiy.text()) != roiy):
+        if self.roix.text() = '':
+            set_roix = roix
+        else:
+            set_roix = int(self.roix.text())
+        if self.roiy.text() = '':
+            set_roiy = roiy
+        else:
+            set_roiy = int(self.roiy.text())
+        if self.coadd.text() = '':
+            set_coadd = coadd
+        else:
+            set_coadd = int(self.coadd.text())
+        if self.cpr.text() = '':
+            set_cpr = cpr
+        else:
+            set_cpr = int(self.cpr.text())
+        if (set_roix != roix) or (set_roiy != roiy):
             print("ROI change")
         if self.wroisz.currentText() != self.roi_label.text():
             print("ROI size change")
-        if self.coadd.text() != coadd:
+        if set_coadd != coadd:
             print("COADD change")
-        if self.cpr.text() != cpr:
+        if set_cpr != cpr:
             print("CPR change")
 
     def dismiss(self):
