@@ -158,6 +158,8 @@ class ControlWindow(QtGui.QWidget):
         centery = int(int(self.trickypos.read()) + roiy/2)
         coadd = self.trknmad1.read()
         cpr = self.trkrocpr.read()
+        item = str(self.trickxsize.read())
+        self.wroisz.setCurrentText(item)
         self.roi_label.setText(f"ROI {centerx} {centery}")
         self.roisz_label.setText(f"ROI Size: {roisz}")
         self.coadd_label.setText(f"Coadd: {coadd}")
@@ -307,9 +309,12 @@ class FitsViewer(QtGui.QMainWindow):
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
+        item = str(self.trickxsize.read())
+        self.wroisz.setCurrentText(item)
         self.wcut.currentIndexChanged.connect(self.cut_change)
         readout_hbox.addWidget(self.wcut)
         self.wcut.setVisible(False)
+        self.wcut.setCurrentItem('median')
         self.wcolor = QtGui.QComboBox()
         for name in fi.get_color_algorithms():
             self.wcolor.addItem(name)
