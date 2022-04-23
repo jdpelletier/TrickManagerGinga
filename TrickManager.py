@@ -376,7 +376,7 @@ class ControlWindow(QtGui.QWidget):
         if set_cpr != cpr:
             print("CPR change")
             status = self.trkstop.write(1)
-            status = self.trkrocpr.write(newcpr)
+            status = self.trkrocpr.write(set_cpr)
             status = self.trkstsx.write(1)
 
 
