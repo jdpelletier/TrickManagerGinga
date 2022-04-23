@@ -134,6 +134,8 @@ class ControlWindow(QtGui.QWidget):
         self.update_gui()
 
     def update_gui(self):
+        roix = int(self.trickxsize.read())
+        roiy = int(self.trickysize.read())
         centerx = int(int(self.trickxpos.read()) + roix/2)
         centery = int(int(self.trickypos.read()) + roiy/2)
         self.roi_info.setText(f"ROI {centerx} {centery}")
