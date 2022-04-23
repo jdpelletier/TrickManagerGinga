@@ -310,7 +310,7 @@ class FitsViewer(QtGui.QMainWindow):
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
         item = str(self.trickxsize.read())
-        self.wroisz.setCurrentText(item)
+        self.wcut.setCurrentText(item)
         self.wcut.currentIndexChanged.connect(self.cut_change)
         readout_hbox.addWidget(self.wcut)
         self.wcut.setVisible(False)
