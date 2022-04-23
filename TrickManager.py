@@ -160,7 +160,7 @@ class ControlWindow(QtGui.QWidget):
         self.roi_label.setText(f"ROI {centerx} {centery}")
         self.roisz_label.setText(f"ROI Size: {roisz}")
         self.coadd_label.setText(f"Coadd: {coadd}")
-        self.cpr_label.setText(f"CPR: {CPR}")
+        self.cpr_label.setText(f"CPR: {cpr}")
 
     def roisz_change(self):
         return
