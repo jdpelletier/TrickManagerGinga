@@ -146,7 +146,7 @@ class ControlWindow(QtGui.QWidget):
         x = screen.width() - widget.width()
         y = screen.height() - widget.height()
         self.move(x, y)
-        # self.resize(0, 0)
+        self.resize(100, 0)
 
         self.update_gui()
 
