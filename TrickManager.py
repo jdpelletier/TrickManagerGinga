@@ -141,9 +141,11 @@ class ControlWindow(QtGui.QWidget):
     def update_gui(self):
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
+        roisz = str(self.trickxsize.read())
         centerx = int(int(self.trickxpos.read()) + roix/2)
         centery = int(int(self.trickypos.read()) + roiy/2)
         self.roi_label.setText(f"ROI {centerx} {centery}")
+        self.roisz_label.setText(f"ROI Size: {roisz}")
 
     def roisz_change(self):
         print(self.wroisz.currentText())
