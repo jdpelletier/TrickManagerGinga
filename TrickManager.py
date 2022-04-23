@@ -87,6 +87,10 @@ class ControlWindow(QtGui.QWidget):
     """
     def __init__(self):
         super().__init__()
+
+        self.trickxpos = ktl.cache('tds', 'TRKRO1X')
+        self.trickypos = ktl.cache('tds', 'TRKRO1Y')
+
         vbox = QtGui.QVBoxLayout()
         title_hbox = QtGui.QHBoxLayout()
         title = QtGui.QLabel("Trick Control")
@@ -104,12 +108,10 @@ class ControlWindow(QtGui.QWidget):
         roisz_hbox.addWidget(self.wroisz)
         vbox.addLayout(roisz_hbox)
         roixy_hbox = QtGui.QHBoxLayout()
-        roix_label = QtGui.QLabel("ROI X: ")
-        roixy_hbox.addWidget(roix_label)
+        roi_label = QtGui.QLabel("ROI")
+        roixy_hbox.addWidget(roi_label)
         roix = QtGui.QLineEdit()
         roixy_hbox.addWidget(roix)
-        roiy_label = QtGui.QLabel("Y: ")
-        roixy_hbox.addWidget(roiy_label)
         roiy = QtGui.QLineEdit()
         roixy_hbox.addWidget(roiy)
         vbox.addLayout(roixy_hbox)
@@ -128,6 +130,11 @@ class ControlWindow(QtGui.QWidget):
         x = screen.width() - widget.width()
         y = screen.height() - widget.height()
         self.move(x, y)
+
+    def update_gui(self):
+        centerx = int(int(self.trickxpos.read()) + roix/2)
+        centery = int(int(self.trickypos.read()) + roiy/2)
+        self.roi_info.setText(f"ROI {centerx} {centery}")
 
     def roisz_change(self):
         print(self.wroisz.currentText())
