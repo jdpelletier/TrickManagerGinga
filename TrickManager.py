@@ -242,6 +242,9 @@ class Util:
         print(f'Sending TRICK filter wheel to {targname}')
         status = self.targname.write(targname)
 
+    def test(self):
+        print("TESTING")
+
 
 
 class ControlWindow(QtGui.QWidget):
@@ -728,6 +731,35 @@ class FitsViewer(QtGui.QMainWindow):
         msg.setText("Open the loop or switch to STRAP before changing filter")
         msg.setIcon(QtGui.QMessageBox.Critical)
         y = msg.exec_()
+
+    def init_trick(self):
+        print("Initing TRICK")
+        self.wquit.setEnabled(False)
+        self.stopex.write(1)
+        time.sleep(3)
+        self.init.write(1)
+        self.sampmode.write(5)
+        self.cyclespr.write(50)
+        self.cdsmode.write(1)
+        self.readmode.write(3)
+        self.go.write(1)
+        time.sleep(3)
+        if self.ops == "MGAO":
+            self.trkenapx.write(0)
+            self.trkfpspx.write('Passive')
+        self.trkstop.write(1)
+        time.sleep(1)
+        if self.ops == "MGAO":
+            self.trkfpspx.write('1 second')
+            self.trkenapx.write(1)
+        self.trkstsx.write(1)
+        self.video = True
+        video = Video(self.display_video)
+        video.signals.load.connect(self.show_images)
+        self.threadpool.start(video)
+        self.wquit.setEnabled(True)
+        self.mode = 'video'
+        self.wrestartvideo.setEnabled(True)
 
     def restart_video(self):
         self.stopex.write(1)
