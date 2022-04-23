@@ -131,6 +131,8 @@ class ControlWindow(QtGui.QWidget):
         y = screen.height() - widget.height()
         self.move(x, y)
 
+        self.update_gui()
+
     def update_gui(self):
         centerx = int(int(self.trickxpos.read()) + roix/2)
         centery = int(int(self.trickypos.read()) + roiy/2)
