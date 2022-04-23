@@ -94,6 +94,37 @@ class Util:
         self.trkrordy = ktl.cache('ao','trkrordy')
         self.tkcxim = ktl.cache('ao','tkcxim')
         self.tkcyim = ktl.cache('ao','tkcyim')
+        self.trkstop = ktl.cache('trick', 'trkstop')
+        self.trkstsx = ktl.cache('trick', 'trkstsx')
+        self.trkrocpr = ktl.cache('trick', 'trkrocpr')
+        self.trknmad1 = ktl.cache('ao', 'trknmad1')
+        self.targname = ktl.cache('tfs', 'TARGNAME')
+        self.targname.monitor()
+        self.tfshome = ktl.cache('tfs', 'home')
+        self.tfsinit = ktl.cache('tfs', 'init')
+        self.tfsstatus = ktl.cache('tfs', 'status')
+        self.tfsposname = ktl.cache('tfs', 'posname')
+
+    def desaturate(self):
+        print("Desaturate button pressed")
+        cpr = int(self.trkrocpr.read())
+        coadd = int(self.trknmad1.read())
+        xsatu = int(128*cpr/(69700*coadd^2)*100) #info.maxroi = 128
+        if xsatu >= 40:
+            newcpr = int(cpr*40/xsatu)
+            if newcpr < 2: #cannot be less than 2
+                newcpr = 2
+
+            if cpr != newcpr:
+                print(f'Resetting CPR to {newcpr}')
+
+                status = self.trkstop.write(1)
+                status = self.trkrocpr.write(newcpr)
+                status = self.trkstsx.write(1)
+            else:
+               print('Unable to change CPR to desaturate detector')
+        else:
+            print('The detector is not near saturation')
 
     def trk_distortion_model(self, x0, y0, p):
         # Translation of DistortionModel into Python
@@ -170,8 +201,46 @@ class Util:
         status = self.trkrordy.write(1)
         return
 
-    def test(self):
-        print("TESTING")
+    def change_filter(self, button):
+        target = button.text()
+
+        if target != str(self.targname):
+        #     if self.tiptilt == "closed": #todo figure out keyword here
+        #         self.tiptilt_popup()
+        #         return
+            if target == 'DISMISS':
+                return
+            if target == 'Block':
+                target = 'blocking'
+            if target == 'home' or target == 'open':
+                target = target.lower()
+            self.targname.write(target)
+        return
+
+    def init_filter(self):
+        print("Initing filter")
+        #if self.tiptilt == "closed": #todo figure out keyword here
+        #         self.tiptilt_popup()
+        #         return
+        targname = str(self.targname)
+        print('Sending TRICK filter wheel home')
+        status = self.tfshome.write(1)
+        time.sleep(3)
+        print('Initializing TRICK filter wheel')
+        status = self.tfsinit.write(1)
+        tfsstatus = self.tfsstatus.read()
+        while tfsstatus != 'OK':
+            print('tfsstatus')
+            time.sleep(1)
+            tfsstatus = self.tfsstatus.read()
+        posname = self.tfsposname.read()
+        if posname != 'home':
+            print('Waiting for TFS to go home, this could take 30s')
+        while posname != 'home':
+            time.sleep(0.5)
+            posname = self.tfsposname.read()
+        print(f'Sending TRICK filter wheel to {targname}')
+        status = self.targname.write(targname)
 
 
 
@@ -182,6 +251,8 @@ class ControlWindow(QtGui.QWidget):
     """
     def __init__(self):
         super().__init__()
+
+        self.util = Util()
 
         self.trickxpos = ktl.cache('tds', 'TRKRO1X')
         self.trickypos = ktl.cache('tds', 'TRKRO1Y')
@@ -244,8 +315,6 @@ class ControlWindow(QtGui.QWidget):
 
         self.update_gui()
 
-        self.util = Util()
-
     def update_gui(self):
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
@@ -293,7 +362,6 @@ class ControlWindow(QtGui.QWidget):
             print("COADD change")
         if set_cpr != cpr:
             print("CPR change")
-            self.util.test()
 
     def dismiss(self):
         self.close()
@@ -310,6 +378,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.cachedFiles = None
         self.video = False
         self.ops = "MGAO" #set mode to MGAO by default, then checks for missing keywords
+
+        self.util = Util()
         #KTL stuff
         #Cache KTL keywords
         self.trickxpos = ktl.cache('tds', 'TRKRO1X')
@@ -342,14 +412,8 @@ class FitsViewer(QtGui.QMainWindow):
             self.ops = "RTC"
         self.trkstop = ktl.cache('trick', 'trkstop')
         self.trkstsx = ktl.cache('trick', 'trkstsx')
-        self.trkrocpr = ktl.cache('trick', 'trkrocpr')
         self.targname = ktl.cache('tfs', 'TARGNAME')
         self.targname.monitor()
-        self.tfshome = ktl.cache('tfs', 'home')
-        self.tfsinit = ktl.cache('tfs', 'init')
-        self.tfsstatus = ktl.cache('tfs', 'status')
-        self.tfsposname = ktl.cache('tfs', 'posname')
-        self.trknmad1 = ktl.cache('ao', 'trknmad1')
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
         self.trkstat = self.trkstsx = ktl.cache('trick', 'trkstat')
@@ -419,7 +483,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wdesaturate = QtGui.QPushButton("Desaturate")
         self.wdesaturate.setObjectName("wdesaturate")
         self.wdesaturate.setMaximumSize(QtCore.QSize(100, 100))
-        self.wdesaturate.clicked.connect(self.desaturate)
+        self.wdesaturate.clicked.connect(self.util.desaturate)
         readout_hbox.addWidget(self.wdesaturate)
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
@@ -456,7 +520,7 @@ class FitsViewer(QtGui.QMainWindow):
         filter_hbox.addWidget(self.wchangefilter)
         self.winitfilter = QtGui.QPushButton("Init Wheel")
         self.winitfilter.setObjectName("winitfilter")
-        self.winitfilter.clicked.connect(self.init_filter)
+        self.winitfilter.clicked.connect(self.util.init_filter)
         filter_hbox.addWidget(self.winitfilter)
         hw = QtGui.QWidget()
         hw.setLayout(filter_hbox)
@@ -587,8 +651,6 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.c = None #ControlWindow)
 
-        self.util = Util()
-
     def add_canvas(self, tag=None):
         # add a canvas to the view
         my_canvas = self.fitsimage.get_canvas()
@@ -649,27 +711,6 @@ class FitsViewer(QtGui.QMainWindow):
 
     ##TODO verify init trick, restart video, stop video, reboot trick, change_filter, desaturate
 
-    def desaturate(self):
-        print("Desaturate button pressed")
-        cpr = int(self.trkrocpr.read())
-        coadd = int(self.trknmad1.read())
-        xsatu = int(128*cpr/(69700*coadd^2)*100) #info.maxroi = 128
-        if xsatu >= 40:
-            newcpr = int(cpr*40/xsatu)
-            if newcpr < 2: #cannot be less than 2
-                newcpr = 2
-
-            if cpr != newcpr:
-                print(f'Resetting CPR to {newcpr}')
-
-                status = self.trkstop.write(1)
-                status = self.trkrocpr.write(newcpr)
-                status = self.trkstsx.write(1)
-            else:
-               print('Unable to change CPR to desaturate detector')
-        else:
-            print('The detector is not near saturation')
-
 
     def filter_popup(self):
         msg = QtGui.QMessageBox()
@@ -678,24 +719,8 @@ class FitsViewer(QtGui.QMainWindow):
         msg.setIcon(QtGui.QMessageBox.Information)
         for filter in self.trick_filters:
             msg.addButton(f'{filter}', QtGui.QMessageBox.YesRole)
-        msg.buttonClicked.connect(self.change_filter)
+        msg.buttonClicked.connect(self.util.change_filter)
         x = msg.exec_()
-
-    def change_filter(self, button):
-        target = button.text()
-
-        if target != str(self.targname):
-        #     if self.tiptilt == "closed": #todo figure out keyword here
-        #         self.tiptilt_popup()
-        #         return
-            if target == 'DISMISS':
-                return
-            if target == 'Block':
-                target = 'blocking'
-            if target == 'home' or target == 'open':
-                target = target.lower()
-            self.targname.write(target)
-        return
 
     def tiptilt_popup(self):
         msg = QtGui.QMessageBox()
@@ -703,60 +728,6 @@ class FitsViewer(QtGui.QMainWindow):
         msg.setText("Open the loop or switch to STRAP before changing filter")
         msg.setIcon(QtGui.QMessageBox.Critical)
         y = msg.exec_()
-
-    def init_filter(self):
-        print("Initing filter")
-        #if self.tiptilt == "closed": #todo figure out keyword here
-        #         self.tiptilt_popup()
-        #         return
-        targname = str(self.targname)
-        print('Sending TRICK filter wheel home')
-        status = self.tfshome.write(1)
-        time.sleep(3)
-        print('Initializing TRICK filter wheel')
-        status = self.tfsinit.write(1)
-        tfsstatus = self.tfsstatus.read()
-        while tfsstatus != 'OK':
-            print('tfsstatus')
-            time.sleep(1)
-            tfsstatus = self.tfsstatus.read()
-        posname = self.tfsposname.read()
-        if posname != 'home':
-            print('Waiting for TFS to go home, this could take 30s')
-        while posname != 'home':
-            time.sleep(0.5)
-            posname = self.tfsposname.read()
-        print(f'Sending TRICK filter wheel to {targname}')
-        status = self.targname.write(targname)
-
-    def init_trick(self):
-        print("Initing TRICK")
-        self.wquit.setEnabled(False)
-        self.stopex.write(1)
-        time.sleep(3)
-        self.init.write(1)
-        self.sampmode.write(5)
-        self.cyclespr.write(50)
-        self.cdsmode.write(1)
-        self.readmode.write(3)
-        self.go.write(1)
-        time.sleep(3)
-        if self.ops == "MGAO":
-            self.trkenapx.write(0)
-            self.trkfpspx.write('Passive')
-        self.trkstop.write(1)
-        time.sleep(1)
-        if self.ops == "MGAO":
-            self.trkfpspx.write('1 second')
-            self.trkenapx.write(1)
-        self.trkstsx.write(1)
-        self.video = True
-        video = Video(self.display_video)
-        video.signals.load.connect(self.show_images)
-        self.threadpool.start(video)
-        self.wquit.setEnabled(True)
-        self.mode = 'video'
-        self.wrestartvideo.setEnabled(True)
 
     def restart_video(self):
         self.stopex.write(1)
