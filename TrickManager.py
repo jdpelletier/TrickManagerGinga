@@ -655,7 +655,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.wchangefilter.setText(str(self.targname))
         self.dtstatus.setText(str(self.dtsensor))
-        self.trickstatus.setText(str(self.trkstat))
+        ts = str(self.trkstat)
+        if ts = '2nd-channel video in progress':
+            ts = '2C Video'
+        self.trickstatus.setText(ts)
         m = self.readmode.read()
         if m == "3":
             self.rmstatus.setText("Video")
