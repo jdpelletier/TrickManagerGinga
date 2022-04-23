@@ -357,14 +357,28 @@ class ControlWindow(QtGui.QWidget):
             set_cpr = cpr
         else:
             set_cpr = int(self.cpr.text())
+        set_roisz = None
+        if self.wroisz.currentText() != roisz:
+            set_roisz = int(self.wroisz.currentText())
         if (set_roix != centerx) or (set_roiy != centery):
             print("ROI change")
-        if self.wroisz.currentText() != roisz:
-            print("ROI size change")
+            xroi = set_roix-int(self.wroisz.currentText())/2
+            yroi = set_roiy-int(self.wroisz.currentText())/2
+            self.trickxpos.write(xroi)
+            self.trickypos.write(yroi)
+            distcoeff = np.zeros(20)
+            rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
+            for idx,row in enumerate(rows):
+                distcoeff[idx] = float(row[0][5:])
+            self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=set_roisz)
         if set_coadd != coadd:
             print("COADD change")
         if set_cpr != cpr:
             print("CPR change")
+            status = self.trkstop.write(1)
+            status = self.trkrocpr.write(newcpr)
+            status = self.trkstsx.write(1)
+
 
     def dismiss(self):
         self.close()
@@ -1032,8 +1046,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.go.write(1)
 
     def set_roi(self):
-        xroi = self.xclick-8
-        yroi = self.yclick-8
+        xroi = self.xclick-float(self.trickxsize.read())/2.0
+        yroi = self.yclick-float(self.trickysize.read())/2.0
         self.trickxpos.write(xroi)
         self.trickypos.write(yroi)
         distcoeff = np.zeros(20)
