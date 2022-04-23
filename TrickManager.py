@@ -699,7 +699,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.resize(500, 700)
-        self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(512, 512))
+        self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(600, 600))
         self.fitsimage.set_limits(None)
         self.readout.setMinimumSize(QtCore.QSize(240, 0))
         self.fitsimage.set_autocut_params('median')
