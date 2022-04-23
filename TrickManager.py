@@ -100,8 +100,8 @@ class ControlWindow(QtGui.QWidget):
         title_hbox.addWidget(title)
         vbox.addLayout(title_hbox)
         roisz_hbox = QtGui.QHBoxLayout()
-        roisz_label = QtGui.QLabel("ROI Size: ")
-        roisz_hbox.addWidget(roisz_label)
+        self.roisz_label = QtGui.QLabel("ROI Size: ")
+        roisz_hbox.addWidget(self.roisz_label)
         self.wroisz = QtGui.QComboBox()
         sizes = ['2','4','8','16']
         for size in sizes:
@@ -110,8 +110,8 @@ class ControlWindow(QtGui.QWidget):
         roisz_hbox.addWidget(self.wroisz)
         vbox.addLayout(roisz_hbox)
         roixy_hbox = QtGui.QHBoxLayout()
-        roi_label = QtGui.QLabel("ROI")
-        roixy_hbox.addWidget(roi_label)
+        self.roi_label = QtGui.QLabel("ROI")
+        roixy_hbox.addWidget(self.roi_label)
         roix = QtGui.QLineEdit()
         roixy_hbox.addWidget(roix)
         roiy = QtGui.QLineEdit()
@@ -140,7 +140,7 @@ class ControlWindow(QtGui.QWidget):
         roiy = int(self.trickysize.read())
         centerx = int(int(self.trickxpos.read()) + roix/2)
         centery = int(int(self.trickypos.read()) + roiy/2)
-        self.roixy_hbox.setText(f"ROI {centerx} {centery}")
+        self.roi_label.setText(f"ROI {centerx} {centery}")
 
     def roisz_change(self):
         print(self.wroisz.currentText())
