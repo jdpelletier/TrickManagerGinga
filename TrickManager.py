@@ -314,7 +314,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wcut.currentIndexChanged.connect(self.cut_change)
         readout_hbox.addWidget(self.wcut)
         self.wcut.setVisible(False)
-        self.wcut.setCurrentItem('median')
+        self.wcut.setCurrentText('median')
         self.wcolor = QtGui.QComboBox()
         for name in fi.get_color_algorithms():
             self.wcolor.addItem(name)
