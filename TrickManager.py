@@ -130,6 +130,7 @@ class ControlWindow(QtGui.QWidget):
         cpr_hbox.addWidget(self.coadd)
         self.coadd_label = QtGui.QLabel("Coadd: ")
         cpr_hbox.addWidget(self.coadd_label)
+        vbox.addLayout(cpr_hbox)
         apply_hbox = QtGui.QHBoxLayout()
         wapply = QtGui.QPushButton("Apply")
         wapply.clicked.connect(self.apply)
