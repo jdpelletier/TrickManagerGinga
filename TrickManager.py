@@ -188,7 +188,7 @@ class ControlWindow(QtGui.QWidget):
             set_cpr = cpr
         else:
             set_cpr = int(self.cpr.text())
-        if (set_roix != roix) or (set_roiy != roiy):
+        if (set_roix != centerx) or (set_roiy != centery):
             print("ROI change")
         if self.wroisz.currentText() != roisz:
             print("ROI size change")
