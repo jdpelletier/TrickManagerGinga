@@ -745,7 +745,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.stop_scan()
         self.fitsimage.clear()
         self.fitsimage.rotate(0)
-        self.resize(240, 300)
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
         self.viewerLspacer.changeSize(40, 100, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.viewerRspacer.changeSize(40, 100, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -781,6 +780,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.box_readout.setVisible(False)
         self.wopen.setVisible(False)
         self.readout.setMinimumSize(QtCore.QSize(0, 0))
+        self.resize(240, 300)
         #TODO replace this with restart video
         self.start_video()
 
