@@ -196,7 +196,7 @@ class ControlWindow(QtGui.QWidget):
             print("COADD change")
         if set_cpr != cpr:
             print("CPR change")
-            v = FitsViewer()
+            v = FitsViewer(log.get_logger("ControlWindow", log_stderr=True, level=40))
             v.test()
 
     def dismiss(self):
