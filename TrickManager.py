@@ -80,6 +80,101 @@ class Video(QtCore.QRunnable):
 
         self.fn(*self.args, **self.kwargs)
 
+class Util:
+    def __init__(self):
+        super().__init__()
+        self.tkenrup = ktl.cache('ao', 'tkenrup')
+        self.tkcrxs = ktl.cache('ao','tkcrxs')
+        self.tkcrys = ktl.cache('ao','tkcrys')
+        self.tkcrevxp = ktl.cache('ao','tkcrevxp')
+        self.tkcrevyp = ktl.cache('ao','tkcrevyp')
+        self.tkcrevxo = ktl.cache('ao','tkcrevxo')
+        self.tkcrevyo = ktl.cache('ao','tkcrevyo')
+        self.tksrtrg = ktl.cache('ao','tksrtrg')
+        self.trkrordy = ktl.cache('ao','trkrordy')
+        self.tkcxim = ktl.cache('ao','tkcxim')
+        self.tkcyim = ktl.cache('ao','tkcyim')
+
+    def trk_distortion_model(self, x0, y0, p):
+        # Translation of DistortionModel into Python
+        x0T = x0-p[0]
+        y0T = y0-p[10]
+
+        x1 = p[0]+p[1]*y0T+p[2]*x0T+p[3]*y0T**2+p[4]*y0T*x0T+p[5]*x0T**2+\
+            p[6]*y0T**3+p[7]*y0T**2*x0T+p[8]*y0T*x0T**2+p[9]*x0T**3
+
+        y1 = p[10]+p[11]*y0T+p[12]*x0T+p[13]*y0T**2+p[14]*y0T*x0T+p[15]*x0T**2+\
+            p[16]*y0T**3+p[17]*y0T**2*x0T+p[18]*y0T*x0T**2+p[19]*x0T**3
+
+        return (x1,y1)
+
+    def trk_undo_distmodel(self, x1, y1, DistC):
+        eps = 0.5 # error in pixels
+        maxiter = 20
+
+        k = 0
+        x0 = copy.copy(x1)
+        y0 = copy.copy(y1)
+        (x1p,y1p) = self.trk_distortion_model(x0,y0,DistC)
+
+        while (np.sqrt((x1p-x1)**2+(y1p-y1)**2) > eps):
+            if k >= maxiter:
+                print('No convergence in '+str(iter)+' iterations')
+                break
+
+            x0 -= (x1p-x1)
+            y0 -= (y1p-y1)
+
+            (x1p,y1p) = self.trk_distortion_model(x0,y0,DistC)
+            k += 1
+
+        return (x0,y0)
+
+
+    def trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None):
+        # TODO: error handling
+
+        if roisz not in [None,2, 4, 8, 16]:
+            raise('Invalid value for roisz')
+            return
+
+        sctrack = self.tkenrup.read() # what is the error handling here?
+        if sctrack:
+            # turn sctracking off
+            status = self.tkenrup.write(0)
+
+        if roisz is not None:
+            status = self.tkcrxs.write(roisz)
+            status = self.tkcrys.write(roisz)
+
+        (xp,yp) = self.trk_undo_distmodel(xroi, yroi, distcoeff)
+        status = self.tkcrevxp.write(xp)
+        status = self.tkcrevyp.write(yp)
+
+        xim = self.tkcrevxo.read()
+        yim = self.tkcrevyo.read()
+        status = self.tkcxim.write(xim)
+        status = self.tkcyim.write(yim)
+
+        # need to tigger the ROI calculator TWICE (as told to Bruno Femenia by Paul Stomski)
+        status = self.tksrtrg.write(1)
+        time.sleep(0.1)    # wait 0.1 s
+        status = self.tksrtrg.write(1)
+
+        # need to set to propagate SPOC-Camera-WFC
+        status = self.tkenrup.write(1)
+        if sctrack == 0:
+            status = self.tkenrup.write(0)
+
+        # Setting trkrordy syncs SPOC and camera values with WFC and triggers actions by WFC: bad pixel map, etc
+        status = self.trkrordy.write(1)
+        return
+
+    def test(self):
+        print("TESTING")
+
+
+
 class ControlWindow(QtGui.QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
@@ -149,6 +244,8 @@ class ControlWindow(QtGui.QWidget):
 
         self.update_gui()
 
+        self.util = Util()
+
     def update_gui(self):
         roix = int(self.trickxsize.read())
         roiy = int(self.trickysize.read())
@@ -196,8 +293,7 @@ class ControlWindow(QtGui.QWidget):
             print("COADD change")
         if set_cpr != cpr:
             print("CPR change")
-            v = FitsViewer(log.get_logger("ControlWindow", log_stderr=True, level=40))
-            v.test()
+            self.util.test()
 
     def dismiss(self):
         self.close()
@@ -247,17 +343,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.trkstop = ktl.cache('trick', 'trkstop')
         self.trkstsx = ktl.cache('trick', 'trkstsx')
         self.trkrocpr = ktl.cache('trick', 'trkrocpr')
-        self.tkenrup = ktl.cache('ao', 'tkenrup')
-        self.tkcrxs = ktl.cache('ao','tkcrxs')
-        self.tkcrys = ktl.cache('ao','tkcrys')
-        self.tkcrevxp = ktl.cache('ao','tkcrevxp')
-        self.tkcrevyp = ktl.cache('ao','tkcrevyp')
-        self.tkcrevxo = ktl.cache('ao','tkcrevxo')
-        self.tkcrevyo = ktl.cache('ao','tkcrevyo')
-        self.tksrtrg = ktl.cache('ao','tksrtrg')
-        self.trkrordy = ktl.cache('ao','trkrordy')
-        self.tkcxim = ktl.cache('ao','tkcxim')
-        self.tkcyim = ktl.cache('ao','tkcyim')
         self.targname = ktl.cache('tfs', 'TARGNAME')
         self.targname.monitor()
         self.tfshome = ktl.cache('tfs', 'home')
@@ -500,10 +585,9 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.trick_filters = ['Ks', 'H', 'Home', 'Open', 'Block', 'DISMISS']
 
-        self.c = None #ControlWindow
+        self.c = None #ControlWindow)
 
-    def test(self):
-        print('TEST WORKED')
+        self.util = Util()
 
     def add_canvas(self, tag=None):
         # add a canvas to the view
@@ -953,88 +1037,13 @@ class FitsViewer(QtGui.QMainWindow):
         rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
         for idx,row in enumerate(rows):
             distcoeff[idx] = float(row[0][5:])
-        self.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
+        self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
         left, right, up, down = self.getROI()
         self.fitsimage.get_canvas().get_object_by_tag(self.boxtag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.boxtag)
         self.box = self.recdc(left, down, right, up, color='green')
         self.fitsimage.get_canvas().add(self.box, tag=self.boxtag, redraw=True)
         self.wsetroi.setEnabled(False)
-
-    def trk_distortion_model(self, x0, y0, p):
-        # Translation of DistortionModel into Python
-        x0T = x0-p[0]
-        y0T = y0-p[10]
-
-        x1 = p[0]+p[1]*y0T+p[2]*x0T+p[3]*y0T**2+p[4]*y0T*x0T+p[5]*x0T**2+\
-            p[6]*y0T**3+p[7]*y0T**2*x0T+p[8]*y0T*x0T**2+p[9]*x0T**3
-
-        y1 = p[10]+p[11]*y0T+p[12]*x0T+p[13]*y0T**2+p[14]*y0T*x0T+p[15]*x0T**2+\
-            p[16]*y0T**3+p[17]*y0T**2*x0T+p[18]*y0T*x0T**2+p[19]*x0T**3
-
-        return (x1,y1)
-
-    def trk_undo_distmodel(self, x1, y1, DistC):
-        eps = 0.5 # error in pixels
-        maxiter = 20
-
-        k = 0
-        x0 = copy.copy(x1)
-        y0 = copy.copy(y1)
-        (x1p,y1p) = self.trk_distortion_model(x0,y0,DistC)
-
-        while (np.sqrt((x1p-x1)**2+(y1p-y1)**2) > eps):
-            if k >= maxiter:
-                print('No convergence in '+str(iter)+' iterations')
-                break
-
-            x0 -= (x1p-x1)
-            y0 -= (y1p-y1)
-
-            (x1p,y1p) = self.trk_distortion_model(x0,y0,DistC)
-            k += 1
-
-        return (x0,y0)
-
-
-    def trk_putxy_spoc(self, xroi, yroi, distcoeff, roisz=None):
-        # TODO: error handling
-
-        if roisz not in [None,2, 4, 8, 16]:
-            raise('Invalid value for roisz')
-            return
-
-        sctrack = self.tkenrup.read() # what is the error handling here?
-        if sctrack:
-            # turn sctracking off
-            status = self.tkenrup.write(0)
-
-        if roisz is not None:
-            status = self.tkcrxs.write(roisz)
-            status = self.tkcrys.write(roisz)
-
-        (xp,yp) = self.trk_undo_distmodel(xroi, yroi, distcoeff)
-        status = self.tkcrevxp.write(xp)
-        status = self.tkcrevyp.write(yp)
-
-        xim = self.tkcrevxo.read()
-        yim = self.tkcrevyo.read()
-        status = self.tkcxim.write(xim)
-        status = self.tkcyim.write(yim)
-
-        # need to tigger the ROI calculator TWICE (as told to Bruno Femenia by Paul Stomski)
-        status = self.tksrtrg.write(1)
-        time.sleep(0.1)    # wait 0.1 s
-        status = self.tksrtrg.write(1)
-
-        # need to set to propagate SPOC-Camera-WFC
-        status = self.tkenrup.write(1)
-        if sctrack == 0:
-            status = self.tkenrup.write(0)
-
-        # Setting trkrordy syncs SPOC and camera values with WFC and triggers actions by WFC: bad pixel map, etc
-        status = self.trkrordy.write(1)
-        return
 
     ##Start of image find and processing code
 
@@ -1275,7 +1284,7 @@ class FitsViewer(QtGui.QMainWindow):
             rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
             for idx,row in enumerate(rows):
                 distcoeff[idx] = float(row[0][5:])
-            self.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
+            self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
             if self.ops == "MGAO":
                 self.trkenapx.write(0)
                 self.trkfpspx.write('Passive')
