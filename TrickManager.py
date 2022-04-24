@@ -1291,10 +1291,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            xroi = float(self.trickxpos.read()) - (float(self.trickxsize.read()) - self.xclick)
-            yroi = float(self.trickypos.read()) - (float(self.trickysize.read())- float(self.yclick))
-            self.trickxpos.write(xroi)
-            self.trickypos.write(yroi)
+            xroi = float(self.trickxpos.read()) - (float(self.trickxsize.read())/2.0 - self.xclick)
+            yroi = float(self.trickypos.read()) - (float(self.trickysize.read())/2.0 - float(self.yclick))
+            # self.trickxpos.write(xroi)
+            # self.trickypos.write(yroi)
             distcoeff = np.zeros(20)
             rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
             for idx,row in enumerate(rows):
