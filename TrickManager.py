@@ -1044,8 +1044,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.go.write(1)
 
     def set_roi(self):
-        xroi = self.xclick
-        yroi = self.yclick
+        xroi = self.xclick+1.0
+        yroi = self.yclick+1.0
         self.trickxpos.write(xroi)
         self.trickypos.write(yroi)
         distcoeff = np.zeros(20)
