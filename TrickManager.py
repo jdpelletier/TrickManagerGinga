@@ -359,8 +359,8 @@ class ControlWindow(QtGui.QWidget):
             set_roisz = int(self.wroisz.currentText())
         if (set_roix != centerx) or (set_roiy != centery) or (set_roisz != None):
             print("ROI change")
-            xroi = set_roix-int(self.wroisz.currentText())/2
-            yroi = set_roiy-int(self.wroisz.currentText())/2
+            xroi = set_roix
+            yroi = set_roiy
             self.util.trickxpos.write(xroi)
             self.util.trickypos.write(yroi)
             distcoeff = np.zeros(20)
