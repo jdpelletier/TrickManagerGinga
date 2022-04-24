@@ -840,6 +840,7 @@ class FitsViewer(QtGui.QMainWindow):
             self.rmstatus.setText("Filmstrip")
         else:
             self.rmstatus.setText("FFrame")
+        self.util.update_gui()
         self.resize(240, 300)
 
     def pixels_to_image(self, pix, ff, bg):
