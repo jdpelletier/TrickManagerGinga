@@ -274,7 +274,7 @@ class ControlWindow(QtGui.QWidget):
         sizes = ['2','4','8','16']
         for size in sizes:
             self.wroisz.addItem(size)
-        item = str(self.trickxsize.read())
+        item = str(self.util.trickxsize.read())
         self.wroisz.setCurrentText(item)
         roisz_hbox.addWidget(self.wroisz)
         vbox.addLayout(roisz_hbox)
