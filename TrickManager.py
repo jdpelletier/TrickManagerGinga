@@ -375,6 +375,7 @@ class ControlWindow(QtGui.QWidget):
             status = self.util.trkstop.write(1)
             status = self.util.trkrocpr.write(set_cpr)
             status = self.util.trkstsx.write(1)
+        self.update_gui()
 
 
     def dismiss(self):
@@ -1290,8 +1291,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            xroi = float(self.trickxpos.read()) - (float(self.trickxsize.read())/2.0 - self.xclick)
-            yroi = float(self.trickypos.read()) - (float(self.trickysize.read())/2.0 - float(self.yclick))
+            xroi = float(self.trickxpos.read())
+            yroi = float(self.trickypos.read())
             self.trickxpos.write(xroi)
             self.trickypos.write(yroi)
             distcoeff = np.zeros(20)
