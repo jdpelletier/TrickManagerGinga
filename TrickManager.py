@@ -83,6 +83,10 @@ class Video(QtCore.QRunnable):
 class Util:
     def __init__(self):
         super().__init__()
+        self.trickxpos = ktl.cache('tds', 'TRKRO1X')
+        self.trickypos = ktl.cache('tds', 'TRKRO1Y')
+        self.trickxsize = ktl.cache('tds', 'TRKRO1SX')
+        self.trickysize = ktl.cache('tds', 'TRKRO1SY')
         self.tkenrup = ktl.cache('ao', 'tkenrup')
         self.tkcrxs = ktl.cache('ao','tkcrxs')
         self.tkcrys = ktl.cache('ao','tkcrys')
@@ -257,13 +261,6 @@ class ControlWindow(QtGui.QWidget):
 
         self.util = Util()
 
-        self.trickxpos = ktl.cache('tds', 'TRKRO1X')
-        self.trickypos = ktl.cache('tds', 'TRKRO1Y')
-        self.trickxsize = ktl.cache('tds', 'TRKRO1SX')
-        self.trickysize = ktl.cache('tds', 'TRKRO1SY')
-        self.trknmad1 = ktl.cache('ao', 'trknmad1')
-        self.trkrocpr = ktl.cache('trick', 'trkrocpr')
-
         vbox = QtGui.QVBoxLayout()
         title_hbox = QtGui.QHBoxLayout()
         title = QtGui.QLabel("Trick Control")
@@ -319,14 +316,14 @@ class ControlWindow(QtGui.QWidget):
         self.update_gui()
 
     def update_gui(self):
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
-        roisz = str(self.trickxsize.read())
-        centerx = int(int(self.trickxpos.read()) + roix/2)
-        centery = int(int(self.trickypos.read()) + roiy/2)
-        coadd = self.trknmad1.read()
-        cpr = self.trkrocpr.read()
-        item = str(self.trickxsize.read())
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
+        roisz = str(self.util.trickxsize.read())
+        centerx = int(int(self.util.trickxpos.read()) + roix/2)
+        centery = int(int(self.util.trickypos.read()) + roiy/2)
+        coadd = self.util.trknmad1.read()
+        cpr = self.util.trkrocpr.read()
+        item = str(self.util.trickxsize.read())
         self.wroisz.setCurrentText(item)
         self.roi_label.setText(f"ROI {centerx} {centery}")
         self.roisz_label.setText(f"ROI Size: {roisz}")
@@ -334,13 +331,13 @@ class ControlWindow(QtGui.QWidget):
         self.cpr_label.setText(f"CPR: {cpr}")
 
     def apply(self):
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
-        roisz = str(self.trickxsize.read())
-        centerx = int(int(self.trickxpos.read()) + roix/2)
-        centery = int(int(self.trickypos.read()) + roiy/2)
-        coadd = int(self.trknmad1.read())
-        cpr = int(self.trkrocpr.read())
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
+        roisz = str(self.util.trickxsize.read())
+        centerx = int(int(self.util.trickxpos.read()) + roix/2)
+        centery = int(int(self.util.trickypos.read()) + roiy/2)
+        coadd = int(self.util.trknmad1.read())
+        cpr = int(self.util.trkrocpr.read())
         if self.roix.text() == '':
             set_roix = centerx
         else:
@@ -364,8 +361,8 @@ class ControlWindow(QtGui.QWidget):
             print("ROI change")
             xroi = set_roix-int(self.wroisz.currentText())/2
             yroi = set_roiy-int(self.wroisz.currentText())/2
-            self.trickxpos.write(xroi)
-            self.trickypos.write(yroi)
+            self.util.trickxpos.write(xroi)
+            self.util.trickypos.write(yroi)
             distcoeff = np.zeros(20)
             rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
             for idx,row in enumerate(rows):
@@ -375,9 +372,9 @@ class ControlWindow(QtGui.QWidget):
             print("COADD change")
         if set_cpr != cpr:
             print("CPR change")
-            status = self.trkstop.write(1)
-            status = self.trkrocpr.write(set_cpr)
-            status = self.trkstsx.write(1)
+            status = self.util.trkstop.write(1)
+            status = self.util.trkrocpr.write(set_cpr)
+            status = self.util.trkstsx.write(1)
 
 
     def dismiss(self):
