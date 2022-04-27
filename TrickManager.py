@@ -80,6 +80,34 @@ class Video(QtCore.QRunnable):
 
         self.fn(*self.args, **self.kwargs)
 
+class UpdateControlWindowSignals(QtCore.QObject):
+    load = QtCore.Signal(object)
+
+class UpdateControlWindow(QtCore.QRunnable):
+    '''
+    Control Window thread
+    '''
+    def __init__(self, fn, *args, **kwargs):
+        super(Video, self).__init__()
+
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = VideoSignals()
+        self.kwargs['file_callback'] = self.signals.load
+
+        # Add the callback to our kwargs
+    @QtCore.Slot()
+    def run(self):
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+
+        self.fn(*self.args, **self.kwargs)
+
+
+
 class Util:
     def __init__(self):
         super().__init__()
@@ -314,6 +342,22 @@ class ControlWindow(QtGui.QWidget):
         self.resize(250, 0)
 
         self.update_gui()
+
+        self.threadpool = QtCore.QThreadPool()
+
+    def start_updating(self):
+        self.updating = True
+        updater = UpdateControlWindow(self.update)
+        updater.signals.load.connect(self.update_gui)
+        self.threadpool.start(updater)
+
+    def update(self, file_callback):
+        while self.updating:
+            file_callback.emit()
+            time.sleep(1)
+
+    def stop_updating(self):
+        self.updating = False
 
     def update_gui(self):
         roix = int(self.util.trickxsize.read())
@@ -1291,8 +1335,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            xroi = float(self.trickxpos.read()) - (float(self.xclick)) + float(self.trickxsize.read())
-            yroi = float(self.trickypos.read()) - (float(self.yclick)) + float(self.trickysize.read())
+            xroi = float(self.trickxpos.read()) - (float(self.xclick)) - float(self.trickxsize.read())
+            yroi = float(self.trickypos.read()) - (float(self.yclick)) - float(self.trickysize.read())
             # self.trickxpos.write(xroi)
             # self.trickypos.write(yroi)
             distcoeff = np.zeros(20)
