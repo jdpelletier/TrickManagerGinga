@@ -81,7 +81,7 @@ class Video(QtCore.QRunnable):
         self.fn(*self.args, **self.kwargs)
 
 class UpdateControlWindowSignals(QtCore.QObject):
-    load = QtCore.Signal(object)
+    load = QtCore.Signal()
 
 class UpdateControlWindow(QtCore.QRunnable):
     '''
