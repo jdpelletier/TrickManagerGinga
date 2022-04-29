@@ -1378,20 +1378,19 @@ class FitsViewer(QtGui.QMainWindow):
 
 
     def btndown(self, canvas, event, data_x, data_y):
-        self.xclick = int(1.5 + data_x) + int(self.trickxpos.read())
-        self.yclick = int(1.5 + data_y) + int(self.trickypos.read())
+        self.xclick = data_x
+        self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            print(f"{self.xclick}, {self.yclick}")
-            # xroi = float(self.trickxpos.read()) - (float(self.xclick)) - float(self.trickxsize.read())
-            # yroi = float(self.trickypos.read()) - (float(self.yclick)) - float(self.trickysize.read())
-            # # self.trickxpos.write(xroi)
-            # # self.trickypos.write(yroi)
-            # distcoeff = np.zeros(20)
-            # rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
-            # for idx,row in enumerate(rows):
-            #     distcoeff[idx] = float(row[0][5:])
-            # self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
+            xroi = int(1.5 + self.xclick) + int(self.trickxpos.read())
+            yroi = int(1.5 + self.xclick) + int(self.trickypos.read())
+            # self.trickxpos.write(xroi)
+            # self.trickypos.write(yroi)
+            distcoeff = np.zeros(20)
+            rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
+            for idx,row in enumerate(rows):
+                distcoeff[idx] = float(row[0][5:])
+            self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
         else:
             self.wsetroi.setEnabled(True)
             with warnings.catch_warnings():
