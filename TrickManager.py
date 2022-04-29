@@ -1380,9 +1380,9 @@ class FitsViewer(QtGui.QMainWindow):
     def btndown(self, canvas, event, data_x, data_y):
         self.xclick = data_x + int(self.trickxpos.read())
         self.yclick = data_y + int(self.trickypos.read())
-        print(f"{self.xclick}, {self.yclick}")
         ##todo video mode adjusting ROI
         if self.mode == "video":
+            print(f"{self.xclick}, {self.yclick}")
             # xroi = float(self.trickxpos.read()) - (float(self.xclick)) - float(self.trickxsize.read())
             # yroi = float(self.trickypos.read()) - (float(self.yclick)) - float(self.trickysize.read())
             # # self.trickxpos.write(xroi)
