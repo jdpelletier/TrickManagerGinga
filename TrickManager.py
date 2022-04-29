@@ -111,10 +111,37 @@ class UpdateControlWindow(QtCore.QRunnable):
 class Util:
     def __init__(self):
         super().__init__()
+
+        #KTL keywords
         self.trickxpos = ktl.cache('tds', 'TRKRO1X')
         self.trickypos = ktl.cache('tds', 'TRKRO1Y')
         self.trickxsize = ktl.cache('tds', 'TRKRO1SX')
         self.trickysize = ktl.cache('tds', 'TRKRO1SY')
+        self.stopex = ktl.cache('tds', 'STOPEX')
+        self.timfile = ktl.cache('tds', 'TIMFILE')
+        self.init = ktl.cache('tds', 'INIT')
+        self.sampmode = ktl.cache('tds', 'SAMPMODE')
+        self.cdsmode = ktl.cache('tds', 'CDSMODE')
+        self.readmode = ktl.cache('tds', 'READMODE')
+        self.itime = ktl.cache('tds', 'ITIME')
+        self.getkw = ktl.cache('tds', 'GETKW')
+        self.getdcskw = ktl.cache('tds', 'GETDCSKW')
+        self.getaokw = ktl.cache('tds', 'GETAOKW')
+        self.go = ktl.cache('tds', 'GO')
+        self.trkro1px = ktl.cache('ao', 'TRKRO1PX')
+        self.trkro1px.monitor()
+        self.trkro1ff = ktl.cache('ao', 'TRKRO1FF')
+        self.trkro1ff.monitor()
+        self.trkro1bg = ktl.cache('ao', 'TRKRO1BG')
+        self.trkro1bg.monitor()
+
+        self.ops = "MGAO" #set mode to MGAO by default, then checks for missing keywords
+        try:
+            self.trkenapx = ktl.cache('ao', 'trkenapx')
+            self.trkfpspx = ktl.cache('ao', 'trkfpspx')
+        except KeyError:
+            self.ops = "RTC"
+
         self.tkenrup = ktl.cache('ao', 'tkenrup')
         self.tkcrxs = ktl.cache('ao','tkcrxs')
         self.tkcrys = ktl.cache('ao','tkcrys')
@@ -129,6 +156,7 @@ class Util:
         self.trkstop = ktl.cache('trick', 'trkstop')
         self.trkstsx = ktl.cache('trick', 'trkstsx')
         self.trkrocpr = ktl.cache('trick', 'trkrocpr')
+        self.cyclespr = ktl.cache('tds', 'cyclespr') #TODO figure out differnce in cpr
         self.trknmad1 = ktl.cache('ao', 'trknmad1')
         self.targname = ktl.cache('tfs', 'TARGNAME')
         self.targname.monitor()
@@ -137,8 +165,11 @@ class Util:
         self.tfsstatus = ktl.cache('tfs', 'status')
         self.tfsposname = ktl.cache('tfs', 'posname')
         self.trkstat = ktl.cache('trick', 'trkstat')
+        self.trkstat.monitor()
         self.dtlp = ktl.cache('ao', 'dtlp')
         self.dttmastr = ktl.cache('ao', 'dttmastr')
+        self.dtsensor = ktl.cache('ao', 'dtsensor')
+        self.dtsensor.monitor()
 
     def trk_set_cpr(self, cpr):
         cpr_now = int(self.trkrocpr.read())
@@ -483,47 +514,8 @@ class FitsViewer(QtGui.QMainWindow):
 
         self.cachedFiles = None
         self.video = False
-        self.ops = "MGAO" #set mode to MGAO by default, then checks for missing keywords
 
         self.util = Util()
-        #KTL stuff
-        #Cache KTL keywords
-        self.trickxpos = ktl.cache('tds', 'TRKRO1X')
-        self.trickypos = ktl.cache('tds', 'TRKRO1Y')
-        self.trickxsize = ktl.cache('tds', 'TRKRO1SX')
-        self.trickysize = ktl.cache('tds', 'TRKRO1SY')
-        self.stopex = ktl.cache('tds', 'STOPEX')
-        self.timfile = ktl.cache('tds', 'TIMFILE')
-        self.init = ktl.cache('tds', 'INIT')
-        self.sampmode = ktl.cache('tds', 'SAMPMODE')
-        self.cdsmode = ktl.cache('tds', 'CDSMODE')
-        self.readmode = ktl.cache('tds', 'READMODE')
-        self.itime = ktl.cache('tds', 'ITIME')
-        self.getkw = ktl.cache('tds', 'GETKW')
-        self.getdcskw = ktl.cache('tds', 'GETDCSKW')
-        self.getaokw = ktl.cache('tds', 'GETAOKW')
-        self.go = ktl.cache('tds', 'GO')
-        self.progress = ktl.cache('tds', 'progress')
-        self.trkro1px = ktl.cache('ao', 'TRKRO1PX')
-        self.trkro1px.monitor()
-        self.trkro1ff = ktl.cache('ao', 'TRKRO1FF')
-        self.trkro1ff.monitor()
-        self.trkro1bg = ktl.cache('ao', 'TRKRO1BG')
-        self.trkro1bg.monitor()
-        self.cyclespr = ktl.cache('tds', 'cyclespr')
-        try:
-            self.trkenapx = ktl.cache('ao', 'trkenapx')
-            self.trkfpspx = ktl.cache('ao', 'trkfpspx')
-        except KeyError:
-            self.ops = "RTC"
-        self.trkstop = ktl.cache('trick', 'trkstop')
-        self.trkstsx = ktl.cache('trick', 'trkstsx')
-        self.targname = ktl.cache('tfs', 'TARGNAME')
-        self.targname.monitor()
-        self.dtsensor = ktl.cache('ao', 'dtsensor')
-        self.dtsensor.monitor()
-        self.trkstat = ktl.cache('trick', 'trkstat')
-        self.trkstat.monitor()
 
         self.rawfile = ''
         self.mode = ''
@@ -594,7 +586,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
-        item = str(self.trickxsize.read())
+        item = str(self.util.trickxsize.read())
         self.wcut.setCurrentText(item)
         self.wcut.currentIndexChanged.connect(self.cut_change)
         readout_hbox.addWidget(self.wcut)
@@ -620,7 +612,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.vid_filter = QtGui.QLabel("Filter: ")
         self.vid_filter.setObjectName("vid_filter")
         filter_hbox.addWidget(self.vid_filter)
-        self.wchangefilter = QtGui.QPushButton(f"{self.targname}")
+        self.wchangefilter = QtGui.QPushButton(f"{self.util.targname}")
         self.wchangefilter.setObjectName("wchangefilter")
         self.wchangefilter.clicked.connect(self.filter_popup)
         filter_hbox.addWidget(self.wchangefilter)
@@ -742,8 +734,8 @@ class FitsViewer(QtGui.QMainWindow):
 
         fi.set_callback('cursor-changed', self.motion_cb)
         fi.add_callback('cursor-down', self.btndown)
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
 
         self.recdc, self.compdc, self.crossdc = self.add_canvas()
@@ -804,7 +796,7 @@ class FitsViewer(QtGui.QMainWindow):
             text = "X: Y:  Value:"
             self.readout.setText(text)
         else:
-            text = f"X: {int(fits_x+1.5) + int(self.trickxpos.read())} Y: {int(fits_y+1.5) + int(self.trickypos.read())}  Value: {value}"
+            text = f"X: {int(fits_x+1.5) + int(self.util.trickxpos.read())} Y: {int(fits_y+1.5) + int(self.util.trickypos.read())}  Value: {value}"
             self.readout.setText(text)
 
     def quit(self, *args):
@@ -838,24 +830,24 @@ class FitsViewer(QtGui.QMainWindow):
     def init_trick(self):
         print("Initing TRICK")
         self.wquit.setEnabled(False)
-        self.stopex.write(1)
+        self.util.stopex.write(1)
         time.sleep(3)
-        self.init.write(1)
-        self.sampmode.write(5)
-        self.cyclespr.write(50)
-        self.cdsmode.write(1)
-        self.readmode.write(3)
-        self.go.write(1)
+        self.util.init.write(1)
+        self.util.sampmode.write(5)
+        self.util.cyclespr.write(50)
+        self.util.cdsmode.write(1)
+        self.util.readmode.write(3)
+        self.util.go.write(1)
         time.sleep(3)
-        if self.ops == "MGAO":
-            self.trkenapx.write(0)
-            self.trkfpspx.write('Passive')
-        self.trkstop.write(1)
+        if self.util.ops == "MGAO":
+            self.util.trkenapx.write(0)
+            self.util.trkfpspx.write('Passive')
+        self.util.trkstop.write(1)
         time.sleep(1)
-        if self.ops == "MGAO":
-            self.trkfpspx.write('1 second')
-            self.trkenapx.write(1)
-        self.trkstsx.write(1)
+        if self.util.ops == "MGAO":
+            self.util.trkfpspx.write('1 second')
+            self.util.trkenapx.write(1)
+        self.util.trkstsx.write(1)
         self.video = True
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
@@ -865,20 +857,20 @@ class FitsViewer(QtGui.QMainWindow):
         self.wrestartvideo.setEnabled(True)
 
     def restart_video(self):
-        self.stopex.write(1)
+        self.util.stopex.write(1)
         time.sleep(3)
-        self.cdsmode.write(1)
-        self.readmode.write(3)
-        self.go.write(1)
-        if self.ops == "MGAO":
-            self.trkenapx.write(0)
-            self.trkfpspx.write('Passive')
-        self.trkstop.write(1)
+        self.util.cdsmode.write(1)
+        self.util.readmode.write(3)
+        self.util.go.write(1)
+        if self.util.ops == "MGAO":
+            self.util.trkenapx.write(0)
+            self.util.trkfpspx.write('Passive')
+        self.util.trkstop.write(1)
         time.sleep(1)
-        if self.ops == "MGAO":
-            self.trkfpspx.write('1 second')
-            self.trkenapx.write(1)
-        self.trkstsx.write(1)
+        if self.util.ops == "MGAO":
+            self.util.trkfpspx.write('1 second')
+            self.util.trkenapx.write(1)
+        self.util.trkstsx.write(1)
         self.start_video()
 
 
@@ -900,7 +892,7 @@ class FitsViewer(QtGui.QMainWindow):
 
     def display_video(self, file_callback):
         while self.video:
-            file_callback.emit(self.trkro1px, self.trkro1ff, self.trkro1bg)
+            file_callback.emit(self.util.trkro1px, self.util.trkro1ff, self.util.trkro1bg)
             left, right, up, down = self.getROI()
             time.sleep(1)
 
@@ -911,21 +903,21 @@ class FitsViewer(QtGui.QMainWindow):
 
     def show_images(self, pix, ff, bg):
         image = self.pixels_to_image(pix, ff, bg)
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
         self.img.load_data(image)
         self.fitsimage.set_image(self.img)
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
         self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
-        self.wchangefilter.setText(str(self.targname))
-        self.dtstatus.setText(str(self.dtsensor))
-        ts = str(self.trkstat)
+        self.wchangefilter.setText(str(self.util.targname))
+        self.dtstatus.setText(str(self.util.dtsensor))
+        ts = str(self.util.trkstat)
         if ts == '2nd-channel video in progress':
             ts = '2C Video'
         self.trickstatus.setText(ts)
-        m = self.readmode.read()
+        m = self.util.readmode.read()
         if m == "3":
             self.rmstatus.setText("Video")
         elif m == "2":
@@ -938,8 +930,8 @@ class FitsViewer(QtGui.QMainWindow):
         lst = str(pix).strip().replace(':', '').split()
         lst_ff = str(ff).strip().replace(':', '').split()
         lst_bg = str(bg).strip().replace(':', '').split()
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
         roi_size = roix * roiy
         pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
         pixelvalues= pixelvalues[:roi_size]
@@ -1010,8 +1002,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_widget().setMinimumSize(QtCore.QSize(240, 240))
         self.viewerLspacer.changeSize(40, 100, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.viewerRspacer.changeSize(40, 100, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
         self.fitsimage.set_limits(((1,-0.5),(roix-2, roiy-0.5)),coord='data')
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
         self.fitsimage.set_autocut_params('minmax')
@@ -1121,24 +1113,22 @@ class FitsViewer(QtGui.QMainWindow):
 
     def take_ff(self):
         self.wtakeff.setEnabled(False)
-        self.stopex.write(1)
+        self.util.stopex.write(1)
         time.sleep(3)
-        self.timfile.write('/kroot/rel/default/data/nirtts_rel_v1.6.lod')
-        # self.init.write(1)
-        # self.sampmode.write(5)
-        self.cdsmode.write(1)
-        self.readmode.write(1)
-        self.itime.write(0)
-        self.getkw.write(1)
-        self.getdcskw.write(1)
-        self.getaokw.write(1)
-        self.go.write(1)
+        self.util.timfile.write('/kroot/rel/default/data/nirtts_rel_v1.6.lod')
+        self.util.cdsmode.write(1)
+        self.util.readmode.write(1)
+        self.util.itime.write(0)
+        self.util.getkw.write(1)
+        self.util.getdcskw.write(1)
+        self.util.getaokw.write(1)
+        self.util.go.write(1)
 
     def set_roi(self):
         xroi = self.xclick+1.0
         yroi = self.yclick+1.0
-        self.trickxpos.write(xroi)
-        self.trickypos.write(yroi)
+        self.util.trickxpos.write(xroi)
+        self.util.trickypos.write(yroi)
         distcoeff = np.zeros(20)
         rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
         for idx,row in enumerate(rows):
@@ -1217,18 +1207,17 @@ class FitsViewer(QtGui.QMainWindow):
         # if the file exists but locked, wait wait_time seconds and check
         # again until it's no longer locked by another process
         while self.fileIsCurrentlyLocked(filename):
-            print(self.progress.read())
             time.sleep(wait_time)
 
     def getROI(self):
-        left = int(self.trickxpos.read())  + 8 - int(self.trickxsize.read())*3
-        right = int(self.trickxpos.read()) + 8 + int(self.trickxsize.read())*3
-        up = int(self.trickypos.read()) + 8 - int(self.trickysize.read())*3
-        down = int(self.trickypos.read()) + 8 + int(self.trickysize.read())*3
-        roix = int(self.trickxsize.read())
-        roiy = int(self.trickysize.read())
-        centerx = int(int(self.trickxpos.read()) + roix/2)
-        centery = int(int(self.trickypos.read()) + roiy/2)
+        left = int(self.util.trickxpos.read())  + 8 - int(self.util.trickxsize.read())*3
+        right = int(self.util.trickxpos.read()) + 8 + int(self.util.trickxsize.read())*3
+        up = int(self.util.trickypos.read()) + 8 - int(self.util.trickysize.read())*3
+        down = int(self.util.trickypos.read()) + 8 + int(self.util.trickysize.read())*3
+        roix = int(self.util.trickxsize.read())
+        roiy = int(self.util.trickysize.read())
+        centerx = int(int(self.util.trickxpos.read()) + roix/2)
+        centery = int(int(self.util.trickypos.read()) + roiy/2)
         self.roi_info.setText(f"ROI {centerx} {centery}")
         return left, right, up, down
 
@@ -1382,10 +1371,8 @@ class FitsViewer(QtGui.QMainWindow):
         self.yclick = data_y
         ##todo video mode adjusting ROI
         if self.mode == "video":
-            xroi = int(1.5 + self.xclick) + int(self.trickxpos.read())
-            yroi = int(1.5 + self.yclick) + int(self.trickypos.read())
-            # self.trickxpos.write(xroi)
-            # self.trickypos.write(yroi)
+            xroi = int(1.5 + self.xclick) + int(self.util.trickxpos.read())
+            yroi = int(1.5 + self.yclick) + int(self.util.trickypos.read())
             distcoeff = np.zeros(20)
             rows = csv.reader(open('/usr/local/qfix/data/Trick/setup_files/TRICK_DistCoeff.dat','r'))
             for idx,row in enumerate(rows):
