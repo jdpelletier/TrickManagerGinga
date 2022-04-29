@@ -81,7 +81,7 @@ class Video(QtCore.QRunnable):
         self.fn(*self.args, **self.kwargs)
 
 class UpdateControlWindowSignals(QtCore.QObject):
-    load = QtCore.Signal(object)
+    load = QtCore.Signal()
 
 class UpdateControlWindow(QtCore.QRunnable):
     '''
@@ -353,6 +353,7 @@ class ControlWindow(QtGui.QWidget):
 
     def update(self, file_callback):
         while self.updating:
+            print("update")
             file_callback.emit()
             time.sleep(1)
 
