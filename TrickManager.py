@@ -81,14 +81,14 @@ class Video(QtCore.QRunnable):
         self.fn(*self.args, **self.kwargs)
 
 class UpdateControlWindowSignals(QtCore.QObject):
-    load = QtCore.Signal()
+    load = QtCore.Signal(object)
 
 class UpdateControlWindow(QtCore.QRunnable):
     '''
     Control Window thread
     '''
     def __init__(self, fn, *args, **kwargs):
-        super(Video, self).__init__()
+        super(UpdateControlWindow, self).__init__()
 
         # Store constructor arguments (re-used for processing)
         self.fn = fn
