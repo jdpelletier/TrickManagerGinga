@@ -1210,10 +1210,10 @@ class FitsViewer(QtGui.QMainWindow):
             time.sleep(wait_time)
 
     def getROI(self):
-        left = int(self.util.trickxpos.read()) - int(self.util.trickxsize.read())
-        right = int(self.util.trickxpos.read()) + int(self.util.trickxsize.read())
-        up = int(self.util.trickypos.read()) - int(self.util.trickysize.read())
-        down = int(self.util.trickypos.read()) + int(self.util.trickysize.read())
+        left = int(self.util.trickxpos.read()) - int(self.util.trickxsize.read())*3
+        right = int(self.util.trickxpos.read()) + int(self.util.trickxsize.read())*3
+        up = int(self.util.trickypos.read()) - int(self.util.trickysize.read())*3
+        down = int(self.util.trickypos.read()) + int(self.util.trickysize.read())*3
         roix = int(self.util.trickxsize.read())
         roiy = int(self.util.trickysize.read())
         centerx = int(int(self.util.trickxpos.read()) + roix/2)
@@ -1347,7 +1347,7 @@ class FitsViewer(QtGui.QMainWindow):
         try:
             self.fitsimage.get_canvas().get_object_by_tag(self.picktag)
             self.fitsimage.get_canvas().delete_object_by_tag(self.picktag)
-            self.pickbox = self.recdc(self.xclick-int(self.util.trickxsize), self.yclick-int(self.util.trickysize), self.xclick+int(self.util.trickxsize), self.yclick+int(self.util.trickysize), color='red')
+            self.pickbox = self.recdc(self.xclick-(int(self.util.trickxsize)*3), self.yclick-(int(self.util.trickysize)*3), self.xclick+(int(self.util.trickxsize)*3), self.yclick+(int(self.util.trickysize)*3), color='red')
             self.fitsimage.get_canvas().add(self.pickbox, tag=self.picktag, redraw=True)
         except KeyError:
             self.pickbox = self.recdc(self.xclick-30, self.yclick-30, self.xclick+30, self.yclick+30, color='red')
