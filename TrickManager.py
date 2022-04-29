@@ -136,6 +136,60 @@ class Util:
         self.tfsinit = ktl.cache('tfs', 'init')
         self.tfsstatus = ktl.cache('tfs', 'status')
         self.tfsposname = ktl.cache('tfs', 'posname')
+        self.trkstat = ktl.cache('trick', 'trkstat')
+        self.dtlp = ktl.cache('ao', 'dtlp')
+        selft.dttmastr = ktl.cache('ao', 'dttmastr')
+
+    def trk_set_cpr(cpr):
+        cpr_now = int(self.trkrocpr.read())
+        if cpr == cpr_now:
+            print('Requested CPR already in place')
+            return
+
+        print('Setting CPR to %d' % cpr)
+        trkstat_init = self.trkstat.read()
+        if trkstat_init == '2nd-channel video in progress':
+            # if the tip-tilt loop is closed on TRICK, open it briefly then reclose it
+            dtlp = self.dtlp.read()
+            dttmastr = self.dttmastr.read()
+            if (dtlp == 'CLOSE') and (dttmastr == 'ROI1'):
+                print('Opening the tip-tilt loop')
+                ktl.cache('ao', 'dtlp').write('OPEN')
+
+            print('Stopping exposure while we change CPR')
+            self.trkstop.write('1')
+
+        status = self.trkrocpr.write(cpr)
+
+        if trkstat_init == '2nd-channel video in progress':
+            print('Restarting video')
+            status = self.trkstsx.write(1) # restart the video
+            time.sleep(0.02)
+            dtlp = self.dtlp.write(dtlp)      # return the loop to original state
+
+    def trk_set_coadds(ncoadds):
+
+        # error checking on the number of coadds; must be an integer >= 1
+        ncoadds = int(ncoadds)
+        ncoadds = np.clip(1,ncoadds,100) # not sure what the upper limit is!
+
+        # check that this is not already the value in place; if so, don't set
+        ncoadds_now = int(self.trknmad1.read())
+        if ncoadds == ncoadds_now:
+            print('Requested number of coadds already in place')
+            return
+
+        # check that the CPR is an integer number of ncoadds
+        cpr_now = int(self.trkrocpr.read())
+        if cpr_now % ncoadds != 0:
+            print('CPR is not an integer multiple of requested ncoadds')
+            # we will have to make it an integer number of ncoadds for *both* the current and new number of coadds
+            # calculate the lowest common multiple of the current and new number of coadds
+            lcm = np.lcm(ncoadds_now,ncoadds)
+            cpr_new = int(np.ceil(cpr_now/lcm)*lcm)
+            trk_set_cpr(cpr_new)
+
+        status = self.trknmad1.write(ncoadds)
 
     def desaturate(self):
         print("Desaturate button pressed")
@@ -274,9 +328,6 @@ class Util:
         print(f'Sending TRICK filter wheel to {targname}')
         status = self.targname.write(targname)
 
-    def test(self):
-        print("TESTING")
-
 
 
 class ControlWindow(QtGui.QWidget):
@@ -413,12 +464,10 @@ class ControlWindow(QtGui.QWidget):
                 distcoeff[idx] = float(row[0][5:])
             self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=set_roisz)
         if set_coadd != coadd:
-            print("COADD change")
+            status = self.util.trk_set_coadds(set_coadd)
         if set_cpr != cpr:
             print("CPR change")
-            status = self.util.trkstop.write(1)
-            status = self.util.trkrocpr.write(set_cpr)
-            status = self.util.trkstsx.write(1)
+            status = self.util.trk_set_cpr(set_cpr)
         self.update_gui()
 
 
@@ -475,7 +524,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.targname.monitor()
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
-        self.trkstat = self.trkstsx = ktl.cache('trick', 'trkstat')
+        self.trkstat = ktl.cache('trick', 'trkstat')
         self.trkstat.monitor()
 
         self.rawfile = ''
