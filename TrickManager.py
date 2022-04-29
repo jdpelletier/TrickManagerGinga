@@ -1210,10 +1210,10 @@ class FitsViewer(QtGui.QMainWindow):
             time.sleep(wait_time)
 
     def getROI(self):
-        left = int(self.util.trickxpos.read())  + 8 - int(self.util.trickxsize.read())*3
-        right = int(self.util.trickxpos.read()) + 8 + int(self.util.trickxsize.read())*3
-        up = int(self.util.trickypos.read()) + 8 - int(self.util.trickysize.read())*3
-        down = int(self.util.trickypos.read()) + 8 + int(self.util.trickysize.read())*3
+        left = int(self.util.trickxpos.read()) - int(self.util.trickxsize.read())*3
+        right = int(self.util.trickxpos.read()) + int(self.util.trickxsize.read())*3
+        up = int(self.util.trickypos.read()) - int(self.util.trickysize.read())*3
+        down = int(self.util.trickypos.read()) + int(self.util.trickysize.read())*3
         roix = int(self.util.trickxsize.read())
         roiy = int(self.util.trickysize.read())
         centerx = int(int(self.util.trickxpos.read()) + roix/2)
