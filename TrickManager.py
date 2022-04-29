@@ -94,7 +94,7 @@ class UpdateControlWindow(QtCore.QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
-        self.signals = VideoSignals()
+        self.signals = UpdateControlWindowSignals()
         self.kwargs['file_callback'] = self.signals.load
 
         # Add the callback to our kwargs
