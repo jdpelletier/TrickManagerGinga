@@ -353,7 +353,6 @@ class ControlWindow(QtGui.QWidget):
 
     def update(self, file_callback):
         while self.updating:
-            print("update")
             file_callback.emit()
             time.sleep(1)
 
@@ -361,7 +360,6 @@ class ControlWindow(QtGui.QWidget):
         self.updating = False
 
     def update_gui(self):
-        print("update_gui")
         roix = int(self.util.trickxsize.read())
         roiy = int(self.util.trickysize.read())
         roisz = str(self.util.trickxsize.read())
