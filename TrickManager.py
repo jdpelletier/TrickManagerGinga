@@ -804,7 +804,7 @@ class FitsViewer(QtGui.QMainWindow):
             text = "X: Y:  Value:"
             self.readout.setText(text)
         else:
-            text = f"X: {int(fits_x+1.5) + int(self.trickypos.read())} Y: {int(fits_y+1.5) + int(self.trickypos.read())}  Value: {value}"
+            text = f"X: {int(fits_x+1.5) + int(self.trickxpos.read())} Y: {int(fits_y+1.5) + int(self.trickypos.read())}  Value: {value}"
             self.readout.setText(text)
 
     def quit(self, *args):
