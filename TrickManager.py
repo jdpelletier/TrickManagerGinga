@@ -140,7 +140,7 @@ class Util:
         self.dtlp = ktl.cache('ao', 'dtlp')
         self.dttmastr = ktl.cache('ao', 'dttmastr')
 
-    def trk_set_cpr(cpr):
+    def trk_set_cpr(self, cpr):
         cpr_now = int(self.trkrocpr.read())
         if cpr == cpr_now:
             print('Requested CPR already in place')
@@ -167,7 +167,7 @@ class Util:
             time.sleep(0.02)
             dtlp = self.dtlp.write(dtlp)      # return the loop to original state
 
-    def trk_set_coadds(ncoadds):
+    def trk_set_coadds(self, ncoadds):
 
         # error checking on the number of coadds; must be an integer >= 1
         ncoadds = int(ncoadds)
