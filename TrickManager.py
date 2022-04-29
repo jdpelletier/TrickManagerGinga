@@ -418,7 +418,6 @@ class ControlWindow(QtGui.QWidget):
         centery = int(int(self.util.trickypos.read()) + roiy/2)
         coadd = self.util.trknmad1.read()
         cpr = self.util.trkrocpr.read()
-        item = str(self.util.trickxsize.read())
         self.wroisz.setCurrentText(item)
         self.roi_label.setText(f"ROI {centerx} {centery}")
         self.roisz_label.setText(f"ROI Size: {roisz}")
