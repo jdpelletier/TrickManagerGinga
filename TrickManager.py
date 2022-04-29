@@ -138,7 +138,7 @@ class Util:
         self.tfsposname = ktl.cache('tfs', 'posname')
         self.trkstat = ktl.cache('trick', 'trkstat')
         self.dtlp = ktl.cache('ao', 'dtlp')
-        selft.dttmastr = ktl.cache('ao', 'dttmastr')
+        self.dttmastr = ktl.cache('ao', 'dttmastr')
 
     def trk_set_cpr(cpr):
         cpr_now = int(self.trkrocpr.read())
