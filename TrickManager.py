@@ -341,9 +341,9 @@ class ControlWindow(QtGui.QWidget):
         self.move(x, y)
         self.resize(250, 0)
 
-        self.update_gui()
-
         self.threadpool = QtCore.QThreadPool()
+
+        self.start_updating()
 
     def start_updating(self):
         self.updating = True
