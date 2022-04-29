@@ -615,6 +615,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.wchangefilter = QtGui.QPushButton(f"{self.util.targname}")
         self.wchangefilter.setObjectName("wchangefilter")
         self.wchangefilter.clicked.connect(self.filter_popup)
+        self.wchangefilter.setMaximumSize(QtCore.QSize(50, 100))
         filter_hbox.addWidget(self.wchangefilter)
         self.winitfilter = QtGui.QPushButton("Init Wheel")
         self.winitfilter.setObjectName("winitfilter")
@@ -1347,7 +1348,7 @@ class FitsViewer(QtGui.QMainWindow):
         try:
             self.fitsimage.get_canvas().get_object_by_tag(self.picktag)
             self.fitsimage.get_canvas().delete_object_by_tag(self.picktag)
-            self.pickbox = self.recdc(self.xclick-(int(self.util.trickxsize)*3), self.yclick-(int(self.util.trickysize)*3), self.xclick+(int(self.util.trickxsize)*3), self.yclick+(int(self.util.trickysize)*3), color='red')
+            self.pickbox = self.recdc(self.xclick-30, self.yclick-30, self.xclick+30, self.yclick+30, color='red')
             self.fitsimage.get_canvas().add(self.pickbox, tag=self.picktag, redraw=True)
         except KeyError:
             self.pickbox = self.recdc(self.xclick-30, self.yclick-30, self.xclick+30, self.yclick+30, color='red')
