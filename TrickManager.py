@@ -954,7 +954,7 @@ class FitsViewer(QtGui.QMainWindow):
         bp_sec = bad_pix[xpos:xpos+roix,ypos:ypos+roiy]
         print(bp_sec)
         final_image = np.multiply(roi_image, bp_sec)
-        print(fina_image)
+        print(final_image)
         return(final_image)
 
     def full_frame_mode(self):
