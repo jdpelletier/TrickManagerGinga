@@ -952,8 +952,10 @@ class FitsViewer(QtGui.QMainWindow):
         roi_image = new_image[0:roix, 0:roiy]
         bad_pix = fits.getdata('/kroot/rel/ao/qfix/data/Trick/BadPix_1014Hz.fits', ext=0)
         bp_sec = bad_pix[xpos:xpos+roix,ypos:ypos+roiy]
+        print(bp_sec)
         final_image = np.multiply(roi_image, bp_sec)
-        return(roi_image)
+        print(fina_image)
+        return(final_image)
 
     def full_frame_mode(self):
         if self.c != None:
