@@ -951,9 +951,7 @@ class FitsViewer(QtGui.QMainWindow):
         new_image = image * ff - bg
         roi_image = new_image[0:roix, 0:roiy]
         bad_pix = fits.getdata('/kroot/rel/ao/qfix/data/Trick/BadPix_1014Hz.fits', ext=0)
-        print(f"{xpos}:{xpos+roix},{ypos}:{ypos+roiy}")
         bp_sec = bad_pix[xpos:xpos+roix,ypos:ypos+roiy]
-        print(bp_sec)
         final_image = np.multiply(roi_image, bp_sec)
         return(final_image)
 
