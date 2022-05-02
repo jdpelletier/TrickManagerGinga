@@ -359,6 +359,42 @@ class Util:
         print(f'Sending TRICK filter wheel to {targname}')
         status = self.targname.write(targname)
 
+    def restart_video(self):
+        self.stopex.write(1)
+        time.sleep(3)
+        self.cdsmode.write(1)
+        self.readmode.write(3)
+        self.go.write(1)
+        if self.ops == "MGAO":
+            self.trkenapx.write(0)
+            self.trkfpspx.write('Passive')
+        self.trkstop.write(1)
+        time.sleep(1)
+        if self.ops == "MGAO":
+            self.trkfpspx.write('1 second')
+            self.trkenapx.write(1)
+        self.trkstsx.write(1)
+
+    def init_trick(self):
+        print("Initing Trick")
+        self.stopex.write(1)
+        time.sleep(3)
+        self.init.write(1)
+        self.sampmode.write(5)
+        self.cyclespr.write(50)
+        self.cdsmode.write(1)
+        self.readmode.write(3)
+        self.go.write(1)
+        time.sleep(3)
+        if self.ops == "MGAO":
+            self.trkenapx.write(0)
+            self.trkfpspx.write('Passive')
+        self.trkstop.write(1)
+        time.sleep(1)
+        if self.ops == "MGAO":
+            self.trkfpspx.write('1 second')
+            self.trkenapx.write(1)
+        self.trkstsx.write(1)
 
 
 class ControlWindow(QtGui.QWidget):
@@ -663,7 +699,7 @@ class FitsViewer(QtGui.QMainWindow):
         buttons_vbox_mid.setObjectName("buttons_vbox_mid")
         self.winittrick = QtGui.QPushButton("Init Trick")
         self.winittrick.setObjectName("winittrick")
-        self.winittrick.clicked.connect(self.init_trick)
+        self.winittrick.clicked.connect(self._init_trick)
         buttons_vbox_mid.addWidget(self.winittrick)
         self.wreboottrick = QtGui.QPushButton("Reboot Trick")
         self.wreboottrick.setObjectName("wreboottrick")
@@ -711,7 +747,7 @@ class FitsViewer(QtGui.QMainWindow):
         buttons_vbox_right.addWidget(self.wopen)
         self.wrestartvideo = QtGui.QPushButton("Restart Video")
         self.wrestartvideo.setObjectName("wrestartvideo")
-        self.wrestartvideo.clicked.connect(self.restart_video)
+        self.wrestartvideo.clicked.connect(self._restart_video)
         buttons_vbox_right.addWidget(self.wrestartvideo)
         self.wquit = QtGui.QPushButton("Quit")
         self.wquit.setObjectName("wquit")
@@ -828,54 +864,20 @@ class FitsViewer(QtGui.QMainWindow):
         msg.setIcon(QtGui.QMessageBox.Critical)
         y = msg.exec_()
 
-    def init_trick(self):
-        print("Initing TRICK")
+    def _init_trick(self):
         self.wquit.setEnabled(False)
-        self.util.stopex.write(1)
-        time.sleep(3)
-        self.util.init.write(1)
-        self.util.sampmode.write(5)
-        self.util.cyclespr.write(50)
-        self.util.cdsmode.write(1)
-        self.util.readmode.write(3)
-        self.util.go.write(1)
-        time.sleep(3)
-        if self.util.ops == "MGAO":
-            self.util.trkenapx.write(0)
-            self.util.trkfpspx.write('Passive')
-        self.util.trkstop.write(1)
-        time.sleep(1)
-        if self.util.ops == "MGAO":
-            self.util.trkfpspx.write('1 second')
-            self.util.trkenapx.write(1)
-        self.util.trkstsx.write(1)
+        self.util.init_trick()
         self.video = True
         video = Video(self.display_video)
         video.signals.load.connect(self.show_images)
         self.threadpool.start(video)
         self.wquit.setEnabled(True)
         self.mode = 'video'
-        self.wrestartvideo.setEnabled(True)
 
-    def restart_video(self):
-        self.util.stopex.write(1)
-        time.sleep(3)
-        self.util.cdsmode.write(1)
-        self.util.readmode.write(3)
-        self.util.go.write(1)
-        if self.util.ops == "MGAO":
-            self.util.trkenapx.write(0)
-            self.util.trkfpspx.write('Passive')
-        self.util.trkstop.write(1)
-        time.sleep(1)
-        if self.util.ops == "MGAO":
-            self.util.trkfpspx.write('1 second')
-            self.util.trkenapx.write(1)
-        self.util.trkstsx.write(1)
+    def _restart_video(self):
+        self.util.restart_video()
         self.start_video()
 
-
-    ##TODO remove this when switching back to video mode is replaced with restart_video
     def start_video(self):
         self.video = True
         video = Video(self.display_video)
