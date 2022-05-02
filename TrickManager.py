@@ -828,7 +828,7 @@ class FitsViewer(QtGui.QMainWindow):
                 str(e)))
             ra_txt = 'BAD WCS'
             dec_txt = 'BAD WCS'
-        if video == True:
+        if self.video == True:
             if (fits_x+0.5 > int(self.util.trickxsize.read()) or fits_x+0.5 <0) or (fits_y+0.5 > int(self.util.trickxsize.read()) or fits_y+0.5 <0):
                 text = "X: Y:  Value:"
                 self.readout.setText(text)
