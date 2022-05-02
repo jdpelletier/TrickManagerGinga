@@ -833,7 +833,7 @@ class FitsViewer(QtGui.QMainWindow):
             text = "X: Y:  Value:"
             self.readout.setText(text)
         else:
-            text = f"X: {int(fits_x+1.5) + int(self.util.trickxpos.read())} Y: {int(fits_y+1.5) + int(self.util.trickypos.read())}  Value: {value}"
+            text = f"X: {int(fits_x+.5) + int(self.util.trickxpos.read())} Y: {int(fits_y+.5) + int(self.util.trickypos.read())}  Value: {value}"
             self.readout.setText(text)
 
     def quit(self, *args):
@@ -935,6 +935,8 @@ class FitsViewer(QtGui.QMainWindow):
         lst_bg = str(bg).strip().replace(':', '').split()
         roix = int(self.util.trickxsize.read())
         roiy = int(self.util.trickysize.read())
+        xpos = int(self.util.trickxpos.read())
+        ypos = int(self.util.trickypos.read())
         roi_size = roix * roiy
         pixelvalues = np.array(lst[1::2],dtype=float) # take every second value, since the first value is the pixel number
         pixelvalues= pixelvalues[:roi_size]
@@ -948,6 +950,9 @@ class FitsViewer(QtGui.QMainWindow):
         bg = np.reshape(pixelvalues_bg,(dims,dims))
         new_image = image * ff - bg
         roi_image = new_image[0:roix, 0:roiy]
+        bad_pix = fits.getdata('/kroot/rel/ao/qfix/data/Trick/BadPix_1014Hz.fits', ext=0)
+        bp_sec = bad_pix[xpos:xpos+roix,ypos:ypos+roiy]
+        final_image = np.multiply(roi_image, bp_sec)
         return(roi_image)
 
     def full_frame_mode(self):
