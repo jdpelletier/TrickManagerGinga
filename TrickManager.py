@@ -828,13 +828,20 @@ class FitsViewer(QtGui.QMainWindow):
                 str(e)))
             ra_txt = 'BAD WCS'
             dec_txt = 'BAD WCS'
-
-        if (fits_x+0.5 > 2048 or fits_x+0.5 <0) or (fits_y+0.5 > 2048 or fits_y+0.5 <0):
-            text = "X: Y:  Value:"
-            self.readout.setText(text)
+        if video == True:
+            if (fits_x+0.5 > int(self.util.trickxsize.read()) or fits_x+0.5 <0) or (fits_y+0.5 > int(self.util.trickxsize.read()) or fits_y+0.5 <0):
+                text = "X: Y:  Value:"
+                self.readout.setText(text)
+            else:
+                text = f"X: {int(fits_x+.5) + int(self.util.trickxpos.read())} Y: {int(fits_y+.5) + int(self.util.trickypos.read())}  Value: {value}"
+                self.readout.setText(text)
         else:
-            text = f"X: {int(fits_x+.5) + int(self.util.trickxpos.read())} Y: {int(fits_y+.5) + int(self.util.trickypos.read())}  Value: {value}"
-            self.readout.setText(text)
+            if (fits_x+0.5 > 2048 or fits_x+0.5 <0) or (fits_y+0.5 > 2048 or fits_y+0.5 <0):
+                text = "X: Y:  Value:"
+                self.readout.setText(text)
+            else:
+                text = f"X: {int(fits_x)} Y: {int(fits_y)}  Value: {value}"
+                self.readout.setText(text)
 
     def quit(self, *args):
         self.logger.info("Attempting to shut down the application...")
