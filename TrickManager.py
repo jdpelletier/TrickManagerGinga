@@ -183,7 +183,10 @@ class Util:
             # if the tip-tilt loop is closed on TRICK, open it briefly then reclose it
             dtlp = self.dtlp.read()
             dttmastr = self.dttmastr.read()
-            if (dtlp == 'CLOSE') and (dttmastr == 'ROI1'):
+
+            if dttmastr == 'ROI1': #if RTC return, switch to MGAOS return for ease
+                dttmastr = 2
+            if (dtlp == 'CLOSE') and (dttmastr == 2):
                 print('Opening the tip-tilt loop')
                 self.dtlp.write('OPEN')
 
