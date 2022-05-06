@@ -167,7 +167,7 @@ class Util:
         self.trkstat = ktl.cache('trick', 'trkstat')
         self.trkstat.monitor()
         self.dtlp = ktl.cache('ao', 'dtlp')
-        self.dttmastr = ktl.cache('ao', 'dttmastr')
+        # self.dttmastr = ktl.cache('ao', 'dttmastr')
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
 
