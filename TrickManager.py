@@ -166,7 +166,7 @@ class Util:
         try:
             self.trkenapx = ktl.cache('ao', 'trkenapx')
             self.trkfpspx = ktl.cache('ao', 'trkfpspx')
-            self.dttmastr = ktl.cache('ao', 'trickmastr')
+            self.dttmastr = ktl.cache('ao', 'trkmastr')
         except KeyError:
             self.ops = "RTC"
             self.dttmastr = ktl.cache('ao', 'dttmastr')
