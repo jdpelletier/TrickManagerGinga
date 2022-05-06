@@ -134,14 +134,6 @@ class Util:
         self.trkro1ff.monitor()
         self.trkro1bg = ktl.cache('ao', 'TRKRO1BG')
         self.trkro1bg.monitor()
-
-        self.ops = "MGAO" #set mode to MGAO by default, then checks for missing keywords
-        try:
-            self.trkenapx = ktl.cache('ao', 'trkenapx')
-            self.trkfpspx = ktl.cache('ao', 'trkfpspx')
-        except KeyError:
-            self.ops = "RTC"
-
         self.tkenrup = ktl.cache('ao', 'tkenrup')
         self.tkcrxs = ktl.cache('ao','tkcrxs')
         self.tkcrys = ktl.cache('ao','tkcrys')
@@ -167,9 +159,17 @@ class Util:
         self.trkstat = ktl.cache('trick', 'trkstat')
         self.trkstat.monitor()
         self.dtlp = ktl.cache('ao', 'dtlp')
-        # self.dttmastr = ktl.cache('ao', 'dttmastr')
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
+
+        self.ops = "MGAOS" #set mode to MGAOS by default, then checks for missing keywords
+        try:
+            self.trkenapx = ktl.cache('ao', 'trkenapx')
+            self.trkfpspx = ktl.cache('ao', 'trkfpspx')
+            self.dttmastr = ktl.cache('ao', 'trickmastr')
+        except KeyError:
+            self.ops = "RTC"
+            self.dttmastr = ktl.cache('ao', 'dttmastr')
 
     def trk_set_cpr(self, cpr):
         cpr_now = int(self.trkrocpr.read())
@@ -185,7 +185,7 @@ class Util:
             dttmastr = self.dttmastr.read()
             if (dtlp == 'CLOSE') and (dttmastr == 'ROI1'):
                 print('Opening the tip-tilt loop')
-                ktl.cache('ao', 'dtlp').write('OPEN')
+                self.dtlp.write('OPEN')
 
             print('Stopping exposure while we change CPR')
             self.trkstop.write('1')
@@ -365,12 +365,12 @@ class Util:
         self.cdsmode.write(1)
         self.readmode.write(3)
         self.go.write(1)
-        if self.ops == "MGAO":
+        if self.ops == "MGAOS":
             self.trkenapx.write(0)
             self.trkfpspx.write('Passive')
         self.trkstop.write(1)
         time.sleep(1)
-        if self.ops == "MGAO":
+        if self.ops == "MGAOS":
             self.trkfpspx.write('1 second')
             self.trkenapx.write(1)
         self.trkstsx.write(1)
@@ -386,12 +386,12 @@ class Util:
         self.readmode.write(3)
         self.go.write(1)
         time.sleep(3)
-        if self.ops == "MGAO":
+        if self.ops == "MGAOS":
             self.trkenapx.write(0)
             self.trkfpspx.write('Passive')
         self.trkstop.write(1)
         time.sleep(1)
-        if self.ops == "MGAO":
+        if self.ops == "MGAOS":
             self.trkfpspx.write('1 second')
             self.trkenapx.write(1)
         self.trkstsx.write(1)
