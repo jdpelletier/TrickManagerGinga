@@ -625,8 +625,6 @@ class FitsViewer(QtGui.QMainWindow):
         self.wcut = QtGui.QComboBox()
         for name in fi.get_autocut_methods():
             self.wcut.addItem(name)
-        item = str(self.util.trickxsize.read())
-        self.wcut.setCurrentText(item)
         self.wcut.currentIndexChanged.connect(self.cut_change)
         readout_hbox.addWidget(self.wcut)
         self.wcut.setVisible(False)
