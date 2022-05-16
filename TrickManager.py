@@ -913,7 +913,7 @@ class FitsViewer(QtGui.QMainWindow):
 
 
     def show_images(self, pix, ff, bg):
-        print("Showing")
+        print(pix)
         image = self.pixels_to_image(pix, ff, bg)
         roix = int(self.util.trickxsize.read())
         roiy = int(self.util.trickysize.read())
