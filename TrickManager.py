@@ -552,7 +552,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.logger = logger
 
         self.cachedFiles = None
-        self.video = False
+        self.video = True
 
         self.util = Util()
 
