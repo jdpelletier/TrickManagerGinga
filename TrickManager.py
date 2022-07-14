@@ -956,7 +956,7 @@ class FitsViewer(QtGui.QMainWindow):
         image = np.reshape(pixelvalues,(dims,dims))
         ff = np.reshape(pixelvalues_ff,(dims,dims))
         bg = np.reshape(pixelvalues_bg,(dims,dims))
-        # new_image = image * ff - bg TODO put back in when figuring out FF
+        new_image = image * ff - bg
         new_image = image - bg
         roi_image = new_image[0:roix, 0:roiy]
         bad_pix = fits.getdata('/kroot/rel/ao/qfix/data/Trick/BadPix_1014Hz.fits', ext=0)
