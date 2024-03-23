@@ -1098,8 +1098,8 @@ class FitsViewer(QtGui.QMainWindow):
         data_x, data_y = width / 2.0, height / 2.0
         # x, y = self.fitsimage.get_canvas_xy(data_x, data_y)
         radius = float(max(width, height)) / 20
-        self.fitsimage.get_canvas().add(self.compdc(300, 400, radius, color='skyblue',
-                                       fontsize=8))
+        # self.fitsimage.get_canvas().add(self.compdc(300, 400, radius, color='skyblue',
+        #                                fontsize=8))
         # self.bd._orient(self.fitsimage, righthand=False, msg=True)
         
 
@@ -1402,6 +1402,7 @@ class FitsViewer(QtGui.QMainWindow):
                 distcoeff[idx] = float(row[0][5:])
             self.util.trk_putxy_spoc(xroi, yroi, distcoeff, roisz=None)
         else:
+            self.fitsimage.set_pan(data_x, data_y)
             self.wsetroi.setEnabled(True)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
