@@ -1078,7 +1078,7 @@ class FitsViewer(QtGui.QMainWindow):
     def load_file(self, filepath):
         image = load_data(filepath, logger=self.logger)
         self.fitsimage.set_image(image)
-        self.fitsimage.rotate(self.util.rotposn.read())
+        self.fitsimage.rotate(20.0)
         # self.setWindowTitle(filepath)
         left, right, up, down = self.getROI()
         try:
