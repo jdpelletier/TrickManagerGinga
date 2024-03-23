@@ -1010,7 +1010,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(True)
         self.wopen.setVisible(True)
         self.box_readout.setVisible(True)
-        # self.start_scan()
+        self.start_scan()
         self.mode = 'fullframe'
 
     def video_mode(self):
