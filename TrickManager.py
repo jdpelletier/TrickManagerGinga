@@ -1098,8 +1098,8 @@ class FitsViewer(QtGui.QMainWindow):
         data_x, data_y = width / 2.0, height / 2.0
         # x, y = self.fitsimage.get_canvas_xy(data_x, data_y)
         radius = float(max(width, height)) / 20
-        self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
-                                       fontsize=8))
+        # self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
+                                    #    fontsize=8))
         # self.bd._orient(self.fitsimage, righthand=False, msg=True)
         
 
