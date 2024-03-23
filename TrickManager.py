@@ -1098,8 +1098,8 @@ class FitsViewer(QtGui.QMainWindow):
         data_x, data_y = width / 2.0, height / 2.0
         # x, y = self.fitsimage.get_canvas_xy(data_x, data_y)
         radius = float(max(width, height)) / 20
-        # self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
-                                    #    fontsize=8))
+        self.fitsimage.get_canvas().add(self.compdc(300, 400, radius, color='skyblue',
+                                       fontsize=8))
         # self.bd._orient(self.fitsimage, righthand=False, msg=True)
         
 
@@ -1270,10 +1270,10 @@ class FitsViewer(QtGui.QMainWindow):
         self.wtakeff.setEnabled(True)
 
     def addWcs(self, filen):
-        w = wcs.WCS(naxis=2)
+        # w = wcs.WCS(naxis=2)
         fitsData = fits.getdata(filen, ext=0)
         header = fits.getheader(filen)
-        ## TODO wcs not working, may have to remove. leaving important stuff for now.
+        ## TODO wcs not working, may have to remove. leaving required stuff for now.
         # ht, wd = fitsData.shape[:2]
         # y = ht//2
         # x = wd//2
