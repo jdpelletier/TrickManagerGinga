@@ -1074,6 +1074,7 @@ class FitsViewer(QtGui.QMainWindow):
 
     def load_file(self, filepath):
         image = load_data(filepath, logger=self.logger)
+        header = fits.getheader(filepath)
         self.fitsimage.set_image(image)
         # self.setWindowTitle(filepath)
         left, right, up, down = self.getROI()
@@ -1096,7 +1097,8 @@ class FitsViewer(QtGui.QMainWindow):
         radius = float(max(width, height)) / 20
         self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
                                        fontsize=8))
-        self.bd._orient(self.fitsimage, righthand=False, msg=True)
+        # self.bd._orient(self.fitsimage, righthand=False, msg=True)
+        self.fitsimage.rotate(header['ROTPOSN'])
 
     def open_file(self):
         res = QtGui.QFileDialog.getOpenFileName(self, "Open FITS file",
