@@ -1273,33 +1273,34 @@ class FitsViewer(QtGui.QMainWindow):
         w = wcs.WCS(naxis=2)
         fitsData = fits.getdata(filen, ext=0)
         header = fits.getheader(filen)
-        ht, wd = fitsData.shape[:2]
-        y = ht//2
-        x = wd//2
+        ## TODO wcs not working, may have to remove. leaving important stuff for now.
+        # ht, wd = fitsData.shape[:2]
+        # y = ht//2
+        # x = wd//2
         name = header['DATAFILE']
-        ra = float(header['RA'])
-        dec = float(header['DEC'])
-        try:
-            rot = float(header['ROTPOSN'])
-        except VerifyError:
-            self.rotator_invalid_popup()
-            print("Invalid rotator angle in header, unable to rotate image")
-            rot = 0.0
+        # ra = float(header['RA'])
+        # dec = float(header['DEC'])
+        # try:
+        #     rot = float(header['ROTPOSN'])
+        # except VerifyError:
+        #     self.rotator_invalid_popup()
+        #     print("Invalid rotator angle in header, unable to rotate image")
+        #     rot = 0.0
         filter = header['TRFWNAME']
-        w.wcs.crpix = [y, x]
-        w.wcs.cdelt = np.array([-0.05, 0.05])
-        w.wcs.crota = np.array([0.05, rot])
-        w.wcs.crval = [ra, dec]
-        w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
-        pixcrd = np.array([[0, 0], [24, 38], [45, 98]], dtype=np.float64)
-        world = w.wcs_pix2world(pixcrd, 0)
-        # Convert the same coordinates back to pixel coordinates.
-        pixcrd2 = w.wcs_world2pix(world, 0)
-        # These should be the same as the original pixel coordinates, modulo
-        # some floating-point error.
-        assert np.max(np.abs(pixcrd - pixcrd2)) < 1e-6
-        # Now, write out the WCS object as a FITS header
-        header = w.to_header()
+        # w.wcs.crpix = [y, x]
+        # w.wcs.cdelt = np.array([-0.05, 0.05])
+        # w.wcs.crota = np.array([0.05, rot])
+        # w.wcs.crval = [ra, dec]
+        # w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+        # pixcrd = np.array([[0, 0], [24, 38], [45, 98]], dtype=np.float64)
+        # world = w.wcs_pix2world(pixcrd, 0)
+        # # Convert the same coordinates back to pixel coordinates.
+        # pixcrd2 = w.wcs_world2pix(world, 0)
+        # # These should be the same as the original pixel coordinates, modulo
+        # # some floating-point error.
+        # assert np.max(np.abs(pixcrd - pixcrd2)) < 1e-6
+        # # Now, write out the WCS object as a FITS header
+        # header = w.to_header()
         return name, header, fitsData, filter
 
     def rotator_invalid_popup(self):
