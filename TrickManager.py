@@ -162,6 +162,9 @@ class Util:
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
 
+        self.rotposn = ktl.cache('dcs', 'rotposn')
+        self.rotposn.monitor()
+
         self.ops = "MGAOS" #set mode to MGAOS by default, then checks for missing keywords
         try:
             self.trkenapx = ktl.cache('ao', 'trkenapx')
@@ -1098,7 +1101,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
                                        fontsize=8))
         # self.bd._orient(self.fitsimage, righthand=False, msg=True)
-        self.fitsimage.rotate(header['ROTPOSN'])
+        self.fitsimage.rotate(self.rotposn.read())
 
     def open_file(self):
         res = QtGui.QFileDialog.getOpenFileName(self, "Open FITS file",
