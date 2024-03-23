@@ -1101,7 +1101,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().add(self.compdc(data_x, data_y, radius, color='skyblue',
                                        fontsize=8))
         # self.bd._orient(self.fitsimage, righthand=False, msg=True)
-        self.fitsimage.rotate(self.rotposn.read())
+        self.fitsimage.rotate(self.util.rotposn.read())
 
     def open_file(self):
         res = QtGui.QFileDialog.getOpenFileName(self, "Open FITS file",
