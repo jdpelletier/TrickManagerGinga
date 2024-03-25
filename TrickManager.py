@@ -1077,7 +1077,7 @@ class FitsViewer(QtGui.QMainWindow):
 
     def load_file(self, filepath):
         image = load_data(filepath, logger=self.logger)
-        header = fits.gethead(filepath)
+        header = fits.getheader(filepath)
         try:
             rot = float(header['ROTPOSN'])
         except VerifyError:
