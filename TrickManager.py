@@ -162,8 +162,8 @@ class Util:
         self.dtsensor = ktl.cache('ao', 'dtsensor')
         self.dtsensor.monitor()
 
-        self.rotposn = ktl.cache('dcs', 'rotposn')
-        self.rotposn.monitor()
+        # self.rotposn = ktl.cache('dcs', 'rotposn')
+        # self.rotposn.monitor()
 
         self.ops = "MGAOS" #set mode to MGAOS by default, then checks for missing keywords
         try:
@@ -1077,8 +1077,15 @@ class FitsViewer(QtGui.QMainWindow):
 
     def load_file(self, filepath):
         image = load_data(filepath, logger=self.logger)
+        header = fits.gethead(filepath)
+        try:
+            rot = float(header['ROTPOSN'])
+        except VerifyError:
+            self.rotator_invalid_popup()
+            print("Invalid rotator angle in header, unable to rotate image")
+            rot = 0.0
         self.fitsimage.set_image(image)
-        self.fitsimage.rotate(-1.0 * float(self.util.rotposn.read()))
+        self.fitsimage.rotate(-1.0 * float(rot))
         # self.setWindowTitle(filepath)
         left, right, up, down = self.getROI()
         try:
