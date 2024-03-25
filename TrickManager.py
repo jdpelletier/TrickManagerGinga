@@ -1010,7 +1010,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.filt_info.setVisible(True)
         self.wopen.setVisible(True)
         self.box_readout.setVisible(True)
-        # self.start_scan()
+        self.start_scan()
         self.mode = 'fullframe'
 
     def video_mode(self):
@@ -1174,13 +1174,16 @@ class FitsViewer(QtGui.QMainWindow):
 
     def scan(self, file_callback):
         while self.scanning:
-            hasNewFiles, files, self.cachedFiles = self.updateFileCache(self.cachedFiles)
-            if hasNewFiles and ('.fits' in files[0] or '.fits.gz' in files[0]):
-                print("New Image Detected!")
-                filen = files[0]
-                self.waitForFileToBeUnlocked(filen, 1)
-                file_callback.emit(filen)
-            time.sleep(1)
+            try:
+                hasNewFiles, files, self.cachedFiles = self.updateFileCache(self.cachedFiles)
+                if hasNewFiles and ('.fits' in files[0] or '.fits.gz' in files[0]):
+                    print("New Image Detected!")
+                    filen = files[0]
+                    self.waitForFileToBeUnlocked(filen, 1)
+                    file_callback.emit(filen)
+                time.sleep(1)
+            except FileExistsError:
+                time.sleep(1)
 
     def walkDirectory(self):
         directory = self.nightpath()
