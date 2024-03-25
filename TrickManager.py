@@ -1174,26 +1174,26 @@ class FitsViewer(QtGui.QMainWindow):
 
     def scan(self, file_callback):
         while self.scanning:
-            try:
-                hasNewFiles, files, self.cachedFiles = self.updateFileCache(self.cachedFiles)
-                if hasNewFiles and ('.fits' in files[0] or '.fits.gz' in files[0]):
-                    print("New Image Detected!")
-                    filen = files[0]
-                    self.waitForFileToBeUnlocked(filen, 1)
-                    file_callback.emit(filen)
-                time.sleep(1)
-            except FileNotFoundError:
-                time.sleep(1)
+            hasNewFiles, files, self.cachedFiles = self.updateFileCache(self.cachedFiles)
+            if hasNewFiles and ('.fits' in files[0] or '.fits.gz' in files[0]):
+                print("New Image Detected!")
+                filen = files[0]
+                self.waitForFileToBeUnlocked(filen, 1)
+                file_callback.emit(filen)
+            time.sleep(1)
 
     def walkDirectory(self):
         directory = self.nightpath()
         return [abspath(join(directory, f)) for f in listdir(directory) if isfile(join(directory, f))]
 
     def updateFileCache(self, cachedFiles):
-        updatedFileList = self.walkDirectory()
-        filtered = [i for i in updatedFileList if not i in cachedFiles]
-        cachedFiles = updatedFileList
-        return len(filtered) > 0, filtered, cachedFiles
+        try:
+            updatedFileList = self.walkDirectory()
+            filtered = [i for i in updatedFileList if not i in cachedFiles]
+            cachedFiles = updatedFileList
+            return len(filtered) > 0, filtered, cachedFiles
+        except FileNotFoundError:
+            return False, None, None
 
     def fileIsCurrentlyLocked(self, filepath):
         locked = None
