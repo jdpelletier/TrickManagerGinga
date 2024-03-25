@@ -1184,16 +1184,19 @@ class FitsViewer(QtGui.QMainWindow):
 
     def walkDirectory(self):
         directory = self.nightpath()
-        return [abspath(join(directory, f)) for f in listdir(directory) if isfile(join(directory, f))]
+        try:
+            return [abspath(join(directory, f)) for f in listdir(directory) if isfile(join(directory, f))]
+        except FileNotFoundError:
+            return None
 
     def updateFileCache(self, cachedFiles):
-        try:
-            updatedFileList = self.walkDirectory()
-            filtered = [i for i in updatedFileList if not i in cachedFiles]
-            cachedFiles = updatedFileList
-            return len(filtered) > 0, filtered, cachedFiles
-        except FileNotFoundError:
+        updatedFileList = self.walkDirectory()
+        if updatedFileList == None:
             return False, None, None
+        filtered = [i for i in updatedFileList if not i in cachedFiles]
+        cachedFiles = updatedFileList
+        return len(filtered) > 0, filtered, cachedFiles
+        
 
     def fileIsCurrentlyLocked(self, filepath):
         locked = None
