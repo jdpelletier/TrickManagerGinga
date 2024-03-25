@@ -1182,7 +1182,7 @@ class FitsViewer(QtGui.QMainWindow):
                     self.waitForFileToBeUnlocked(filen, 1)
                     file_callback.emit(filen)
                 time.sleep(1)
-            except FileExistsError:
+            except FileNotFoundError:
                 time.sleep(1)
 
     def walkDirectory(self):
