@@ -1085,7 +1085,7 @@ class FitsViewer(QtGui.QMainWindow):
             print("Invalid rotator angle in header, unable to rotate image")
             rot = 0.0
         self.fitsimage.set_image(image)
-        self.fitsimage.rotate(float(rot))
+        self.fitsimage.rotate(float(rot)+180.0)
         # self.setWindowTitle(filepath)
         left, right, up, down = self.getROI()
         try:
