@@ -1257,7 +1257,7 @@ class FitsViewer(QtGui.QMainWindow):
         return left, right, up, down
 
     def nightpath(self):
-        nightly = Path('/net/k1aoserver/k1aodata/nightly')
+        nightly = Path('/net/k1aoserver-new/AODatastorage/nightly')
         date = datetime.datetime.utcnow()
         year, month, day = str(date.strftime("%y")), str(date.strftime("%m")), str(date.strftime("%d"))
         nightly = nightly / year / month / day / 'Trick'
