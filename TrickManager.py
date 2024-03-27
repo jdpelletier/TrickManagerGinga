@@ -570,7 +570,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
-        fi.set_autocut_params('histogram')
+        fi.set_autocut_params('zscale')
         fi.enable_autozoom('on')
         # fi.set_callback('drag-drop', self.drop_file)
         fi.set_bg(0.2, 0.2, 0.2)
