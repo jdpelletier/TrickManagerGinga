@@ -570,7 +570,7 @@ class FitsViewer(QtGui.QMainWindow):
 
         fi = CanvasView(self.logger, render='widget')
         fi.enable_autocuts('on')
-        fi.set_autocut_params('zscale')
+        fi.set_autocut_params('histogram')
         fi.enable_autozoom('on')
         # fi.set_callback('drag-drop', self.drop_file)
         fi.set_bg(0.2, 0.2, 0.2)
@@ -1085,7 +1085,7 @@ class FitsViewer(QtGui.QMainWindow):
             print("Invalid rotator angle in header, unable to rotate image")
             rot = 0.0
         self.fitsimage.set_image(image)
-        self.fitsimage.rotate(-1.0 * float(rot))
+        self.fitsimage.rotate(float(rot))
         # self.setWindowTitle(filepath)
         left, right, up, down = self.getROI()
         try:
