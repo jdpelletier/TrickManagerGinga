@@ -596,7 +596,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.trickstatus  = QtGui.QLabel("")
         self.trickstatus.setStyleSheet("border: 1px solid black;")
         status_hbox.addWidget(self.trickstatus)
-        self.dtlabel = QtGui.QLabel("DT:")
+        self.dtlabel = QtGui.QLabel(" DT:")
         status_hbox.addWidget(self.dtlabel)
         self.dtstatus = QtGui.QLabel("")
         self.dtstatus.setStyleSheet("border: 1px solid black;")
