@@ -391,6 +391,7 @@ class Util:
         self.cdsmode.write(1)
         self.readmode.write(3)
         self.go.write(1)
+        print("through go")
         time.sleep(3)
         if self.ops == "MGAOS":
             self.trkenapx.write(0)
@@ -401,6 +402,7 @@ class Util:
             self.trkfpspx.write('1 second')
             self.trkenapx.write(1)
         self.trkstsx.write(1)
+        print("done")
 
 
 class ControlWindow(QtGui.QWidget):
