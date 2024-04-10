@@ -655,7 +655,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.vid_filter = QtGui.QLabel("Filter ")
         self.vid_filter.setObjectName("vid_filter")
         filter_hbox.addWidget(self.vid_filter)
-        self.wchangefilter = QtGui.QPushButton(f"{self.util.posname}")
+        self.wchangefilter = QtGui.QPushButton(f"{self.util.tfsposname}")
         self.wchangefilter.setObjectName("wchangefilter")
         self.wchangefilter.clicked.connect(self.filter_popup)
         self.wchangefilter.setMaximumSize(QtCore.QSize(50, 100))
