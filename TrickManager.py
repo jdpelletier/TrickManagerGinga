@@ -367,6 +367,7 @@ class Util:
         status = self.targname.write(targname)
 
     def restart_video(self):
+        print("restarting video")
         self.stopex.write(1)
         time.sleep(3)
         self.cdsmode.write(1)
@@ -381,6 +382,7 @@ class Util:
             self.trkfpspx.write('1 second')
             self.trkenapx.write(1)
         self.trkstsx.write(1)
+        print("done restarting video")
 
     def init_trick(self):
         print("Initing Trick")
