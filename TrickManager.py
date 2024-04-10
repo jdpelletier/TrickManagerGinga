@@ -928,7 +928,7 @@ class FitsViewer(QtGui.QMainWindow):
         self.fitsimage.get_canvas().get_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().delete_object_by_tag(self.crosstag)
         self.fitsimage.get_canvas().add(self.crossdc(float(roix)/2-0.5, float(roiy)/2-0.5, color='blue', text=""), tag=self.crosstag)
-        self.wchangefilter.setText(str(self.util.targname))
+        self.wchangefilter.setText(str(self.util.tfsposname))
         self.dtstatus.setText(str(self.util.dtsensor))
         ts = str(self.util.trkstat)
         if ts == '2nd-channel video in progress':
